@@ -40,4 +40,12 @@ export const uploadFile = (file) => {
 export const listSubmissions = (kind) =>
   admin.get(`/admin/submissions/${kind}`).then((r) => r.data);
 
+export const listAdminUsers = () => admin.get(`/admin/users`).then((r) => r.data);
+export const createAdminUser = (data) => admin.post(`/admin/users`, data).then((r) => r.data);
+export const updateAdminUser = (id, data) => admin.put(`/admin/users/${id}`, data).then((r) => r.data);
+export const deleteAdminUser = (id) => admin.delete(`/admin/users/${id}`).then((r) => r.data);
+
+export const getPageviewAnalytics = (days = 30) =>
+  admin.get(`/admin/analytics/pageviews`, { params: { days } }).then((r) => r.data);
+
 export { API, BACKEND };

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useLenis } from "lenis/react";
 import Navbar from "@/components/Navbar";
@@ -7,10 +7,29 @@ import ScrollProgress from "@/components/ScrollProgress";
 import BackToTop from "@/components/BackToTop";
 import FloatingCTA from "@/components/FloatingCTA";
 import { ScrollTrigger } from "@/lib/motion";
+import { trackPageview } from "@/lib/api";
+
+const SESSION_KEY = "rtr_session_id";
+
+/*
+ * One id per browser tab session, not per visitor -- it only exists to group a
+ * single visit's pages into a "flow" for the admin analytics view, so it lives
+ * in sessionStorage (cleared when the tab closes) rather than anywhere more
+ * persistent or identifying.
+ */
+const getSessionId = () => {
+  let id = sessionStorage.getItem(SESSION_KEY);
+  if (!id) {
+    id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    sessionStorage.setItem(SESSION_KEY, id);
+  }
+  return id;
+};
 
 export default function Layout({ children }) {
   const { pathname } = useLocation();
   const lenis = useLenis();
+  const prevPathRef = useRef(null);
 
   /*
    * Reset scroll on navigation, then re-measure ScrollTriggers.
@@ -33,6 +52,11 @@ export default function Layout({ children }) {
     const frame = requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => cancelAnimationFrame(frame);
   }, [pathname, lenis]);
+
+  useEffect(() => {
+    trackPageview(pathname, prevPathRef.current, getSessionId());
+    prevPathRef.current = pathname;
+  }, [pathname]);
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">

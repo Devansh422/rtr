@@ -47,4 +47,14 @@ export const subscribeNewsletter = (email) =>
   client.post("/newsletter", { email }).then((r) => r.data);
 export const joinMovement = (data) => client.post("/supporters", data).then((r) => r.data);
 
+/**
+ * Fire-and-forget page-visit beacon. Never throws: a blocked/failed analytics
+ * request must not surface anywhere or affect navigation, so failures are
+ * swallowed here rather than left for each call site to remember to catch.
+ */
+export const trackPageview = (path, referrerPath, sessionId) =>
+  client
+    .post("/track/pageview", { path, referrer_path: referrerPath, session_id: sessionId })
+    .catch(() => {});
+
 export default client;

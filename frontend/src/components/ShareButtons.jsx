@@ -22,9 +22,10 @@ const TILE =
 
 export default function ShareButtons({
   title = "Join the #RightToRecall Movement",
+  url: urlProp,
   className = "",
 }) {
-  const url = typeof window !== "undefined" ? window.location.href : "";
+  const url = urlProp || (typeof window !== "undefined" ? window.location.href : "");
   const text = encodeURIComponent(title);
   const enc = encodeURIComponent(url);
 

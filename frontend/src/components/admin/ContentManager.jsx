@@ -32,6 +32,7 @@ export default function ContentManager({ type, schema }) {
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [uploadingField, setUploadingField] = useState(null);
+  const [activeSection, setActiveSection] = useState(0);
 
   const load = async () => {
     setLoading(true);
@@ -51,11 +52,13 @@ export default function ContentManager({ type, schema }) {
   const openNew = () => {
     setEditing(null);
     setForm(emptyFrom(schema));
+    setActiveSection(0);
     setOpen(true);
   };
   const openEdit = (item) => {
     setEditing(item);
     setForm({ ...emptyFrom(schema), ...item });
+    setActiveSection(0);
     setOpen(true);
   };
 
@@ -75,8 +78,11 @@ export default function ContentManager({ type, schema }) {
 
   const save = async () => {
     const titleVal = form[schema.titleField];
-    if (!titleVal || !String(titleVal).trim())
+    if (!titleVal || !String(titleVal).trim()) {
+      const idx = schema.sections?.findIndex((s) => s.fields.includes(schema.titleField));
+      if (idx >= 0) setActiveSection(idx);
       return toast.error(`${schema.fields[0].label} is required`);
+    }
     setSaving(true);
     try {
       if (editing?.id) await updateContent(type, editing.id, form);
@@ -173,7 +179,9 @@ export default function ContentManager({ type, schema }) {
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-[88vh] max-w-2xl overflow-y-auto rounded">
+        <DialogContent
+          className={`max-h-[88vh] overflow-y-auto rounded ${schema.sections ? "max-w-3xl" : "max-w-2xl"}`}
+        >
           <DialogHeader>
             <DialogTitle className="font-heading text-title-4">
               {editing ? "Edit" : "New"} · {schema.label}
@@ -182,73 +190,41 @@ export default function ContentManager({ type, schema }) {
               Fill in the fields below and save. Changes go live on the site immediately.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
-            {schema.fields.map((f) => (
-              <label key={f.name} className="block">
-                <span className="mb-1.5 block text-label font-bold uppercase text-muted-foreground">
-                  {f.label}
-                </span>
-                {f.type === "textarea" ? (
-                  <Textarea
-                    data-testid={`field-${f.name}`}
-                    rows={f.name === "content" ? 6 : 3}
-                    value={form[f.name] || ""}
-                    onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                    className="rounded"
-                  />
-                ) : f.type === "image" ? (
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <Input
-                        data-testid={`field-${f.name}`}
-                        value={form[f.name] || ""}
-                        onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                        placeholder="Paste a URL or upload"
-                        className="h-11 rounded"
-                      />
-                      <label className="inline-flex cursor-pointer items-center gap-2 rounded border border-border px-4 text-body font-semibold transition-colors hover:bg-muted">
-                        {uploadingField === f.name ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          <Upload className="h-4 w-4" />
-                        )}
-                        <input
-                          data-testid={`upload-${f.name}`}
-                          type="file"
-                          className="hidden"
-                          onChange={(e) => handleUpload(f.name, e.target.files?.[0])}
-                        />
-                      </label>
-                    </div>
-                    {form[f.name] && (
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={form[f.name]}
-                          alt="preview"
-                          className="h-14 w-14 rounded object-cover"
-                          onError={(e) => (e.currentTarget.style.display = "none")}
-                        />
-                        <button
-                          onClick={() => setForm({ ...form, [f.name]: "" })}
-                          className="text-meta text-muted-foreground hover:text-foreground"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Input
-                    data-testid={`field-${f.name}`}
-                    type={f.type === "date" ? "date" : "text"}
-                    value={form[f.name] || ""}
-                    onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
-                    className="h-11 rounded"
-                  />
-                )}
-              </label>
-            ))}
-          </div>
+
+          {schema.sections && (
+            <div className="flex flex-wrap gap-2 border-b border-border pb-4" data-testid="cm-sections">
+              {schema.sections.map((s, i) => (
+                <button
+                  key={s.title}
+                  type="button"
+                  data-testid={`cm-section-${i}`}
+                  onClick={() => setActiveSection(i)}
+                  className={`rounded px-3 py-1.5 text-meta font-semibold transition-colors ${
+                    activeSection === i
+                      ? "bg-foreground text-background"
+                      : "border border-border bg-card text-foreground/70 hover:bg-muted"
+                  }`}
+                >
+                  {s.title}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <FieldGroup
+            fields={
+              schema.sections
+                ? schema.sections[activeSection].fields.map((n) =>
+                    schema.fields.find((f) => f.name === n)
+                  )
+                : schema.fields
+            }
+            form={form}
+            setForm={setForm}
+            uploadingField={uploadingField}
+            handleUpload={handleUpload}
+          />
+
           <div className="flex justify-end gap-3 pt-2">
             <button
               onClick={() => setOpen(false)}
@@ -274,5 +250,121 @@ export default function ContentManager({ type, schema }) {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+/*
+ * Short fields (plain text/date) pack two to a row; textarea and image fields
+ * always run full-width below them, since a two-up textarea reads worse than
+ * a two-up short input. Applies whether or not the schema defines sections --
+ * even an ungrouped schema benefits from not scrolling past five single-column
+ * text inputs to reach the one textarea at the bottom.
+ */
+function FieldGroup({ fields, form, setForm, uploadingField, handleUpload }) {
+  const short = fields.filter((f) => f.type !== "textarea" && f.type !== "image");
+  const long = fields.filter((f) => f.type === "textarea" || f.type === "image");
+
+  return (
+    <div className="space-y-4 py-4">
+      {short.length > 0 && (
+        <div className={`grid gap-4 ${short.length > 1 ? "sm:grid-cols-2" : ""}`}>
+          {short.map((f) => (
+            <FieldInput key={f.name} f={f} form={form} setForm={setForm} />
+          ))}
+        </div>
+      )}
+      {long.map((f) =>
+        f.type === "image" ? (
+          <ImageField
+            key={f.name}
+            f={f}
+            form={form}
+            setForm={setForm}
+            uploadingField={uploadingField}
+            handleUpload={handleUpload}
+          />
+        ) : (
+          <FieldInput key={f.name} f={f} form={form} setForm={setForm} />
+        )
+      )}
+    </div>
+  );
+}
+
+function FieldInput({ f, form, setForm }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-label font-bold uppercase text-muted-foreground">
+        {f.label}
+      </span>
+      {f.type === "textarea" ? (
+        <Textarea
+          data-testid={`field-${f.name}`}
+          rows={f.name === "content" || f.name === "background" ? 6 : 3}
+          value={form[f.name] || ""}
+          onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+          className="rounded"
+        />
+      ) : (
+        <Input
+          data-testid={`field-${f.name}`}
+          type={f.type === "date" ? "date" : "text"}
+          value={form[f.name] || ""}
+          onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+          className="h-11 rounded"
+        />
+      )}
+    </label>
+  );
+}
+
+function ImageField({ f, form, setForm, uploadingField, handleUpload }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-label font-bold uppercase text-muted-foreground">
+        {f.label}
+      </span>
+      <div className="space-y-2">
+        <div className="flex gap-2">
+          <Input
+            data-testid={`field-${f.name}`}
+            value={form[f.name] || ""}
+            onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+            placeholder="Paste a URL or upload"
+            className="h-11 rounded"
+          />
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded border border-border px-4 text-body font-semibold transition-colors hover:bg-muted">
+            {uploadingField === f.name ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
+            <input
+              data-testid={`upload-${f.name}`}
+              type="file"
+              className="hidden"
+              onChange={(e) => handleUpload(f.name, e.target.files?.[0])}
+            />
+          </label>
+        </div>
+        {form[f.name] && (
+          <div className="flex items-center gap-2">
+            <img
+              src={form[f.name]}
+              alt="preview"
+              className="h-14 w-14 rounded object-cover"
+              onError={(e) => (e.currentTarget.style.display = "none")}
+            />
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, [f.name]: "" })}
+              className="text-meta text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+      </div>
+    </label>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { joinMovement } from "@/lib/api";
@@ -8,6 +9,7 @@ import LinkButton from "@/components/LinkButton";
 import ExplainerVideo from "@/components/ExplainerVideo";
 import SupporterCertificate from "@/components/SupporterCertificate";
 import SupporterShare from "@/components/SupporterShare";
+import AccessCodeReveal from "@/components/AccessCodeReveal";
 import { Check, ArrowRight, PartyPopper, BookOpen } from "lucide-react";
 
 const STATES = [
@@ -47,6 +49,15 @@ const PLEDGE = "I support greater accountability in democracy through the Right 
 const EMPTY = { name: "", state: "", city: "", email: "", mobile: "" };
 
 export default function SupporterFlow() {
+  // Set only when arriving via a specific campaign's "Join"/"Add Your Voice"
+  // CTA (see JoinContext.openJoin); absent for the generic navbar/footer entry
+  // point. Read once on mount so it survives whatever the form does afterward.
+  const [searchParams] = useSearchParams();
+  const campaignId = searchParams.get("campaign") || null;
+  // Set when arriving via another supporter's referral link (see the "Invite
+  // others" panel on MemberDashboard), which reads `?ref=<movementId>`.
+  const referredBy = searchParams.get("ref") || null;
+
   const [stepIndex, setStepIndex] = useState(0);
   const [pledged, setPledged] = useState(false);
   const [form, setForm] = useState(EMPTY);
@@ -104,7 +115,12 @@ export default function SupporterFlow() {
     }
     setLoading(true);
     try {
-      const res = await joinMovement({ ...form, pledge: true });
+      const res = await joinMovement({
+        ...form,
+        pledge: true,
+        campaign_id: campaignId,
+        referred_by: referredBy,
+      });
       setResult(res);
       setStepIndex(3);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -346,6 +362,12 @@ export default function SupporterFlow() {
                     Here is your digital certificate, badge and Movement ID.
                   </p>
                 </div>
+
+                {result.access_code && (
+                  <div className="mb-6">
+                    <AccessCodeReveal code={result.access_code} email={form.email} />
+                  </div>
+                )}
 
                 <SupporterCertificate
                   name={result.name}

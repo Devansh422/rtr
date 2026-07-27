@@ -496,60 +496,65 @@ export default function Home() {
             </Reveal>
 
             <StaggerGroup className="mt-10 grid gap-6 md:grid-cols-3">
-              {ongoingCampaigns.map((c) => (
-                <StaggerItem key={c.id}>
-                  <Link
-                    to={`/campaigns/${c.id}`}
-                    data-testid={`home-campaign-${c.id}`}
-                    className="group flex h-full flex-col overflow-hidden rounded border border-border bg-card transition-transform duration-300 hover:-translate-y-1"
-                  >
-                    <div className="relative h-44 overflow-hidden">
-                      <img
-                        src={c.image}
-                        alt=""
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute left-3 top-3">
-                        <StatusBadge status={c.status} />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-1 flex-col p-6">
-                      {c.location && (
-                        <p className="inline-flex items-center gap-1.5 text-label font-bold uppercase text-muted-foreground">
-                          <MapPin className="h-3 w-3" aria-hidden="true" /> {c.location}
-                        </p>
-                      )}
-                      <h3 className="mt-3 font-heading text-title-4 font-bold">{c.title}</h3>
-                      <p className="mt-2 flex-1 text-body text-foreground/70">{c.description}</p>
-
-                      {progressPercent(c.supporters, c.goal) !== null && (
-                        <div className="mt-5">
-                          <div className="flex items-baseline justify-between text-meta">
-                            <span className="font-semibold text-foreground/80">
-                              {formatCount(c.supporters)} supporters
-                            </span>
-                            <span className="font-bold text-secondary">
-                              {Math.round(progressPercent(c.supporters, c.goal))}%
-                            </span>
-                          </div>
-                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
-                            <div
-                              className="h-full rounded bg-primary"
-                              style={{ width: `${progressPercent(c.supporters, c.goal)}%` }}
-                            />
-                          </div>
+              {ongoingCampaigns.map((c) => {
+                // liveSupporters (baseline + real /join signups) falls back to
+                // the raw admin baseline if the API hasn't computed it.
+                const liveCount = c.liveSupporters ?? c.supporters;
+                return (
+                  <StaggerItem key={c.id}>
+                    <Link
+                      to={`/campaigns/${c.id}`}
+                      data-testid={`home-campaign-${c.id}`}
+                      className="group flex h-full flex-col overflow-hidden rounded border border-border bg-card transition-transform duration-300 hover:-translate-y-1"
+                    >
+                      <div className="relative h-44 overflow-hidden">
+                        <img
+                          src={c.image}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute left-3 top-3">
+                          <StatusBadge status={c.status} />
                         </div>
-                      )}
+                      </div>
 
-                      <span className="mt-5 inline-flex items-center gap-2 text-label font-bold uppercase text-foreground">
-                        {c.cta || "Read more"} <ArrowRight className="h-3.5 w-3.5" />
-                      </span>
-                    </div>
-                  </Link>
-                </StaggerItem>
-              ))}
+                      <div className="flex flex-1 flex-col p-6">
+                        {c.location && (
+                          <p className="inline-flex items-center gap-1.5 text-label font-bold uppercase text-muted-foreground">
+                            <MapPin className="h-3 w-3" aria-hidden="true" /> {c.location}
+                          </p>
+                        )}
+                        <h3 className="mt-3 font-heading text-title-4 font-bold">{c.title}</h3>
+                        <p className="mt-2 flex-1 text-body text-foreground/70">{c.description}</p>
+
+                        {progressPercent(liveCount, c.goal) !== null && (
+                          <div className="mt-5">
+                            <div className="flex items-baseline justify-between text-meta">
+                              <span className="font-semibold text-foreground/80">
+                                {formatCount(liveCount)} supporters
+                              </span>
+                              <span className="font-bold text-secondary">
+                                {Math.round(progressPercent(liveCount, c.goal))}%
+                              </span>
+                            </div>
+                            <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
+                              <div
+                                className="h-full rounded bg-primary"
+                                style={{ width: `${progressPercent(liveCount, c.goal)}%` }}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        <span className="mt-5 inline-flex items-center gap-2 text-label font-bold uppercase text-foreground">
+                          {c.cta || "Read more"} <ArrowRight className="h-3.5 w-3.5" />
+                        </span>
+                      </div>
+                    </Link>
+                  </StaggerItem>
+                );
+              })}
             </StaggerGroup>
           </div>
         </section>

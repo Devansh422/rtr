@@ -7,6 +7,7 @@ import { submitVolunteer } from "@/lib/api";
 import DynamicButton from "@/components/DynamicButton";
 import LinkButton from "@/components/LinkButton";
 import Eyebrow from "@/components/Eyebrow";
+import AccessCodeReveal from "@/components/AccessCodeReveal";
 import { ArrowDown, Check, Sparkles } from "lucide-react";
 import { gsap, useGsap, EASE_OUT, prefersReducedMotion } from "@/lib/motion";
 
@@ -81,6 +82,7 @@ export default function Volunteer() {
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [result, setResult] = useState(null);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -121,7 +123,8 @@ export default function Volunteer() {
     for (const r of required) if (!form[r]) return toast.error("Please fill in all fields");
     setLoading(true);
     try {
-      await submitVolunteer(form);
+      const res = await submitVolunteer(form);
+      setResult(res);
       setDone(true);
       toast.success("Thank you! We'll be in touch soon.");
     } catch (err) {
@@ -234,28 +237,34 @@ export default function Volunteer() {
       <section id={FORM_ANCHOR} className="scroll-mt-24 px-6 py-20 md:px-12 md:py-28">
         <div ref={successRef} className="mx-auto w-full max-w-2xl">
           {done ? (
-            <div
-              data-panel
-              className="flex flex-col items-center gap-4 rounded border border-border bg-card p-12 text-center"
-            >
-              <div
-                data-anim
-                className="flex h-16 w-16 items-center justify-center rounded bg-primary"
-              >
-                <Sparkles className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
+            <div data-panel className="flex flex-col items-center gap-6">
+              <div className="flex flex-col items-center gap-4 rounded border border-border bg-card p-12 text-center">
+                <div
+                  data-anim
+                  className="flex h-16 w-16 items-center justify-center rounded bg-primary"
+                >
+                  <Sparkles className="h-8 w-8 text-primary-foreground" aria-hidden="true" />
+                </div>
+                <h2 data-anim className="font-heading text-title-2 font-semibold">
+                  You're on the list!
+                </h2>
+                <p data-anim className="text-body text-muted-foreground">
+                  Thanks for stepping up. Our team will reach out with next steps soon.
+                </p>
               </div>
-              <h2 data-anim className="font-heading text-title-2 font-semibold">
-                You're on the list!
-              </h2>
-              <p data-anim className="text-body text-muted-foreground">
-                Thanks for stepping up. Our team will reach out with next steps soon.
-              </p>
+
+              {result?.access_code && (
+                <div data-anim className="w-full">
+                  <AccessCodeReveal code={result.access_code} email={form.email} />
+                </div>
+              )}
+
               <DynamicButton
                 data-anim
                 variant="outline"
-                className="mt-2"
                 onClick={() => {
                   setForm(EMPTY);
+                  setResult(null);
                   setDone(false);
                 }}
               >

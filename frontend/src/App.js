@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import SmoothScroll from "@/components/SmoothScroll";
 import { JoinProvider } from "@/context/JoinContext";
 import { AdminAuthProvider, RequireAdmin } from "@/context/AdminAuthContext";
+import { MemberAuthProvider, RequireMember } from "@/context/MemberAuthContext";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -19,6 +20,8 @@ import SupporterFlow from "@/pages/SupporterFlow";
 import KnowledgeHub from "@/pages/KnowledgeHub";
 import AdminLogin from "@/pages/admin/AdminLogin";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
+import MemberLogin from "@/pages/MemberLogin";
+import MemberDashboard from "@/pages/MemberDashboard";
 
 function PublicApp() {
   return (
@@ -50,18 +53,29 @@ function App() {
       <SmoothScroll>
         <BrowserRouter>
           <AdminAuthProvider>
-            <Routes>
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin"
-                element={
-                  <RequireAdmin>
-                    <AdminDashboard />
-                  </RequireAdmin>
-                }
-              />
-              <Route path="/*" element={<PublicApp />} />
-            </Routes>
+            <MemberAuthProvider>
+              <Routes>
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <RequireAdmin>
+                      <AdminDashboard />
+                    </RequireAdmin>
+                  }
+                />
+                <Route path="/login" element={<MemberLogin />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <RequireMember>
+                      <MemberDashboard />
+                    </RequireMember>
+                  }
+                />
+                <Route path="/*" element={<PublicApp />} />
+              </Routes>
+            </MemberAuthProvider>
           </AdminAuthProvider>
         </BrowserRouter>
       </SmoothScroll>

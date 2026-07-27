@@ -14,7 +14,10 @@ import {
 } from "recharts";
 import {
   AlertCircle,
+  ArrowRight,
   BarChart3,
+  Eye,
+  Fingerprint,
   Loader2,
   Mail,
   MessageSquare,
@@ -23,7 +26,7 @@ import {
   Users,
 } from "lucide-react";
 import { gsap, prefersReducedMotion } from "@/lib/motion";
-import { listSubmissions } from "@/lib/adminApi";
+import { listSubmissions, getPageviewAnalytics } from "@/lib/adminApi";
 import { formatCount } from "@/lib/content";
 import DynamicButton from "@/components/DynamicButton";
 
@@ -243,6 +246,9 @@ export default function Analytics() {
   const [days, setDays] = useState(30);
   const [showTable, setShowTable] = useState(false);
 
+  const [pvData, setPvData] = useState(null);
+  const [pvStatus, setPvStatus] = useState("loading"); // loading | ready | error
+
   const load = useCallback(async () => {
     setStatus("loading");
     try {
@@ -259,9 +265,32 @@ export default function Analytics() {
     }
   }, []);
 
+  // Pageviews are pre-aggregated server-side per range, unlike the submission
+  // records above (fetched once, bucketed client-side) -- so this refetches
+  // whenever the range filter changes rather than only on mount.
+  const loadPageviews = useCallback(async (range) => {
+    setPvStatus("loading");
+    try {
+      const res = await getPageviewAnalytics(range);
+      setPvData(res);
+      setPvStatus("ready");
+    } catch {
+      setPvStatus("error");
+    }
+  }, []);
+
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    loadPageviews(days);
+  }, [days, loadPageviews]);
+
+  const refreshAll = () => {
+    load();
+    loadPageviews(days);
+  };
 
   const timeSeries = useMemo(
     () =>
@@ -308,6 +337,9 @@ export default function Analytics() {
   const gridStroke = "hsl(var(--border))";
   const maxState = topStates.length ? topStates[0].value : 0;
   const maxProfession = topProfessions.length ? topProfessions[0].value : 0;
+  const topPages = pvData?.topPages || [];
+  const topFlows = pvData?.topFlows || [];
+  const maxPage = topPages.length ? topPages[0].views : 0;
 
   return (
     <div data-testid="analytics-section">
@@ -318,13 +350,18 @@ export default function Analytics() {
             Computed live from supporter, volunteer, message and newsletter records.
           </p>
         </div>
-        <DynamicButton variant="outline" size="sm" onClick={load} data-testid="analytics-refresh">
+        <DynamicButton
+          variant="outline"
+          size="sm"
+          onClick={refreshAll}
+          data-testid="analytics-refresh"
+        >
           <RefreshCw className="h-4 w-4" /> Refresh
         </DynamicButton>
       </div>
 
       {/* KPI row */}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <StatTile
           icon={Users}
           label="Supporters"
@@ -348,6 +385,18 @@ export default function Analytics() {
           label="Newsletter"
           value={data.newsletter.length}
           subtext="Email subscribers"
+        />
+        <StatTile
+          icon={Eye}
+          label="Page views"
+          value={pvData?.total ?? 0}
+          subtext={`Last ${days === 365 ? "12 months" : `${days} days`}`}
+        />
+        <StatTile
+          icon={Fingerprint}
+          label="Sessions"
+          value={pvData?.uniqueSessions ?? 0}
+          subtext="Unique visits"
         />
       </div>
 
@@ -439,8 +488,106 @@ export default function Analytics() {
         </ChartCard>
       </div>
 
+      {/* Site traffic -- top pages (magnitude, one hue) + page flow (ranked list, not a chart) */}
+      <div className="mt-10">
+        <h3 className="font-heading text-lead font-bold">Site traffic</h3>
+        <p className="mt-1 text-meta text-muted-foreground">
+          From anonymous page-visit beacons, not tied to any individual.
+        </p>
+      </div>
+      <div className="mt-4 grid gap-6 lg:grid-cols-2">
+        <ChartCard
+          title="Top pages"
+          subtitle="Most-viewed paths"
+          isEmpty={pvStatus !== "loading" && topPages.length === 0}
+          emptyNote={
+            pvStatus === "error"
+              ? "Couldn't load page views."
+              : "No page views recorded in this range yet."
+          }
+        >
+          {pvStatus === "loading" ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="h-5 w-5 animate-spin text-secondary" />
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={Math.max(200, topPages.length * 40)}>
+              <BarChart
+                data={topPages}
+                layout="vertical"
+                margin={{ top: 0, right: 36, bottom: 0, left: 8 }}
+                barCategoryGap="28%"
+              >
+                <CartesianGrid stroke={gridStroke} horizontal={false} />
+                <XAxis type="number" allowDecimals={false} hide />
+                <YAxis
+                  type="category"
+                  dataKey="path"
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={false}
+                  width={128}
+                />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: "hsl(var(--muted))" }} />
+                <Bar
+                  dataKey="views"
+                  name="Views"
+                  maxBarSize={24}
+                  radius={[0, 2, 2, 0]}
+                  label={{
+                    position: "right",
+                    fill: "hsl(var(--foreground))",
+                    fontSize: 11,
+                    fontWeight: 600,
+                  }}
+                >
+                  {topPages.map((d) => (
+                    <Cell key={d.path} fill={rampStep(ramp, d.views, maxPage)} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </ChartCard>
+
+        <ChartCard
+          title="Page flow"
+          subtitle="Where visitors go next"
+          isEmpty={pvStatus !== "loading" && topFlows.length === 0}
+          emptyNote={
+            pvStatus === "error"
+              ? "Couldn't load page flow."
+              : "No page-to-page navigation recorded in this range yet."
+          }
+        >
+          {pvStatus === "loading" ? (
+            <div className="flex justify-center py-16">
+              <Loader2 className="h-5 w-5 animate-spin text-secondary" />
+            </div>
+          ) : (
+            <ul className="max-h-[300px] space-y-1 overflow-y-auto" data-testid="page-flow-list">
+              {topFlows.map((f, i) => (
+                <li
+                  key={`${f.from}->${f.to}-${i}`}
+                  className="flex items-center gap-2 rounded px-2 py-2 text-meta odd:bg-muted/30"
+                >
+                  <span className="min-w-0 flex-1 truncate text-right text-foreground/80">
+                    {f.from}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                  <span className="min-w-0 flex-1 truncate text-foreground/80">{f.to}</span>
+                  <span className="shrink-0 rounded bg-muted px-2 py-0.5 text-micro font-bold tabular-nums text-foreground">
+                    {formatCount(f.count)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </ChartCard>
+      </div>
+
       {/* Magnitude breakdowns: one hue, darker = larger, so no legend is needed */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-10 grid gap-6 lg:grid-cols-2">
         <ChartCard
           title="Where supporters are"
           subtitle="Top states by supporter count"

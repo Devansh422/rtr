@@ -221,7 +221,11 @@ export default function CampaignDetail() {
               </p>
 
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <DynamicButton onClick={openJoin} size="lg" data-testid="campaign-detail-cta">
+                <DynamicButton
+                  onClick={() => openJoin(campaign.id)}
+                  size="lg"
+                  data-testid="campaign-detail-cta"
+                >
                   {campaign.cta || "Join this campaign"}
                   <ArrowRight className="h-5 w-5" />
                 </DynamicButton>
@@ -243,7 +247,15 @@ export default function CampaignDetail() {
                 </div>
               )}
               <div className="mt-6 rounded border border-border bg-card p-6">
-                <ProgressBar supporters={campaign.supporters} goal={campaign.goal} />
+                {/*
+                 * liveSupporters (baseline + real /join signups attributed to
+                 * this campaign) falls back to the raw admin baseline if the API
+                 * hasn't computed it for some reason -- never render nothing.
+                 */}
+                <ProgressBar
+                  supporters={campaign.liveSupporters ?? campaign.supporters}
+                  goal={campaign.goal}
+                />
               </div>
             </div>
           </div>

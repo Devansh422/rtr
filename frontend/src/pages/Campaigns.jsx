@@ -109,60 +109,65 @@ export default function Campaigns() {
         )}
       >
         <StaggerGroup className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {visible.map((c) => (
-            <StaggerItem key={c.id}>
-              <Link
-                to={`/campaigns/${c.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded border border-border bg-card transition-transform duration-300 hover:-translate-y-2"
-                data-testid={`campaign-card-${c.id}`}
-              >
-                <div className="relative h-52 overflow-hidden">
-                  <img
-                    src={c.image}
-                    alt=""
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute left-4 top-4">
-                    <StatusBadge status={c.status} />
-                  </div>
-                </div>
-                <div className="flex flex-1 flex-col p-7">
-                  <div className="flex items-center gap-1.5 text-meta font-medium text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" /> {c.location}
-                  </div>
-                  <h3 className="mt-3 font-heading text-title-3 font-bold leading-snug">
-                    {c.title}
-                  </h3>
-                  <p className="mt-3 flex-1 text-body text-foreground/70">{c.description}</p>
-
-                  {/* Progress toward the supporter goal, when a goal is set. */}
-                  {progressPercent(c.supporters, c.goal) !== null && (
-                    <div className="mt-5">
-                      <div className="flex items-baseline justify-between text-meta">
-                        <span className="font-semibold text-foreground/80">
-                          {formatCount(c.supporters)} supporters
-                        </span>
-                        <span className="font-bold text-secondary">
-                          {Math.round(progressPercent(c.supporters, c.goal))}%
-                        </span>
-                      </div>
-                      <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
-                        <div
-                          className="h-full rounded bg-primary"
-                          style={{ width: `${progressPercent(c.supporters, c.goal)}%` }}
-                        />
-                      </div>
+          {visible.map((c) => {
+            // liveSupporters (baseline + real /join signups) falls back to the
+            // raw admin baseline if the API hasn't computed it for some reason.
+            const liveCount = c.liveSupporters ?? c.supporters;
+            return (
+              <StaggerItem key={c.id}>
+                <Link
+                  to={`/campaigns/${c.id}`}
+                  className="group flex h-full flex-col overflow-hidden rounded border border-border bg-card transition-transform duration-300 hover:-translate-y-2"
+                  data-testid={`campaign-card-${c.id}`}
+                >
+                  <div className="relative h-52 overflow-hidden">
+                    <img
+                      src={c.image}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <div className="absolute left-4 top-4">
+                      <StatusBadge status={c.status} />
                     </div>
-                  )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-7">
+                    <div className="flex items-center gap-1.5 text-meta font-medium text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5" /> {c.location}
+                    </div>
+                    <h3 className="mt-3 font-heading text-title-3 font-bold leading-snug">
+                      {c.title}
+                    </h3>
+                    <p className="mt-3 flex-1 text-body text-foreground/70">{c.description}</p>
 
-                  <span className="mt-6 inline-flex items-center gap-2 text-label font-bold uppercase text-foreground">
-                    {c.cta} <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </div>
-              </Link>
-            </StaggerItem>
-          ))}
+                    {/* Progress toward the supporter goal, when a goal is set. */}
+                    {progressPercent(liveCount, c.goal) !== null && (
+                      <div className="mt-5">
+                        <div className="flex items-baseline justify-between text-meta">
+                          <span className="font-semibold text-foreground/80">
+                            {formatCount(liveCount)} supporters
+                          </span>
+                          <span className="font-bold text-secondary">
+                            {Math.round(progressPercent(liveCount, c.goal))}%
+                          </span>
+                        </div>
+                        <div className="mt-2 h-1.5 w-full overflow-hidden rounded bg-muted">
+                          <div
+                            className="h-full rounded bg-primary"
+                            style={{ width: `${progressPercent(liveCount, c.goal)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <span className="mt-6 inline-flex items-center gap-2 text-label font-bold uppercase text-foreground">
+                      {c.cta} <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              </StaggerItem>
+            );
+          })}
         </StaggerGroup>
 
         {/* The count tracks the filtered set, never the unfiltered total. */}
