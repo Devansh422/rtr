@@ -1,0 +1,160 @@
+{
+  "art_direction": {
+    "concept": "The Optimistic Civic Blueprint",
+    "description": "A Gen-Z inspired, high-energy civic movement aesthetic that blends the structural clarity of Notion, the bold confidence of Spotify, and the action-oriented momentum of Nike. It relies on high-contrast Neo-Brutalist elements, large typography, vibrant kinetic motion, and undeniable optimism. This is not a boring political site; it's a dynamic digital campaign.",
+    "key_principles": [
+      "Motion is Meaning: Use masked text reveals and smooth scrolling to create momentum.",
+      "High Contrast & Legibility: Deep obsidian or stark white backgrounds with electric accents.",
+      "Unapologetically Bold: Massive typography and 'in-your-face' CTAs.",
+      "Rounded & Friendly: Use pill shapes and large border radii to soften the aggressive contrast and make the movement feel approachable."
+    ]
+  },
+  "typography": {
+    "font_setup": "Import via Fontshare in CSS: @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700,900&display=swap');",
+    "heading_font": "Clash Display, sans-serif (used for all H1, H2, H3, massive numbers, and editorial marquees). Must use tight tracking (tracking-tight or tracking-tighter).",
+    "body_font": "Satoshi, sans-serif (used for all paragraphs, buttons, forms, and small text). Clean, geometric, and friendly.",
+    "hierarchy": {
+      "h1": "text-5xl md:text-7xl lg:text-[6rem] leading-[0.9]",
+      "h2": "text-4xl md:text-5xl lg:text-6xl leading-tight",
+      "h3": "text-2xl md:text-3xl lg:text-4xl leading-tight",
+      "body": "text-base md:text-lg text-foreground/80 leading-relaxed",
+      "labels": "text-xs md:text-sm uppercase tracking-widest font-bold"
+    }
+  },
+  "colors": {
+    "strategy": "High-contrast dynamic themes. Avoid muddy mid-tones. Use Volt Yellow for primary kinetic triggers and Cobalt Blue for trustworthy secondary elements.",
+    "light_mode": {
+      "background": "#F8F9FA",
+      "surface": "#FFFFFF",
+      "foreground": "#09090B",
+      "primary": "#D4FF00",
+      "primary_foreground": "#09090B",
+      "secondary": "#0033FF",
+      "secondary_foreground": "#FFFFFF",
+      "border": "#E4E4E7",
+      "muted": "#F4F4F5",
+      "muted_foreground": "#71717A"
+    },
+    "dark_mode": {
+      "background": "#09090B",
+      "surface": "#18181B",
+      "foreground": "#FFFFFF",
+      "primary": "#D4FF00",
+      "primary_foreground": "#09090B",
+      "secondary": "#3366FF",
+      "secondary_foreground": "#FFFFFF",
+      "border": "#27272A",
+      "muted": "#27272A",
+      "muted_foreground": "#A1A1AA"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous Spacing Philosophy. Use 2-3x more spacing than standard to let the bold typography breathe.",
+    "container": "max-w-7xl mx-auto px-6 md:px-12",
+    "section_spacing": "py-24 md:py-32 lg:py-40",
+    "grid_system": "Bento Grid Protocol. Use grid-cols-1 md:grid-cols-12 with wide gaps (gap-6 or gap-8). Break symmetry actively.",
+    "border_radius": "Use rounded-3xl for cards/surfaces, and rounded-full for buttons/pills to create a friendly, tactile Gen Z feel."
+  },
+  "motion_and_interactions": {
+    "libraries": "framer-motion for choreography, @studio-freight/react-lenis for smooth scrolling, react-fast-marquee for editorial ribbons.",
+    "hero_reveal": "Masked Line-by-Line Reveal. Text lines must be wrapped in overflow-hidden spans. Animate the text block from y: '100%' to y: '0%' with ease: [0.76, 0, 0.24, 1] over 1.2s.",
+    "scroll_reveals": "Elements should float up gracefully as they enter the viewport. Initial: { opacity: 0, y: 40 }, WhileInView: { opacity: 1, y: 0 }, Viewport: { once: true, margin: '-100px' }.",
+    "micro_interactions": "Buttons scale up slightly on hover (scale: 1.05) and press down (scale: 0.95). Cards lift gently (-translate-y-2) with a shadow increase.",
+    "parallax": "Subtle framer-motion useTransform hooked to useScroll for the hero image and large numbered chapters."
+  },
+  "components": {
+    "buttons": "Pill-shaped (rounded-full), massive padding (px-8 py-4), bold text. Primary button is Volt Yellow. Must have a distinct hover state.",
+    "cards": "Solid background colors (Surface), large rounded corners (rounded-3xl), 1px subtle border. No glassmorphism on main content cards (keep it solid).",
+    "glassmorphism": "Used ONLY for the sticky navigation and floating bottom CTAs. backdrop-blur-xl bg-background/70.",
+    "forms": "Large inputs with rounded-2xl. Focus states must have a 2px solid ring of Cobalt Blue. No native datepickers or selects; use styled custom components.",
+    "badges": "Pill-shaped, text-xs uppercase tracking-wider. Used for campaign status (e.g., 'ACTIVE', 'VICTORY')."
+  },
+  "layouts_per_page": {
+    "global": {
+      "header": "Sticky top, glassmorphism, logo left, links center (hidden on mobile), theme toggle + 'Join Us' button right.",
+      "footer": "Massive typography 'THE FUTURE IS OURS' (text-[10vw]), newsletter form, clean link grids, social icons.",
+      "floating_cta": "Fixed bottom-right 'Join Movement' pill, hidden at the very top, revealed on scroll."
+    },
+    "home": {
+      "hero": "Massive masked H1 typography, dynamic community image with parallax. An editorial marquee running below the hero.",
+      "why_it_matters": "3-column bento grid with animated cards.",
+      "how_it_works": "3 vertical steps with massive numbers (1, 2, 3) aligned on the left, descriptive text on the right.",
+      "current_campaign": "Full-width dynamic spotlight block highlighting the urgent campaign.",
+      "latest_news": "Horizontal scroll or 3-column grid of latest updates."
+    },
+    "about": {
+      "manifesto": "Numbered chapters using massive typography.",
+      "timeline": "Vertical connecting line with staggered motion reveals for historical milestones."
+    },
+    "campaigns": {
+      "grid": "Dynamic card grid. Each card has an image, title, 'Status Badge', and an action CTA."
+    },
+    "volunteer": {
+      "layout": "Two-column split. Left side: Bold motivational sticky text. Right side: Multi-step or clean long-form form using Shadcn."
+    },
+    "resources": {
+      "layout": "Tabbed interface or categorized lists. Use Accordions for FAQs."
+    }
+  },
+  "media_and_imagery": {
+    "treatment": "Images should feel raw, documentary-style, and dynamic. Wrap images in rounded-3xl containers with overflow-hidden. Use spotlight or clipped frames.",
+    "urls": [
+      {
+        "category": "Hero / Protests",
+        "url": "https://images.unsplash.com/photo-1591261495530-262c58c5f31a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwxfHx5b3V0aCUyMGNvbW11bml0eSUyMHByb3Rlc3R8ZW58MHx8fHwxNzg1MTQxMTIyfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Youth holding 'ENOUGH' sign - use for urgent action / hero."
+      },
+      {
+        "category": "Community / Why It Matters",
+        "url": "https://images.unsplash.com/photo-1592749644100-f2d2ba0a8b03?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzF8MHwxfHNlYXJjaHwzfHx5b3V0aCUyMGNvbW11bml0eSUyMHByb3Rlc3R8ZW58MHx8fHwxNzg1MTQxMTIyfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Youth holding 'I see you, I hear you' sign - use for empathy / why it matters."
+      },
+      {
+        "category": "Community / Volunteers",
+        "url": "https://images.unsplash.com/photo-1632312045004-494c905db7d2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwzfHxkaXZlcnNlJTIwZ2VuJTIweiUyMHNtaWxpbmd8ZW58MHx8fHwxNzg1MTQxMTIxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Diverse Gen Z friends smiling - use for Volunteer / Community page."
+      },
+      {
+        "category": "Join Us",
+        "url": "https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwZ2VuJTIweiUyMHNtaWxpbmd8ZW58MHx8fHwxNzg1MTQxMTIxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Group of youth laughing on stairs - use for Join Us CTA section."
+      },
+      {
+        "category": "Texture / Abstract",
+        "url": "https://images.unsplash.com/photo-1580566176138-daa588058b59?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHx2aWJyYW50JTIwY29sb3JmdWwlMjBtb3Rpb24lMjB0ZXh0dXJlfGVufDB8fHx8MTc4NTE0MTEyMnww&ixlib=rb-4.1.0&q=85",
+        "description": "Vibrant abstract texture - use as a blend-mode overlay or background for the marquee."
+      }
+    ]
+  },
+  "accessibility_and_testing": {
+    "testing_mandate": "All interactive and key informational elements MUST include a 'data-testid' attribute to facilitate robust automated testing. Example: data-testid='join-movement-button'.",
+    "contrast": "Ensure text over Volt Yellow is dark (#09090B), and text over Cobalt Blue is white (#FFFFFF).",
+    "motion": "Respect prefers-reduced-motion for all framer-motion animations."
+  },
+  "instructions_to_main_agent": {
+    "file_extensions": "Use .jsx and .js for all files. DO NOT USE Typescript (.tsx/.ts).",
+    "tailwind_config": "Extend the tailwind.config.js theme to include colors.primary, colors.secondary, fonts.heading ('Clash Display'), fonts.body ('Satoshi').",
+    "shadcn_usage": "Install and customize Shadcn components (Accordion, Form, Input, Button). Radically alter their borders to rounded-full/3xl to match the Gen Z movement aesthetic.",
+    "execution_order": "1. Setup fonts & config. 2. Build layouts and routing. 3. Add Framer Motion and Lenis scroll. 4. Populate pages with images and copy. 5. Refine dark mode.",
+    "strict_rules": "DO NOT use complete 'transparent' background in header, overlays, or dropdowns. Ensure elements have a solid or glassmorphism background to prevent text collision."
+  },
+  "universal_guidelines_for_main_agent": [
+    "You tend to converge toward generic, 'on distribution' outputs. In frontend design, this creates what users call the 'AI slop' aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "You MUST NOT apply universal transition. Eg: transition: all. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms.",
+    "You MUST NOT center align the app container, ie do not add .App { text-align: center; } in the css file. This disrupts the human natural reading flow of text.",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style.",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN.",
+    "Prioritize using pre-existing components from src/components/ui when applicable.",
+    "Create new components that match the style and conventions of existing components when needed.",
+    "Examine existing components to understand the project's component patterns before creating new ones.",
+    "Use `sonner` for toasts. Sonner component are located in `/app/src/components/ui/sonner.tsx`."
+  ]
+}

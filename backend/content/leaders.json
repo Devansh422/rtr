@@ -1,0 +1,26 @@
+[
+  {
+    "id": "gandhi",
+    "name": "Mahatma Gandhi",
+    "role": "Father of the Nation",
+    "years": "1869-1948",
+    "quote": "The spirit of democracy cannot be imposed from without. It has to come from within.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20Gandhi.jpg?width=800"
+  },
+  {
+    "id": "ambedkar",
+    "name": "Dr. B. R. Ambedkar",
+    "role": "Architect of the Constitution",
+    "years": "1891-1956",
+    "quote": "In politics, hero-worship is a sure road to degradation and to eventual dictatorship.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Dr.%20Ambedkar%201.jpg?width=800"
+  },
+  {
+    "id": "bhagat-singh",
+    "name": "Shaheed Bhagat Singh",
+    "role": "Revolutionary Freedom Fighter",
+    "years": "1907-1931",
+    "quote": "The sanctity of law can be maintained only so long as it is the expression of the will of the people.",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Bhagat%20Singh%201929.jpg?width=800"
+  }
+]

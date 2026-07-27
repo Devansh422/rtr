@@ -1,0 +1,44 @@
+[
+  {
+    "id": "faq-1",
+    "question": "What exactly is Right to Recall?",
+    "answer": "It is a democratic mechanism that lets citizens formally review and, where the law permits, remove an elected representative before the end of their term. It works as an accountability tool between elections.",
+    "category": "Basics"
+  },
+  {
+    "id": "faq-2",
+    "question": "Is Right to Recall constitutional in India?",
+    "answer": "Recall provisions already exist in several state municipal and panchayat laws in India. This movement focuses on informed civic participation and encouraging responsible, constitutional adoption where appropriate.",
+    "category": "Legal"
+  },
+  {
+    "id": "faq-3",
+    "question": "Isn't this against elected representatives?",
+    "answer": "Not at all. Accountability strengthens the relationship between citizens and representatives. Well-designed recall includes safeguards to prevent misuse and to keep governance stable.",
+    "category": "Basics"
+  },
+  {
+    "id": "faq-4",
+    "question": "Is this movement tied to any political party?",
+    "answer": "No. This is a strictly non-partisan civic movement. We do not support or oppose any party or individual. Our only agenda is democratic accountability and informed public engagement.",
+    "category": "About"
+  },
+  {
+    "id": "faq-5",
+    "question": "How can I participate?",
+    "answer": "Join the movement, volunteer your skills, share our resources, or host a civic workshop in your community. Every small action helps build a more accountable democracy.",
+    "category": "Participate"
+  },
+  {
+    "id": "faq-6",
+    "question": "What safeguards prevent misuse of recall?",
+    "answer": "Effective recall systems include high signature thresholds, verification steps, cooling-off periods, and time limits after elections. These keep the process fair, deliberate, and non-disruptive.",
+    "category": "Legal"
+  },
+  {
+    "id": "faq-7",
+    "question": "Do I need any experience to volunteer?",
+    "answer": "None at all. Whether you are a student, designer, lawyer, teacher, or just curious, there is a role for you. We will guide you every step of the way.",
+    "category": "Participate"
+  }
+]

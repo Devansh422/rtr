@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# The admin panel is behind auth; keep it out of the index regardless.
+Disallow: /admin
+
+# SET YOUR DOMAIN: replace with your real domain before launch.
+Sitemap: https://righttorecall.org/sitemap.xml

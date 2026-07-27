@@ -1,0 +1,44 @@
+[
+  {
+    "id": "manifesto",
+    "title": "The Movement Manifesto",
+    "type": "Document",
+    "description": "Our founding principles: non-partisan, fact-based, and built for accountable democracy.",
+    "downloadLabel": "Read Manifesto"
+  },
+  {
+    "id": "rti-toolkit",
+    "title": "RTI Toolkit",
+    "type": "Toolkit",
+    "description": "Plain-language templates to responsibly request public information and track it over time.",
+    "downloadLabel": "Get Toolkit"
+  },
+  {
+    "id": "research-brief",
+    "title": "Research Brief: Recall Worldwide",
+    "type": "Research",
+    "description": "A concise, citation-backed look at how recall mechanisms work across democracies.",
+    "downloadLabel": "Download Brief"
+  },
+  {
+    "id": "workshop-kit",
+    "title": "Campus Workshop Kit",
+    "type": "Toolkit",
+    "description": "Everything you need to run a 45-minute civic literacy session at your college.",
+    "downloadLabel": "Get Kit"
+  },
+  {
+    "id": "explainer-deck",
+    "title": "Right to Recall Explainer Deck",
+    "type": "Document",
+    "description": "A shareable slide deck that explains recall in simple, visual terms.",
+    "downloadLabel": "View Deck"
+  },
+  {
+    "id": "media-kit",
+    "title": "Movement Media Kit",
+    "type": "Document",
+    "description": "Logos, colors, and messaging guidelines for ambassadors and the press.",
+    "downloadLabel": "Get Media Kit"
+  }
+]

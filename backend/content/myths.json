@@ -1,0 +1,27 @@
+[
+  {
+    "id": "myth-1",
+    "myth": "Right to Recall will cause constant political instability.",
+    "fact": "Well-designed recall uses high signature thresholds, verification, and time limits. It is a rare, serious tool, not an everyday disruption."
+  },
+  {
+    "id": "myth-2",
+    "myth": "Recall is anti-democratic.",
+    "fact": "Recall deepens democracy by keeping representatives accountable to voters between elections, always within constitutional limits."
+  },
+  {
+    "id": "myth-3",
+    "myth": "Recall does not exist anywhere in India.",
+    "fact": "Recall provisions already exist in several state municipal and panchayat laws for certain local representatives."
+  },
+  {
+    "id": "myth-4",
+    "myth": "Any citizen can remove a leader at any time.",
+    "fact": "Recall requires meeting strict legal thresholds and a defined process. It is deliberate and rule-bound, not arbitrary."
+  },
+  {
+    "id": "myth-5",
+    "myth": "Recall replaces elections.",
+    "fact": "Recall complements elections. It is an accountability mechanism, not a substitute for the electoral process."
+  }
+]

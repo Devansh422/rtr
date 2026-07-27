@@ -1,0 +1,38 @@
+[
+  {
+    "id": "switzerland",
+    "place": "Switzerland",
+    "region": "Europe",
+    "summary": "Several cantons allow voters to recall a cantonal authority or parliament before the end of its term through a citizen petition and vote."
+  },
+  {
+    "id": "united-states",
+    "place": "United States",
+    "region": "North America",
+    "summary": "Recall of state and local officials is permitted in 19 states. California's statewide gubernatorial recalls are among the most well known examples."
+  },
+  {
+    "id": "canada-bc",
+    "place": "Canada (British Columbia)",
+    "region": "North America",
+    "summary": "The Recall and Initiative Act (1995) lets voters petition to remove a Member of the Legislative Assembly between elections."
+  },
+  {
+    "id": "united-kingdom",
+    "place": "United Kingdom",
+    "region": "Europe",
+    "summary": "The Recall of MPs Act (2015) can trigger a by-election when an MP meets specific conditions and enough constituents sign a recall petition."
+  },
+  {
+    "id": "germany",
+    "place": "Germany",
+    "region": "Europe",
+    "summary": "Several states allow the recall of mayors and local councils through citizen petitions followed by a local referendum."
+  },
+  {
+    "id": "india-local",
+    "place": "India (Local Bodies)",
+    "region": "Asia",
+    "summary": "Recall provisions already exist in municipal and panchayat laws in states such as Madhya Pradesh, Chhattisgarh, and Bihar for certain local representatives."
+  }
+]

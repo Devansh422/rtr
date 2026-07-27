@@ -1,0 +1,23 @@
+[
+  {
+    "id": "t-1",
+    "name": "Rhea Nair",
+    "role": "Student, Bengaluru",
+    "quote": "I finally understand how accountability works between elections. This movement made civics feel like something I can actually do.",
+    "avatar": "https://images.unsplash.com/photo-1632312045004-494c905db7d2?crop=entropy&cs=srgb&fm=jpg&q=85&w=400"
+  },
+  {
+    "id": "t-2",
+    "name": "Arjun Mehta",
+    "role": "Volunteer, Pune",
+    "quote": "Non-partisan, fact-based, and genuinely hopeful. I brought a workshop to my college and 200 people showed up.",
+    "avatar": "https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?crop=entropy&cs=srgb&fm=jpg&q=85&w=400"
+  },
+  {
+    "id": "t-3",
+    "name": "Fatima Sheikh",
+    "role": "Teacher, Hyderabad",
+    "quote": "The RTI toolkit is gold. My students used it to track local spending and presented it in class.",
+    "avatar": "https://images.unsplash.com/photo-1592749644100-f2d2ba0a8b03?crop=entropy&cs=srgb&fm=jpg&q=85&w=400"
+  }
+]

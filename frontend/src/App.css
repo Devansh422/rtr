@@ -1,0 +1,17 @@
+.App {
+  min-height: 100vh;
+}
+
+/*
+ * Shadows and the radius scale are handled in tailwind.config.js, where every
+ * shadow token resolves to `none` and every radius token to 0-3px. That is
+ * enforced at build time, so no `!important` overrides are needed here -- and
+ * none should be added, since they would also clobber focus rings.
+ *
+ * Third-party CSS that ships its own shadows is neutralised below. Keep this
+ * list narrow and explicit rather than reaching for a universal selector.
+ */
+[data-sonner-toast],
+[data-sonner-toaster] {
+  box-shadow: none !important;
+}

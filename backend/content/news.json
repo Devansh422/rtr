@@ -1,0 +1,26 @@
+[
+  {
+    "id": "news-1",
+    "title": "The Recall Charter Picks Up Pace",
+    "summary": "The citizen-drafted model framework is gaining momentum across campuses and communities.",
+    "date": "2025-11-29",
+    "source": "Movement Update",
+    "image": "https://images.unsplash.com/photo-1591261495530-262c58c5f31a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
+  },
+  {
+    "id": "news-2",
+    "title": "Campus Democracy Drive Expands",
+    "summary": "Civic literacy workshops are reaching first-time voters across the country.",
+    "date": "2025-11-22",
+    "source": "Movement Update",
+    "image": "https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
+  },
+  {
+    "id": "news-3",
+    "title": "Free RTI Toolkit Now Available",
+    "summary": "Citizens are using our plain-language templates to ask better questions of public offices.",
+    "date": "2025-11-10",
+    "source": "Movement Update",
+    "image": "https://images.unsplash.com/photo-1580566176138-daa588058b59?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "what-is-right-to-recall",
+    "title": "Right to Recall, Explained in 3 Minutes",
+    "excerpt": "No jargon. Just a clear, friendly walkthrough of what recall means and where it already works in India.",
+    "category": "Basics",
+    "date": "2025-11-28",
+    "author": "The RTR Collective",
+    "readTime": "3 min",
+    "image": "https://images.unsplash.com/photo-1591261495530-262c58c5f31a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "Right to Recall is a democratic tool that lets citizens formally review and, where the law allows, remove an elected representative before their term ends. Think of it as a feedback loop for democracy. In India, recall provisions already exist in several state municipal and panchayat laws. This piece breaks down the idea without legal jargon and explains why more young people are talking about accountability."
+  },
+  {
+    "id": "why-accountability-matters",
+    "title": "Why Accountability Is a Youth Issue",
+    "excerpt": "Half of India is under 30. Here is why democratic accountability belongs to the next generation.",
+    "category": "Opinion",
+    "date": "2025-11-20",
+    "author": "Ananya Rao",
+    "readTime": "4 min",
+    "image": "https://images.unsplash.com/photo-1607748862156-7c548e7e98f4?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "When institutions feel distant, participation drops. But accountability tools can rebuild trust. This article looks at how civic-minded young people around the world use transparent, constitutional mechanisms to stay engaged between elections."
+  },
+  {
+    "id": "recall-around-the-world",
+    "title": "How Recall Works Around the World",
+    "excerpt": "From local wards to national debates, a friendly tour of accountability tools globally.",
+    "category": "Explainer",
+    "date": "2025-11-12",
+    "author": "The RTR Collective",
+    "readTime": "5 min",
+    "image": "https://images.unsplash.com/photo-1592749644100-f2d2ba0a8b03?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "Different democracies design recall differently, with safeguards to prevent misuse. We compare a few models and highlight the checks that keep the process fair, informed, and non-disruptive."
+  },
+  {
+    "id": "rti-toolkit-launch",
+    "title": "Launching Our Free RTI Toolkit",
+    "excerpt": "Ready-to-use templates so any citizen can ask better questions of public offices.",
+    "category": "Resources",
+    "date": "2025-11-05",
+    "author": "Toolkit Team",
+    "readTime": "2 min",
+    "image": "https://images.unsplash.com/photo-1580566176138-daa588058b59?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "Transparency starts with the right questions. Our free RTI toolkit gives you plain-language templates to request public information responsibly and track it over time."
+  },
+  {
+    "id": "town-hall-recap",
+    "title": "Recap: Our First Digital Town Hall",
+    "excerpt": "One big conversation about the future of democratic participation.",
+    "category": "Community",
+    "date": "2025-10-30",
+    "author": "Events Team",
+    "readTime": "3 min",
+    "image": "https://images.unsplash.com/photo-1632312045004-494c905db7d2?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "Our first digital town hall brought together students, teachers, and civic groups. Here are the biggest ideas, questions, and moments from an energising evening."
+  },
+  {
+    "id": "myths-about-recall",
+    "title": "5 Myths About Right to Recall",
+    "excerpt": "Separating fact from fear, one myth at a time.",
+    "category": "Basics",
+    "date": "2025-10-18",
+    "author": "Fact Desk",
+    "readTime": "4 min",
+    "image": "https://images.unsplash.com/photo-1591261495530-262c58c5f31a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
+    "content": "Does recall create instability? Is it anti-representative? We address common misconceptions with facts and highlight the safeguards that keep the process constructive."
+  }
+]

@@ -1,0 +1,246 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Inter:wght@500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family:
+    "Open Sans",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@layer base {
+  :root {
+    --background: 40 40% 99%;
+    --foreground: 235 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 235 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 235 45% 12%;
+    --primary: 30 100% 60%;
+    --primary-foreground: 235 45% 12%;
+    --secondary: 128 89% 28%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 40 30% 96%;
+    --muted-foreground: 235 12% 40%;
+    --accent: 40 30% 96%;
+    --accent-foreground: 235 45% 12%;
+    --destructive: 0 84.2% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 22% 88%;
+    --input: 40 22% 88%;
+    --ring: 128 89% 28%;
+    --chakra: 240 100% 27%;
+    --saffron: 30 100% 60%;
+    --india-green: 128 89% 28%;
+    --chart-1: 30 100% 60%;
+    --chart-2: 128 89% 28%;
+    --chart-3: 240 100% 27%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.25rem;
+  }
+  .dark {
+    --background: 235 45% 7%;
+    --foreground: 40 40% 98%;
+    --card: 235 32% 12%;
+    --card-foreground: 40 40% 98%;
+    --popover: 235 32% 12%;
+    --popover-foreground: 40 40% 98%;
+    --primary: 30 100% 60%;
+    --primary-foreground: 235 45% 8%;
+    --secondary: 128 60% 45%;
+    --secondary-foreground: 235 45% 8%;
+    --muted: 235 25% 16%;
+    --muted-foreground: 235 15% 68%;
+    --accent: 235 25% 16%;
+    --accent-foreground: 40 40% 98%;
+    --destructive: 0 62.8% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 235 25% 18%;
+    --input: 235 25% 18%;
+    --ring: 128 60% 45%;
+    --chakra: 225 100% 70%;
+    --saffron: 30 100% 60%;
+    --india-green: 128 60% 45%;
+    --chart-1: 30 100% 60%;
+    --chart-2: 128 60% 45%;
+    --chart-3: 225 100% 70%;
+    --chart-4: 30 80% 55%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  /* Optical correction: the largest display sizes need tighter tracking. */
+  h1 {
+    letter-spacing: -0.045em;
+  }
+  ::selection {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: "Inter", system-ui, sans-serif;
+    letter-spacing: -0.03em;
+  }
+  .font-body {
+    font-family: "Open Sans", system-ui, sans-serif;
+    letter-spacing: 0;
+  }
+
+  /*
+   * Full-viewport section. min-height rather than height, so content that exceeds
+   * the viewport grows instead of clipping, and svh so mobile browser chrome does
+   * not cause a jump. Content is vertically centred.
+   *
+   * No scroll-margin-top here on purpose: it would sit in the same @layer as
+   * Tailwind's scroll-mt-* utilities at equal specificity, so source order would
+   * decide the winner and anchor offsets would break unpredictably.
+   */
+  .full-section {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* Sections that sit under the fixed navbar need headroom for it. */
+  .full-section-hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 6rem;
+  }
+
+  /*
+   * Clips both axes of a react-fast-marquee track.
+   *
+   * The library injects `.rfm-marquee-container { overflow-x: hidden }` at
+   * runtime. Per the CSS overflow spec, when one axis is `hidden` and the other
+   * is `visible`, the visible one computes to `auto` -- so that rule silently
+   * turns on overflow-y: auto. Our marquee text is set at a very tight
+   * line-height, which lets glyphs extend past their content box, and the result
+   * is a vertical scrollbar inside the band.
+   *
+   * Two classes beats the library's one, so this wins on specificity regardless
+   * of stylesheet order and needs no !important. Apply `marquee-clip` to the
+   * element wrapping <Marquee>.
+   */
+  .marquee-clip .rfm-marquee-container {
+    overflow: hidden;
+  }
+
+  /* Grain / noise overlay */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .text-stroke {
+    -webkit-text-stroke: 2px hsl(var(--foreground));
+    color: transparent;
+  }
+  .text-stroke-primary {
+    -webkit-text-stroke: 2px hsl(var(--primary));
+    color: transparent;
+  }
+
+  /* Indian tricolour accents */
+  .tricolor-bar {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--saffron)) 0%,
+      hsl(var(--saffron)) 33.33%,
+      #ffffff 33.33%,
+      #ffffff 66.66%,
+      hsl(var(--india-green)) 66.66%,
+      hsl(var(--india-green)) 100%
+    );
+  }
+  .tricolor-text {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--saffron)),
+      hsl(var(--chakra)) 50%,
+      hsl(var(--india-green))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  @keyframes chakra-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .chakra-spin {
+    animation: chakra-spin 40s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chakra-spin {
+      animation: none;
+    }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--foreground) / 0.3);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground) / 0.5);
+}
+
+/*
+ * No `scroll-behavior: smooth` here on purpose. Lenis drives scrolling in JS and
+ * the native property fights it -- anchor jumps end up doing both, which reads as
+ * a stutter or an overshoot. Lenis provides the smoothing; anchor navigation goes
+ * through lenis.scrollTo.
+ */
