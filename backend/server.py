@@ -1,8 +1,18 @@
-from dotenv import load_dotenv
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+
+# python-dotenv is a local-development convenience only: it loads variables from
+# backend/.env into os.environ before mongo_url etc. are read below. In every
+# deployed environment (Vercel included) the platform injects environment
+# variables directly, there is no .env file in the bundle, and load_dotenv()
+# would be a no-op even if it ran. Importing it defensively means a dependency
+# resolution quirk that drops this dev-only package can never crash the app.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT_DIR / '.env')
+except ImportError:
+    pass
 
 from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request, Body, UploadFile, File, Response
 from starlette.middleware.cors import CORSMiddleware

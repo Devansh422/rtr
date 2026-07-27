@@ -1,8 +1,10 @@
 # Python dependencies for the Vercel serverless function (api/index.py).
 #
-# A byte-identical copy lives at api/requirements.txt as a safety net in case
-# Vercel's builder prefers a requirements.txt co-located with the function over
-# this project-root one. If you change one, change both.
+# DUPLICATE of /requirements.txt at the repo root. Vercel's exact requirements.txt
+# discovery order for a mixed Node+Python monorepo isn't documented precisely, so
+# this copy exists as a safety net in case the builder prefers a file co-located
+# with the function over the project root one. If you change one, change both --
+# they must stay byte-identical.
 #
 # Pins are carried over from backend/requirements.txt, which is a full freeze of
 # the development container. Only what backend/server.py actually imports (plus
