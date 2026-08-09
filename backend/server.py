@@ -14,12 +14,16 @@ Run locally with:
 """
 
 from contextlib import asynccontextmanager
+from typing import Optional
 import logging
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, Depends, FastAPI
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.middleware.cors import CORSMiddleware
 
 from backend.core import bootstrap, config, db as database, mongo
+from backend.core.deps import get_optional_session
 
 # Importing this makes every module's tables visible on Base.metadata, which is what
 # AUTO_CREATE_TABLES needs at startup. The routers below would each pull in their own
@@ -85,18 +89,56 @@ async def root():
     return {"message": "Right to Recall Movement API", "status": "ok"}
 
 
-@api_router.get("/health")
-async def health():
-    """Liveness plus which backing stores this instance actually has.
+async def _schema_ready(session: Optional[AsyncSession]) -> bool:
+    """Whether the migrations have actually been applied.
 
-    Worth an endpoint because the Phase 0 migration has two valid
-    configurations, and "why is /api/states 503-ing" has a one-request answer
-    when `postgres` is reported here as false.
+    `postgres: true` says only "DATABASE_URL is configured" -- nothing about
+    whether the tables exist. Those are different failures with the same symptom
+    (every data endpoint 500s), and the second is the common one: pushing to git
+    deploys the code but not the schema, so a fresh deployment reports a healthy
+    Postgres connection and then fails on the first real query.
+
+    One cheap existence check turns that into a one-request answer.
+
+    Takes the session rather than opening its own, so health uses the same
+    connection path as every other endpoint -- and so this is reachable in tests,
+    which is the whole reason it can be trusted.
     """
+    if session is None:
+        return False
+    try:
+        await session.execute(text("SELECT 1 FROM platform_meta LIMIT 1"))
+        return True
+    except Exception:
+        # The failed statement leaves the transaction unusable, and the session is
+        # committed at teardown. Roll back or that commit raises and turns a
+        # diagnostic endpoint into a 500 -- exactly when it is most needed.
+        await session.rollback()
+        return False
+
+
+@api_router.get("/health")
+async def health(session: Optional[AsyncSession] = Depends(get_optional_session)):
+    """Liveness, which backing stores this instance has, and whether it can use them.
+
+    Worth an endpoint because the Phase 0 migration has two valid configurations,
+    and "why is /api/states 503-ing" has a one-request answer when `postgres` is
+    reported here as false -- or, when it is true but `schema` is false, "run
+    `python -m backend.scripts.migrate`".
+    """
+    schema = await _schema_ready(session)
     return {
         "status": "ok",
         "mongo": True,
         "postgres": config.postgres_enabled(),
+        # False with postgres true means the connection works and the tables are
+        # missing. See DEPLOY.md step 1b.
+        "schema": schema,
+        "hint": (
+            None
+            if schema or session is None
+            else "Tables are missing. Run: python -m backend.scripts.migrate"
+        ),
         # Optional integrations, each of which degrades a feature rather than
         # breaking it. Reported here so "why is the assistant only listing
         # sources" and "why did no email arrive" both have a one-request answer.

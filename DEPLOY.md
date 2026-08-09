@@ -13,16 +13,26 @@ relative path `/api` and needs no backend URL configured.
 ## Prerequisites
 
 - A Vercel account.
-- The `vercel` CLI (`npm i -g vercel`). This project deploys straight from your
-  machine, so no git hosting account is required.
+- **A GitHub repository** connected to it. Vercel then builds and deploys on every
+  push, which is the path this guide assumes. (The `vercel` CLI works too —
+  `npm i -g vercel` then `vercel --prod` — but nothing here requires it.)
 - A MongoDB database reachable from the public internet (Atlas free tier is
   fine). The bundled JSON files in `backend/content/` are seeded into it
   automatically on first boot.
 - A Postgres database (Neon free tier is fine). Holds staff identity, roles and
   permissions, the states table and the audit log. See step 1b.
-- Node 18+ and Python 3.12 locally if you want to run things before deploying.
+- **Python 3.12 on your own machine.** Not optional: migrations are never run by
+  the deployed function, so you run them from here against the same database.
   (Python 3.10 is the floor — several pinned dependencies require it — and 3.12
-  matches what Vercel runs.)
+  matches what Vercel runs.) Node 18+ if you want to build the frontend locally.
+
+### The one thing that is not automatic
+
+Pushing to GitHub deploys the **code**. It does not touch the **database schema**.
+Migrations are applied by you, from your machine, with
+`python -m backend.scripts.migrate` — see step 1b, and "Releases that add a
+migration" in step 3 for the ordering. A deploy that ships code expecting a table
+that does not exist yet will 500 on every affected endpoint until you run it.
 
 ## 1. MongoDB Atlas setup
 
@@ -44,9 +54,16 @@ keeps everything relational (staff accounts, roles, geographic scoping, the
 campaign pipeline, the audit log). See §4 of `IMPLEMENTATION_PLAN.md` for why.
 
 1. Create a free project at <https://neon.com>.
-2. Copy the connection string from the dashboard. A plain
-   `postgresql://user:pass@ep-xxx.region.aws.neon.tech/dbname?sslmode=require`
-   is fine — the async driver prefix is added by the app.
+2. Copy the connection string from the dashboard **verbatim**, including
+   `?sslmode=require` and any `&channel_binding=require`. You do not need to edit
+   it: the app swaps in the async driver prefix, strips the parameters that belong
+   to `psql` rather than to the async driver, and turns `sslmode` into the SSL
+   setting the driver actually wants.
+
+   (Editing it is what causes trouble. If you drop `sslmode=require` by hand, Neon
+   refuses the connection; if you leave it in on a version of this app that does
+   not translate it, you get
+   `TypeError: connect() got an unexpected keyword argument 'sslmode'`.)
 3. Apply the schema **before** the first deploy, from your machine:
 
    ```sh
@@ -128,34 +145,79 @@ Treat it as required for any real deployment. `GET /api/health` reports which
 mode an instance is running in:
 
 ```json
-{ "status": "ok", "mongo": true, "postgres": true }
+{ "status": "ok", "mongo": true, "postgres": true, "schema": true }
 ```
+
+`schema` is separate from `postgres` on purpose: the first means "DATABASE_URL is
+configured", the second means "the migrations have been applied". They fail
+independently and look identical from outside, so both are reported.
 
 Do **not** set `REACT_APP_BACKEND_URL`. Leaving it unset is what makes the
 frontend use the same-origin `/api` path. Only set it if you deliberately point
 the site at a backend hosted elsewhere. See `frontend/.env.example` and
 `backend/.env.example` for local development templates.
 
-## 3. Deploy
+## 3. Deploy from GitHub
 
-1. Import the repository in Vercel. Leave **Root Directory** as the repo root -
-   `vercel.json` already handles building `frontend/` from there:
+1. In Vercel: **Add New -> Project -> Import Git Repository**, and pick the repo.
+2. Leave **Root Directory** as the repo root. Do **not** set it to `frontend/` —
+   the Python function lives at `api/index.py` and needs `backend/**` alongside it.
+3. Leave the **Framework Preset** as **Other**. `vercel.json` sets
+   `"framework": null` deliberately: letting Vercel auto-detect turns the Python
+   function into the thing that serves the site, and the static build stops being
+   served at all.
+4. Do not fill in Build & Development Settings. `vercel.json` already supplies them
+   and the dashboard fields would override it:
    - install: `cd frontend && npm install --legacy-peer-deps`
      (the `--legacy-peer-deps` flag is required: `react-day-picker@8` declares a
      peer range that excludes React 19)
    - build: `cd frontend && CI=false npm run build` (`CI=false` keeps CRA lint
      warnings from failing the build)
    - output: `frontend/build`
-2. Add the environment variables from step 2 **before** the first deploy.
-3. Deploy. Vercel builds the static frontend and, separately, installs the root
+5. Add the environment variables from step 2 **before** you deploy. If the first
+   build runs without them, every `/api/*` request 500s until you add them and
+   redeploy.
+6. Deploy. Vercel builds the static frontend and, separately, installs the root
    `requirements.txt` and bundles `api/index.py` as a Python function.
-4. Verify: `curl https://YOUR-DOMAIN/api/` should return
-   `{"message":"Right to Recall Movement API","status":"ok"}`, and
-   `curl https://YOUR-DOMAIN/api/health` should report `"postgres": true`.
+7. Verify with `curl https://YOUR-DOMAIN/api/health`. You want **both**
+   `"postgres": true` and `"schema": true`.
+
+   `postgres: true, schema: false` is the common fresh-deployment state: the
+   connection works and the tables do not exist yet, because pushing to git
+   deploys code and not schema. The response says so in its `hint` field. Run
+   step 1b's `migrate` command and the same URL will report `schema: true`.
 
 Routing comes from the `rewrites` in `vercel.json`: `/api/*` goes to the Python
 function, and anything that is not an existing static file falls through to
 `/index.html` so React Router handles client-side routes on refresh/deep links.
+
+### After the first deploy
+
+Every push to your default branch deploys to production automatically. Pushes to
+other branches, and pull requests, get their own preview URL.
+
+**Preview deployments share your environment variables**, which means they share
+your database. A preview built from a branch is not a sandbox: signing up on a
+preview URL writes a real supporter record, and running the demo loader against
+that `DATABASE_URL` puts `[DEMO]` profiles on production. If you want a genuinely
+separate environment, create a second Neon database and a second Vercel project
+pointed at the same repo, and give that project its own `DATABASE_URL`.
+
+### Releases that add a migration
+
+Code deploys on push; the schema does not. When a release adds a migration, the
+order that avoids downtime is:
+
+1. Run `python -m backend.scripts.migrate` from your machine **first**. Every
+   migration in this repo is additive — new tables and columns — so the currently
+   deployed code keeps working against the new schema.
+2. Then push. The new code arrives to a database that already has what it needs.
+
+Doing it the other way round leaves a window where the deployed code queries
+tables that do not exist yet, and every affected endpoint 500s until you catch up.
+
+To check whether a release needs it, look for new files under
+`backend/migrations/versions/` in the diff.
 
 ## 4. Admin panel
 
@@ -363,6 +425,26 @@ missing from the build command.
 rewrite is missing or was reordered; the `/(.*)` -> `/index.html` rewrite must
 stay last in `vercel.json`.
 
+**The site shows a Python response, or a 404, instead of the React app.** Vercel's
+framework auto-detection has taken over: it found `api/index.py` and decided this is
+a Python project, so the static build is not being served. Set the Framework Preset
+back to **Other** in Project Settings, confirm Root Directory is the repo root (not
+`frontend/`), and redeploy.
+
+**Build settings in the dashboard disagree with `vercel.json`.** The dashboard wins.
+Clear the Install/Build/Output fields in Project Settings so `vercel.json` is the
+single source, otherwise a change committed to `vercel.json` will appear to do
+nothing.
+
+**Endpoints 500 with a missing-table or missing-column error after a deploy.** The
+release added a migration and it has not been applied. Run
+`python -m backend.scripts.migrate` against the same `DATABASE_URL`. See "Releases
+that add a migration" in step 3.
+
+**A preview deployment wrote to production data.** Expected: preview builds inherit
+the project's environment variables, including `DATABASE_URL`. Give previews their
+own database if that matters — see "After the first deploy" in step 3.
+
 **Admin login says "Invalid email or password" with the right credentials.** The
 admin user was seeded before you changed `ADMIN_EMAIL`; the old account still
 exists under the previous address. Log in with the old email, or delete the
@@ -392,6 +474,13 @@ works by typing it.
 **The assistant only lists sources instead of answering.** No `GEMINI_API_KEY`, or the
 free-tier daily quota is exhausted. Both are expected operating conditions and the
 fallback is deliberate — `GET /api/health` shows which.
+
+**`TypeError: connect() got an unexpected keyword argument 'sslmode'`.** An older
+build. `sslmode` is a `psql` parameter that the async driver does not accept; the app
+now translates it. Pull the latest code and re-run.
+
+**`ConfigurationError: A DNS label is empty`.** `MONGO_URL` still contains the
+literal `...` from a copied example. Put your real Atlas string in `backend/.env`.
 
 **Demo data will not load: "DATABASE_URL is not set".** The dataset lives entirely in
 the relational database. Export the same `DATABASE_URL` the deployment uses.

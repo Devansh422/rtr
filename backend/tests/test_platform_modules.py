@@ -24,7 +24,7 @@ import zipfile  # noqa: E402
 from io import BytesIO  # noqa: E402
 
 import httpx  # noqa: E402
-from sqlalchemy import select  # noqa: E402
+from sqlalchemy import select, text  # noqa: E402
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine  # noqa: E402
 
 from backend import seed_modules  # noqa: E402
@@ -924,6 +924,40 @@ class TestPublicApi:
         assert body["status"] == "ok"
         assert set(body["features"]) == {"search", "assistant", "email"}
 
+    async def test_health_distinguishes_configured_from_migrated(self, client):
+        # `postgres: true` only means DATABASE_URL is set. `schema` is what tells
+        # you the tables exist -- the difference between "misconfigured" and
+        # "deployed the code but not the migration", which look identical from
+        # outside (every data endpoint 500s).
+        body = (await client.get("/api/health")).json()
+        assert body["schema"] is True
+        assert body["hint"] is None, "no hint should be offered when the schema is present"
+
+    async def test_schema_check_is_false_without_a_database(self):
+        from backend.server import _schema_ready
+
+        assert await _schema_ready(None) is False
+
+    async def test_schema_check_is_false_when_tables_are_missing(self):
+        """The fresh-deployment case: connection fine, migrations not applied."""
+        from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+
+        from backend.server import _schema_ready
+
+        # A real, reachable database with no schema in it.
+        engine = create_async_engine("sqlite+aiosqlite:///:memory:")
+        async with async_sessionmaker(engine)() as bare:
+            assert await _schema_ready(bare) is False
+            # The failed statement must not have left the session unusable, or the
+            # commit at request teardown would 500 the health endpoint itself.
+            await bare.execute(text("SELECT 1"))
+        await engine.dispose()
+
+    async def test_schema_check_is_true_once_migrated(self, seeded):
+        from backend.server import _schema_ready
+
+        assert await _schema_ready(seeded) is True
+
     async def test_constitution_list_and_detail(self, client):
         listing = (await client.get("/api/constitution/articles?limit=5")).json()
         assert listing["total"] >= 40
@@ -1333,3 +1367,86 @@ class TestNaiveDatetimeHandling:
 
         citizen.muted_until = naive_now - timedelta(days=1)
         assert citizen.is_muted() is False
+
+
+class TestDatabaseUrlHandling:
+    """Connection strings are copied verbatim out of a provider dashboard.
+
+    Those strings are written for psql, so they carry libpq parameters asyncpg has
+    never heard of. SQLAlchemy forwards unknown query parameters to the driver's
+    connect() as keyword arguments, so leaving them in fails with
+    `TypeError: connect() got an unexpected keyword argument 'sslmode'` at the first
+    connection -- which is a long way from the cause.
+    """
+
+    def test_neon_url_works_unedited(self):
+        from backend.core.db import _connect_args, _normalise_url
+
+        neon = "postgresql://u:p@ep-cool-123.ap-southeast-1.aws.neon.tech/rtr?sslmode=require"
+        url = _normalise_url(neon)
+        assert url.startswith("postgresql+asyncpg://")
+        assert "sslmode" not in url, "asyncpg would receive this as a keyword argument"
+        assert _connect_args(neon)["ssl"] is True
+
+    def test_neon_channel_binding_is_stripped(self):
+        from backend.core.db import _normalise_url
+
+        url = _normalise_url(
+            "postgresql://u:p@ep-x.neon.tech/rtr?sslmode=require&channel_binding=require"
+        )
+        assert "channel_binding" not in url and "sslmode" not in url
+
+    def test_heroku_style_postgres_scheme_is_upgraded(self):
+        from backend.core.db import _normalise_url
+
+        assert _normalise_url("postgres://u:p@host/db").startswith("postgresql+asyncpg://")
+
+    def test_sslmode_disable_turns_ssl_off(self):
+        from backend.core.db import _connect_args
+
+        assert _connect_args("postgresql://u:p@host/db?sslmode=disable")["ssl"] is False
+
+    def test_parameters_asyncpg_understands_are_kept(self):
+        from backend.core.db import _normalise_url
+
+        url = _normalise_url("postgresql://u:p@host/db?application_name=rtr&sslmode=require")
+        assert "application_name=rtr" in url
+        assert "sslmode" not in url
+
+    def test_plain_local_url_gets_no_ssl_argument(self):
+        from backend.core.db import _connect_args
+
+        assert "ssl" not in _connect_args("postgresql://u:p@localhost:5432/rtr")
+
+    def test_hosted_provider_defaults_to_ssl_when_url_is_silent(self):
+        from backend.core.db import _connect_args
+
+        # Neon refuses unencrypted connections; failing with a server-side error
+        # would be a much worse first experience than defaulting correctly.
+        assert _connect_args("postgresql://u:p@ep-x.neon.tech/rtr")["ssl"] is True
+
+    def test_prepared_statement_cache_stays_disabled(self):
+        from backend.core.db import _connect_args
+
+        # Required behind Neon's pgbouncer endpoint.
+        args = _connect_args("postgresql://u:p@ep-x.neon.tech/rtr?sslmode=require")
+        assert args["statement_cache_size"] == 0
+        assert args["prepared_statement_cache_size"] == 0
+
+    def test_sqlite_is_untouched_apart_from_the_driver(self):
+        from backend.core.db import _connect_args, _normalise_url
+
+        assert _normalise_url("sqlite:////tmp/x.db") == "sqlite+aiosqlite:////tmp/x.db"
+        assert _connect_args("sqlite:////tmp/x.db") == {}
+
+    def test_alembic_uses_the_same_connect_args_as_the_app(self):
+        """Both paths must agree, or `alembic upgrade` fails where the app works."""
+        import pathlib
+
+        env = (
+            pathlib.Path(__file__).resolve().parents[1] / "migrations" / "env.py"
+        ).read_text()
+        assert "_connect_args" in env, (
+            "migrations/env.py builds its own engine; without connect_args a hosted "
+            "Postgres URL fails at migrate time only"
+        )

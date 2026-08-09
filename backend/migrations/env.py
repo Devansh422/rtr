@@ -21,7 +21,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from backend.core import config as app_config  # noqa: E402
-from backend.core.db import _normalise_url  # noqa: E402
+from backend.core.db import _connect_args, _normalise_url  # noqa: E402
 
 # Not `from backend.core.models import Base`: that only registers the core tables,
 # and autogenerate would then propose DROPPING every feature module's table. See
@@ -58,10 +58,15 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_async_migrations() -> None:
+    # connect_args must be passed here too. This builds its own engine rather than
+    # going through core.db.get_engine, so without them a hosted-Postgres URL that
+    # the app connects to fine would fail at `alembic upgrade` -- the two paths have
+    # to agree about SSL and about which query parameters asyncpg accepts.
     connectable = async_engine_from_config(
         alembic_config.get_section(alembic_config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        connect_args=_connect_args(app_config.DATABASE_URL),
     )
     async with connectable.connect() as connection:
         await connection.run_sync(do_run_migrations)

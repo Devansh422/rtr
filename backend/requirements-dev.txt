@@ -12,9 +12,15 @@
 alembic==1.14.0             # schema migrations; run from a machine, never from the function
 aiosqlite==0.20.0           # lets the test suite build the schema without a live Postgres
 
-pytest==9.1.1
+# pytest is held at 8.x DELIBERATELY. pytest-asyncio 0.24 requires pytest<9, and
+# pinning both 9.1.1 and 0.24.0 makes the install unresolvable -- `pip install -r`
+# fails outright rather than degrading, so this is not a warning you can ignore.
+# backend/requirements.txt is a freeze of a different container and lists 9.1.1;
+# do not "align" this with it without also moving pytest-asyncio to a release that
+# supports pytest 9.
+pytest==8.4.2
 pytest-xdist==3.8.0
-pytest-asyncio==0.24.0      # async tests in backend/tests/test_core_rbac.py
+pytest-asyncio==0.24.0      # async tests in backend/tests/
 requests==2.34.2            # the integration suite drives the API over HTTP
 httpx==0.28.1               # in-process ASGI client for the unit-level tests
 uvicorn==0.25.0             # local dev server: uvicorn backend.server:app --reload

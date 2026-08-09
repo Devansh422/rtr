@@ -22,6 +22,7 @@ without editing.
 
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Optional
+from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
 import logging
 
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
@@ -35,20 +36,101 @@ _engine: Optional[AsyncEngine] = None
 _sessionmaker: Optional[async_sessionmaker[AsyncSession]] = None
 
 
+# Query parameters that libpq (psql, psycopg2) understands and asyncpg does not.
+#
+# Every hosted Postgres provider puts at least `sslmode=require` in the connection
+# string it hands you, because that string is written for psql. SQLAlchemy forwards
+# unknown query parameters to the driver's connect() as keyword arguments, so
+# leaving them in produces `TypeError: connect() got an unexpected keyword argument
+# 'sslmode'` at the first connection -- not at startup, and not anywhere near the
+# thing that caused it.
+#
+# They are stripped from the URL here and, where they mean something, translated
+# into asyncpg's own arguments below.
+_LIBPQ_ONLY_PARAMS = frozenset(
+    {
+        "sslmode",
+        "sslrootcert",
+        "sslcert",
+        "sslkey",
+        "channel_binding",  # Neon adds this one
+        "gssencmode",
+        "target_session_attrs",
+        "options",
+    }
+)
+
+# sslmode values that mean "encrypt the connection".
+_SSL_REQUIRED = frozenset({"require", "verify-ca", "verify-full"})
+
+
+def _libpq_params(url: str) -> dict[str, str]:
+    query = urlsplit(url).query
+    return {k: v[0] for k, v in parse_qs(query).items() if k in _LIBPQ_ONLY_PARAMS}
+
+
 def _normalise_url(url: str) -> str:
+    """Driver prefix, plus removal of parameters asyncpg cannot accept.
+
+    Lets a connection string copied verbatim out of the Neon (or Supabase, or RDS)
+    dashboard work unedited, which is what every deployment guide assumes.
+    """
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql://", 1)
     if url.startswith("postgresql://"):
         url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
     if url.startswith("sqlite://") and "+aiosqlite" not in url:
         url = url.replace("sqlite://", "sqlite+aiosqlite://", 1)
+
+    if url.startswith("postgresql+asyncpg://"):
+        parts = urlsplit(url)
+        kept = [
+            (k, v)
+            for k, values in parse_qs(parts.query).items()
+            for v in values
+            if k not in _LIBPQ_ONLY_PARAMS
+        ]
+        url = urlunsplit(parts._replace(query=urlencode(kept)))
     return url
 
 
 def _connect_args(url: str) -> dict:
-    if url.startswith("postgresql+asyncpg://"):
-        return {"statement_cache_size": 0, "prepared_statement_cache_size": 0}
-    return {}
+    """asyncpg connect arguments, including SSL translated from `sslmode`.
+
+    Pass the ORIGINAL url, not the normalised one -- the parameters this reads have
+    been removed from the latter.
+    """
+    if not url.startswith(("postgresql://", "postgres://", "postgresql+asyncpg://")):
+        return {}
+
+    args: dict = {
+        # asyncpg caches prepared statements per connection, which breaks behind a
+        # connection pooler such as Neon's pgbouncer endpoint.
+        "statement_cache_size": 0,
+        "prepared_statement_cache_size": 0,
+    }
+
+    params = _libpq_params(url)
+    sslmode = params.get("sslmode")
+    if sslmode is not None:
+        # asyncpg takes `ssl`: True/False, or an SSLContext for certificate
+        # verification. `verify-ca` and `verify-full` additionally want a root
+        # certificate, which needs an SSLContext the caller supplies; the
+        # connection is still encrypted here, so this is a downgrade in
+        # verification only, and it is logged.
+        args["ssl"] = sslmode in _SSL_REQUIRED
+        if sslmode in {"verify-ca", "verify-full"}:
+            logger.warning(
+                "sslmode=%s requested: the connection is encrypted, but certificate "
+                "verification needs an SSLContext this app does not construct.",
+                sslmode,
+            )
+    elif ".neon.tech" in url or "supabase" in url:
+        # Hosted Postgres refuses unencrypted connections. If the URL says nothing,
+        # default to SSL rather than failing with a confusing server-side error.
+        args["ssl"] = True
+
+    return args
 
 
 def get_engine() -> Optional[AsyncEngine]:
@@ -61,7 +143,9 @@ def get_engine() -> Optional[AsyncEngine]:
         _engine = create_async_engine(
             url,
             poolclass=NullPool,
-            connect_args=_connect_args(url),
+            # From the ORIGINAL url: _normalise_url has stripped the parameters
+            # this needs to read.
+            connect_args=_connect_args(config.DATABASE_URL),
             future=True,
         )
         _sessionmaker = async_sessionmaker(_engine, expire_on_commit=False, class_=AsyncSession)
