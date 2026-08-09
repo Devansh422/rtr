@@ -1,19 +1,67 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, Search, X } from "lucide-react";
 import { gsap, EASE_OUT, prefersReducedMotion } from "@/lib/motion";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DynamicButton from "@/components/DynamicButton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useJoin } from "@/context/JoinContext";
 
+/*
+ * The platform has ~20 public sections, which will not fit in one row.
+ *
+ * The five in LINKS are the ones the landing page's calls to action point at, so
+ * they stay top-level; everything else is grouped behind "More" on desktop and
+ * listed in full, still grouped, on mobile. Grouping by what a visitor is trying to
+ * DO ("Take part", "Learn") rather than by module name is deliberate -- nobody
+ * arrives wanting the "corrections module".
+ */
 const LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/campaigns", label: "Campaigns" },
-  { to: "/blog", label: "Blog" },
-  { to: "/volunteer", label: "Volunteer" },
-  { to: "/knowledge", label: "Knowledge" },
-  { to: "/contact", label: "Contact" },
+  { to: "/constitution", label: "Constitution" },
+  { to: "/representatives", label: "Representatives" },
+  { to: "/states", label: "States" },
+  { to: "/petitions", label: "Petitions" },
+  { to: "/tools", label: "Civic tools" },
+];
+
+const MORE = [
+  {
+    group: "Take part",
+    items: [
+      { to: "/forum", label: "Discuss" },
+      { to: "/reports", label: "Citizen report cards" },
+      { to: "/volunteer-portal", label: "Volunteer task board" },
+      { to: "/events", label: "Events" },
+      { to: "/promises", label: "Promise tracker" },
+    ],
+  },
+  {
+    group: "Learn",
+    items: [
+      { to: "/academy", label: "Learning Academy" },
+      { to: "/research", label: "Research Centre" },
+      { to: "/knowledge", label: "Knowledge Hub" },
+      { to: "/ask", label: "Ask the assistant" },
+    ],
+  },
+  {
+    group: "The movement",
+    items: [
+      { to: "/about", label: "About" },
+      { to: "/campaigns", label: "Campaigns" },
+      { to: "/blog", label: "Blog" },
+      { to: "/resources", label: "Resources" },
+      { to: "/contact", label: "Contact" },
+    ],
+  },
 ];
 
 export default function Navbar() {
@@ -127,9 +175,44 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                data-testid="nav-more"
+                className="flex items-center gap-1 rounded px-3 py-1.5 text-[0.8rem] font-medium text-foreground/70 transition-colors duration-200 hover:bg-muted"
+              >
+                More
+                <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              {MORE.map((section, index) => (
+                <div key={section.group}>
+                  {index ? <DropdownMenuSeparator /> : null}
+                  <DropdownMenuLabel>{section.group}</DropdownMenuLabel>
+                  {section.items.map((item) => (
+                    <DropdownMenuItem key={item.to} asChild>
+                      <Link to={item.to}>{item.label}</Link>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <Link
+            to="/search"
+            aria-label="Search the site"
+            data-testid="nav-search"
+            className="flex h-8 w-8 items-center justify-center rounded border border-border text-foreground/70 transition-colors hover:bg-muted"
+          >
+            <Search className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <LanguageSwitcher compact />
           <ThemeToggle />
           <DynamicButton
             data-testid="nav-join-button"
@@ -174,11 +257,39 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
+          {MORE.map((section) => (
+            <div key={section.group} className="mt-3">
+              <p className="px-4 pb-1 text-label font-bold uppercase text-muted-foreground">
+                {section.group}
+              </p>
+              {section.items.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `block rounded px-4 py-2.5 text-body font-medium transition-colors ${
+                      isActive ? "bg-muted text-secondary" : "text-foreground/75"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+          ))}
+
+          <NavLink
+            to="/search"
+            className="mt-3 block rounded px-4 py-2.5 text-body font-medium text-foreground/75"
+          >
+            Search
+          </NavLink>
+
           <DynamicButton
             data-testid="mobile-join-button"
             onClick={openJoin}
             variant="default"
-            className="mt-2 w-full"
+            className="mt-3 w-full"
           >
             Join Movement
           </DynamicButton>

@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { joinMovement } from "@/lib/api";
+import { recordConsent } from "@/lib/platformApi";
+import ConsentNotice from "@/components/platform/ConsentNotice";
 import { gsap, EASE, prefersReducedMotion } from "@/lib/motion";
 import DynamicButton from "@/components/DynamicButton";
 import LinkButton from "@/components/LinkButton";
@@ -108,10 +110,18 @@ export default function SupporterFlow() {
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
+  // DPDP Act 2023: consent must be informed and specific, so the submit button
+  // stays disabled until the notice next to it has actually been agreed to. A
+  // pre-ticked box is not consent.
+  const [consented, setConsented] = useState(false);
+
   const submit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.state || !form.city || !form.email) {
       return toast.error("Please fill in your name, state, city and email.");
+    }
+    if (!consented) {
+      return toast.error("Please read and agree to the data notice before joining.");
     }
     setLoading(true);
     try {
@@ -121,6 +131,11 @@ export default function SupporterFlow() {
         campaign_id: campaignId,
         referred_by: referredBy,
       });
+      // Recorded alongside the signup rather than before it, so a consent row
+      // never exists for a submission that failed. Never blocks the join: a lost
+      // audit row is a smaller problem than a member who filled in a form and got
+      // an error.
+      recordConsent(form.email, ["membership", "newsletter"], "supporter-signup");
       setResult(res);
       setStepIndex(3);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -324,6 +339,7 @@ export default function SupporterFlow() {
                       />
                     </Field>
                   </div>
+                  <ConsentNotice purpose="membership" onChange={setConsented} className="mt-2" />
                   <div className="flex gap-3 pt-1">
                     <DynamicButton type="button" variant="outline" onClick={() => setStepIndex(1)}>
                       Back
@@ -331,6 +347,7 @@ export default function SupporterFlow() {
                     <DynamicButton
                       type="submit"
                       loading={loading}
+                      disabled={!consented}
                       variant="secondary"
                       className="flex-1"
                       data-testid="become-supporter-button"

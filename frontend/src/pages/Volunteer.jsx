@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { submitVolunteer } from "@/lib/api";
+import { recordConsent } from "@/lib/platformApi";
+import ConsentNotice from "@/components/platform/ConsentNotice";
 import DynamicButton from "@/components/DynamicButton";
 import LinkButton from "@/components/LinkButton";
 import Eyebrow from "@/components/Eyebrow";
@@ -117,13 +119,21 @@ export default function Volunteer() {
     );
   }, [done]);
 
+  // DPDP Act 2023: consent must be informed and specific, so the submit button
+  // stays disabled until the notice next to it has been agreed to.
+  const [consented, setConsented] = useState(false);
+
   const submit = async (e) => {
     e.preventDefault();
     const required = ["name", "email", "phone", "state", "profession", "reason"];
     for (const r of required) if (!form[r]) return toast.error("Please fill in all fields");
+    if (!consented) return toast.error("Please read and agree to the data notice first.");
     setLoading(true);
     try {
       const res = await submitVolunteer(form);
+      // Recorded after the signup succeeds, so no consent row exists for a
+      // submission that failed. Never blocks the signup itself.
+      recordConsent(form.email, ["volunteering"], "volunteer-signup");
       setResult(res);
       setDone(true);
       toast.success("Thank you! We'll be in touch soon.");
@@ -348,9 +358,11 @@ export default function Volunteer() {
                     className="rounded"
                   />
                 </Field>
+                <ConsentNotice purpose="volunteering" onChange={setConsented} />
                 <DynamicButton
                   type="submit"
                   loading={loading}
+                  disabled={!consented}
                   variant="secondary"
                   className="h-11 w-full"
                   data-testid="volunteer-submit"

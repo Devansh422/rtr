@@ -3,19 +3,60 @@
   SET YOUR DOMAIN: replace https://righttorecall.org throughout before launch.
   The same placeholder is in public/robots.txt and public/index.html.
 
-  Only static routes are listed. Blog posts (/blog/:id) and campaigns
-  (/campaigns/:id) are content-managed, so they are discovered by crawling the
-  /blog and /campaigns index pages rather than being hardcoded here, otherwise
-  this file goes stale every time the content team publishes.
+  Only static routes are listed. Everything content-managed is discovered by
+  crawling its index page rather than being hardcoded here, otherwise this file
+  goes stale on every publish:
+
+    /blog/:id                content-managed posts
+    /campaigns/:id           content-managed campaigns
+    /constitution/:number    constitution articles (crawled from /constitution)
+    /representatives/:slug   profiles (crawled from /representatives)
+    /states/:slug            36 state pages (crawled from /states)
+    /petitions/:slug, /promises/:slug, /reports/:slug, /forum/:slug
+    /academy/:slug, /research, /events/:slug
+
+  KNOWN LIMITATION: this app is a client-rendered SPA, so a crawler that does not
+  execute JavaScript sees an empty shell on every one of these routes and the
+  index pages give it nothing to follow. That is the SEO problem §3 of
+  IMPLEMENTATION_PLAN.md identifies, and the Next.js migration is its fix. Until
+  then this sitemap tells a crawler the routes exist; it cannot make their
+  content visible.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core -->
   <url><loc>https://righttorecall.org/</loc><priority>1.0</priority></url>
   <url><loc>https://righttorecall.org/about</loc><priority>0.8</priority></url>
-  <url><loc>https://righttorecall.org/campaigns</loc><priority>0.8</priority></url>
-  <url><loc>https://righttorecall.org/blog</loc><priority>0.7</priority></url>
-  <url><loc>https://righttorecall.org/knowledge</loc><priority>0.8</priority></url>
-  <url><loc>https://righttorecall.org/volunteer</loc><priority>0.9</priority></url>
   <url><loc>https://righttorecall.org/join</loc><priority>0.9</priority></url>
-  <url><loc>https://righttorecall.org/resources</loc><priority>0.7</priority></url>
   <url><loc>https://righttorecall.org/contact</loc><priority>0.6</priority></url>
+
+  <!-- Knowledge -->
+  <url><loc>https://righttorecall.org/constitution</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/academy</loc><priority>0.8</priority></url>
+  <url><loc>https://righttorecall.org/research</loc><priority>0.7</priority></url>
+  <url><loc>https://righttorecall.org/knowledge</loc><priority>0.8</priority></url>
+  <url><loc>https://righttorecall.org/blog</loc><priority>0.7</priority></url>
+  <url><loc>https://righttorecall.org/resources</loc><priority>0.6</priority></url>
+  <url><loc>https://righttorecall.org/ask</loc><priority>0.7</priority></url>
+
+  <!-- Accountability -->
+  <url><loc>https://righttorecall.org/representatives</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/my-representatives</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/promises</loc><priority>0.8</priority></url>
+  <url><loc>https://righttorecall.org/states</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/reports</loc><priority>0.7</priority></url>
+
+  <!-- Act -->
+  <url><loc>https://righttorecall.org/tools</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/petitions</loc><priority>0.8</priority></url>
+  <url><loc>https://righttorecall.org/forum</loc><priority>0.6</priority></url>
+  <url><loc>https://righttorecall.org/volunteer</loc><priority>0.9</priority></url>
+  <url><loc>https://righttorecall.org/volunteer-portal</loc><priority>0.7</priority></url>
+  <url><loc>https://righttorecall.org/events</loc><priority>0.6</priority></url>
+  <url><loc>https://righttorecall.org/campaigns</loc><priority>0.8</priority></url>
+
+  <!-- Published policies (§7 and DPDP) -->
+  <url><loc>https://righttorecall.org/privacy</loc><priority>0.5</priority></url>
+  <url><loc>https://righttorecall.org/content-policy</loc><priority>0.5</priority></url>
+  <url><loc>https://righttorecall.org/disclaimer</loc><priority>0.5</priority></url>
+  <url><loc>https://righttorecall.org/certificates</loc><priority>0.4</priority></url>
 </urlset>

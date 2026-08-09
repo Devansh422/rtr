@@ -9,6 +9,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { joinMovement } from "@/lib/api";
+import { recordConsent } from "@/lib/platformApi";
+import ConsentNotice from "@/components/platform/ConsentNotice";
 import { Check } from "lucide-react";
 import { useGsap, gsap, EASE_OUT } from "@/lib/motion";
 import DynamicButton from "@/components/DynamicButton";
@@ -50,12 +52,19 @@ export default function JoinDialog({ open, onOpenChange }) {
     });
   }, [done]);
 
+  // DPDP Act 2023: informed, specific consent, next to the button rather than in
+  // a link. Same component and same wording as the full signup flow -- both read
+  // the notice from the API, so a policy change reaches every form at once.
+  const [consented, setConsented] = useState(false);
+
   const submit = async (e) => {
     e.preventDefault();
     if (!form.email) return toast.error("Please enter your email");
+    if (!consented) return toast.error("Please read and agree to the data notice first.");
     setLoading(true);
     try {
       const res = await joinMovement(form);
+      recordConsent(form.email, ["membership", "newsletter"], "join-dialog");
       setDone(true);
       toast.success(res.message);
       setTimeout(() => {
@@ -135,10 +144,12 @@ export default function JoinDialog({ open, onOpenChange }) {
                 </option>
               ))}
             </select>
+            <ConsentNotice purpose="membership" onChange={setConsented} />
             <DynamicButton
               data-testid="join-submit-button"
               type="submit"
               loading={loading}
+              disabled={!consented}
               variant="secondary"
               className="w-full h-10"
             >

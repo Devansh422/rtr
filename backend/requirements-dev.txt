@@ -1,0 +1,20 @@
+# Local development and CI dependencies.
+#
+# Install on top of the runtime set:
+#     pip install -r requirements.txt -r backend/requirements-dev.txt
+#
+# Kept separate from the root requirements.txt because that file is what Vercel
+# bundles into the serverless function, where every megabyte counts against a
+# hard size limit and none of this is ever imported.
+
+-r ../requirements.txt
+
+alembic==1.14.0             # schema migrations; run from a machine, never from the function
+aiosqlite==0.20.0           # lets the test suite build the schema without a live Postgres
+
+pytest==9.1.1
+pytest-xdist==3.8.0
+pytest-asyncio==0.24.0      # async tests in backend/tests/test_core_rbac.py
+requests==2.34.2            # the integration suite drives the API over HTTP
+httpx==0.28.1               # in-process ASGI client for the unit-level tests
+uvicorn==0.25.0             # local dev server: uvicorn backend.server:app --reload

@@ -1,0 +1,988 @@
+[
+  {
+    "number": "12",
+    "part": "III",
+    "title": "Definition of \"the State\"",
+    "title_hi": "\"राज्य\" की परिभाषा",
+    "plain_en": "Fundamental Rights are enforceable against \"the State\", and this article says what that means: Parliament, state legislatures, the Union and state governments, all local authorities such as municipalities and panchayats, and other authorities under government control. It matters because a right you cannot enforce against anyone is not a right. Courts have read \"other authorities\" broadly to cover public corporations and bodies discharging public functions.",
+    "plain_hi": "मूल अधिकार \"राज्य\" के विरुद्ध लागू किए जा सकते हैं, और यह अनुच्छेद बताता है कि \"राज्य\" का अर्थ क्या है: संसद, राज्य विधानमंडल, संघ और राज्य सरकारें, नगरपालिका और पंचायत जैसे सभी स्थानीय निकाय, तथा सरकार के नियंत्रण वाले अन्य प्राधिकरण। यह महत्वपूर्ण है क्योंकि जिस अधिकार को किसी के विरुद्ध लागू न किया जा सके, वह अधिकार नहीं है।",
+    "recall_relevance": "Every elected body a citizen might want to hold accountable — from a gram panchayat to Parliament — falls inside this definition, which is why constitutional remedies reach them at all.",
+    "tags": ["fundamental-rights", "definitions", "accountability"],
+    "related": ["13", "32", "226"],
+    "case_law": [
+      {
+        "case": "Ajay Hasia v. Khalid Mujib Sehravardi",
+        "citation": "(1981) 1 SCC 722",
+        "year": 1981,
+        "url": "https://indiankanoon.org/search/?formInput=Ajay%20Hasia%20v%20Khalid%20Mujib",
+        "held": "Laid down tests for when a body is an instrumentality or agency of the State and therefore bound by Fundamental Rights."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "13",
+    "part": "III",
+    "title": "Laws inconsistent with or in derogation of the fundamental rights",
+    "title_hi": "मूल अधिकारों से असंगत या उनका अल्पीकरण करने वाली विधियाँ",
+    "plain_en": "Any law that takes away or shortens a Fundamental Right is void to that extent. This applies both to laws made before the Constitution came into force and to laws made after it, and \"law\" includes ordinances, orders, byelaws, rules, regulations and customs having the force of law. This is the article that gives courts the power to strike legislation down.",
+    "plain_hi": "कोई भी विधि जो किसी मूल अधिकार को छीनती है या उसे कम करती है, उस सीमा तक शून्य है। यह संविधान लागू होने से पहले और बाद में बनी विधियों — तथा अध्यादेश, आदेश, उपविधि, नियम, विनियम और विधि का बल रखने वाली रूढ़ि — पर लागू होती है। यही अनुच्छेद न्यायालयों को विधान रद्द करने की शक्ति देता है।",
+    "recall_relevance": "A Right to Recall law would itself be tested against this article: it must be drafted so that it does not itself violate free speech, equality or fair-procedure guarantees.",
+    "tags": ["fundamental-rights", "judicial-review"],
+    "related": ["12", "32", "368"],
+    "case_law": [
+      {
+        "case": "Kesavananda Bharati v. State of Kerala",
+        "citation": "(1973) 4 SCC 225",
+        "year": 1973,
+        "url": "https://indiankanoon.org/search/?formInput=Kesavananda%20Bharati",
+        "held": "Parliament may amend the Constitution but cannot destroy its basic structure."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "14",
+    "part": "III",
+    "title": "Equality before law",
+    "title_hi": "विधि के समक्ष समता",
+    "original_text": "The State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+    "plain_en": "The State must treat everyone equally before the law and give everyone equal protection of the laws. This does not mean identical treatment for all: the State may classify people into groups, but the classification must rest on a real difference and must relate sensibly to what the law is trying to achieve. Courts have also read this article to forbid arbitrary State action of any kind.",
+    "plain_hi": "राज्य विधि के समक्ष सभी व्यक्तियों के साथ समान व्यवहार करेगा और सभी को विधियों का समान संरक्षण देगा। इसका अर्थ सबके साथ एक ही जैसा व्यवहार नहीं है: राज्य लोगों का वर्गीकरण कर सकता है, परंतु वह वर्गीकरण वास्तविक अंतर पर आधारित होना चाहिए और विधि के उद्देश्य से उसका तर्कसंगत संबंध होना चाहिए। न्यायालयों ने इसमें राज्य की मनमानी कार्रवाई का निषेध भी पढ़ा है।",
+    "recall_relevance": "A recall procedure must apply on the same terms to every elected representative regardless of party, or it fails this article. Non-partisanship is not just this platform's policy — for a recall law it is a constitutional requirement.",
+    "tags": ["fundamental-rights", "equality", "non-arbitrariness"],
+    "related": ["15", "16", "21", "325"],
+    "case_law": [
+      {
+        "case": "State of West Bengal v. Anwar Ali Sarkar",
+        "citation": "AIR 1952 SC 75",
+        "year": 1952,
+        "url": "https://indiankanoon.org/search/?formInput=Anwar%20Ali%20Sarkar",
+        "held": "A classification must be founded on an intelligible differentia with a rational nexus to the object of the law."
+      },
+      {
+        "case": "E.P. Royappa v. State of Tamil Nadu",
+        "citation": "(1974) 4 SCC 3",
+        "year": 1974,
+        "url": "https://indiankanoon.org/search/?formInput=E.P.%20Royappa",
+        "held": "Equality and arbitrariness are sworn enemies; arbitrary State action violates Article 14."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "15",
+    "part": "III",
+    "title": "Prohibition of discrimination on grounds of religion, race, caste, sex or place of birth",
+    "title_hi": "धर्म, मूलवंश, जाति, लिंग या जन्मस्थान के आधार पर विभेद का प्रतिषेध",
+    "plain_en": "The State cannot discriminate against any citizen on grounds of religion, race, caste, sex or place of birth, and cannot deny access to shops, public restaurants, hotels, wells, tanks, roads and other public places on those grounds. The article expressly permits special provisions for women and children, and for socially and educationally backward classes, Scheduled Castes and Scheduled Tribes.",
+    "plain_hi": "राज्य किसी नागरिक के साथ धर्म, मूलवंश, जाति, लिंग या जन्मस्थान के आधार पर विभेद नहीं करेगा, और इन आधारों पर दुकानों, सार्वजनिक भोजनालयों, होटलों, कुओं, तालाबों, सड़कों तथा अन्य सार्वजनिक स्थानों तक पहुँच से वंचित नहीं करेगा। यह अनुच्छेद स्त्रियों और बालकों के लिए, तथा सामाजिक और शैक्षिक रूप से पिछड़े वर्गों, अनुसूचित जातियों और अनुसूचित जनजातियों के लिए विशेष उपबंध की अनुमति स्पष्ट रूप से देता है।",
+    "recall_relevance": "This is the constitutional basis for the platform's rule that no campaign may be framed around a community. A recall movement that targeted representatives of one religion or caste would be unconstitutional, not merely improper.",
+    "tags": ["fundamental-rights", "equality", "non-discrimination"],
+    "related": ["14", "16", "17", "325"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "16",
+    "part": "III",
+    "title": "Equality of opportunity in matters of public employment",
+    "title_hi": "लोक नियोजन के विषय में अवसर की समता",
+    "plain_en": "Every citizen has an equal right to be considered for jobs and offices under the State, and cannot be discriminated against on grounds of religion, race, caste, sex, descent, place of birth or residence. The State may reserve appointments for backward classes that are not adequately represented in the services, and may provide for reservation in promotions for Scheduled Castes and Scheduled Tribes.",
+    "plain_hi": "प्रत्येक नागरिक को राज्य के अधीन नौकरियों और पदों के लिए विचार किए जाने का समान अधिकार है, और धर्म, मूलवंश, जाति, लिंग, वंश, जन्मस्थान या निवास के आधार पर उसके साथ विभेद नहीं किया जा सकता। राज्य सेवाओं में अपर्याप्त प्रतिनिधित्व वाले पिछड़े वर्गों के लिए नियुक्तियाँ आरक्षित कर सकता है।",
+    "tags": ["fundamental-rights", "equality", "employment"],
+    "related": ["14", "15", "335"],
+    "case_law": [
+      {
+        "case": "Indra Sawhney v. Union of India",
+        "citation": "(1992) Supp (3) SCC 217",
+        "year": 1992,
+        "url": "https://indiankanoon.org/search/?formInput=Indra%20Sawhney",
+        "held": "Upheld reservation for Other Backward Classes and laid down the principle that reservations should ordinarily not exceed 50%."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "17",
+    "part": "III",
+    "title": "Abolition of Untouchability",
+    "title_hi": "अस्पृश्यता का अंत",
+    "original_text": "\"Untouchability\" is abolished and its practice in any form is forbidden; the enforcement of any disability arising out of \"Untouchability\" shall be an offence punishable in accordance with law.",
+    "plain_en": "Untouchability is abolished outright and practising it in any form is forbidden. Unusually for Part III, this right operates against everyone and not only against the State, and enforcing any disability arising out of untouchability is a criminal offence. Parliament gave effect to it through the Protection of Civil Rights Act, 1955 and later the Scheduled Castes and Scheduled Tribes (Prevention of Atrocities) Act, 1989.",
+    "plain_hi": "अस्पृश्यता का पूर्णतः अंत किया गया है और किसी भी रूप में उसका आचरण निषिद्ध है। भाग तीन के अन्य अधिकारों से भिन्न, यह अधिकार केवल राज्य के विरुद्ध नहीं बल्कि सभी के विरुद्ध लागू होता है, और अस्पृश्यता से उत्पन्न किसी निर्योग्यता को लागू करना दंडनीय अपराध है।",
+    "tags": ["fundamental-rights", "equality", "social-justice"],
+    "related": ["15", "35"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "18",
+    "part": "III",
+    "title": "Abolition of titles",
+    "title_hi": "उपाधियों का अंत",
+    "plain_en": "The State cannot confer titles, except military and academic distinctions, and citizens cannot accept titles from a foreign state. The point is that the Republic recognises office and achievement, not hereditary rank. The Supreme Court has held that national awards such as the Bharat Ratna and Padma awards are not \"titles\" and may not be used as prefixes or suffixes to a name.",
+    "plain_hi": "राज्य सैन्य और शैक्षिक विशिष्टताओं के सिवाय कोई उपाधि प्रदान नहीं करेगा, और नागरिक किसी विदेशी राज्य से उपाधि स्वीकार नहीं कर सकते। आशय यह है कि गणराज्य पद और उपलब्धि को मान्यता देता है, वंशानुगत श्रेणी को नहीं। भारत रत्न और पद्म पुरस्कार \"उपाधि\" नहीं हैं और उन्हें नाम के आगे या पीछे नहीं लगाया जा सकता।",
+    "tags": ["fundamental-rights", "equality"],
+    "related": ["14"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "19",
+    "part": "III",
+    "title": "Protection of certain rights regarding freedom of speech, assembly, association, movement, residence and profession",
+    "title_hi": "वाक्-स्वातंत्र्य आदि विषयक कुछ अधिकारों का संरक्षण",
+    "plain_en": "Citizens have six freedoms: speech and expression; peaceful assembly without arms; forming associations or unions; moving freely throughout India; residing and settling anywhere in India; and practising any profession or carrying on any occupation, trade or business. Each can be restricted, but only by law and only on the specific grounds this article lists — such as public order, decency, defamation or the sovereignty and integrity of India — and the restriction must be reasonable.",
+    "plain_hi": "नागरिकों को छह स्वतंत्रताएँ हैं: वाक् और अभिव्यक्ति; निरायुध शांतिपूर्ण सम्मेलन; संगम या संघ बनाना; भारत में सर्वत्र अबाध संचरण; भारत के किसी भाग में निवास और बसना; तथा कोई वृत्ति, उपजीविका, व्यापार या कारोबार करना। प्रत्येक पर निर्बंधन लगाया जा सकता है, परंतु केवल विधि द्वारा, केवल इस अनुच्छेद में गिनाए गए आधारों पर, और वह निर्बंधन युक्तियुक्त होना चाहिए।",
+    "recall_relevance": "The right to criticise an elected representative, to publish their voting and attendance record, and to organise a peaceful campaign for their recall all rest on this article. The Supreme Court has also read a voter's right to know a candidate's background into the freedom of expression.",
+    "tags": ["fundamental-rights", "free-speech", "assembly", "right-to-know"],
+    "related": ["21", "32", "324"],
+    "case_law": [
+      {
+        "case": "Union of India v. Association for Democratic Reforms",
+        "citation": "(2002) 5 SCC 294",
+        "year": 2002,
+        "url": "https://indiankanoon.org/search/?formInput=Union%20of%20India%20v%20Association%20for%20Democratic%20Reforms",
+        "held": "A voter's right to know the assets, liabilities, educational background and criminal antecedents of a candidate flows from the freedom of expression under Article 19(1)(a)."
+      },
+      {
+        "case": "Shreya Singhal v. Union of India",
+        "citation": "(2015) 5 SCC 1",
+        "year": 2015,
+        "url": "https://indiankanoon.org/search/?formInput=Shreya%20Singhal",
+        "held": "Struck down Section 66A of the Information Technology Act as a vague and overbroad restriction on online speech."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "20",
+    "part": "III",
+    "title": "Protection in respect of conviction for offences",
+    "title_hi": "अपराधों के लिए दोषसिद्धि के संबंध में संरक्षण",
+    "plain_en": "Three protections in criminal law: you cannot be convicted for an act that was not an offence when you did it, or given a heavier penalty than the law allowed at the time; you cannot be prosecuted and punished twice for the same offence; and you cannot be compelled to be a witness against yourself.",
+    "plain_hi": "आपराधिक विधि में तीन संरक्षण: जो कार्य करते समय अपराध नहीं था उसके लिए दोषसिद्धि नहीं की जा सकती, और उस समय की विधि से अधिक दंड नहीं दिया जा सकता; एक ही अपराध के लिए दो बार अभियोजन और दंड नहीं हो सकता; और किसी को स्वयं के विरुद्ध साक्षी होने के लिए विवश नहीं किया जा सकता।",
+    "recall_relevance": "This is why the platform states, on every profile that lists criminal cases, that pending cases are allegations and not convictions. A person facing trial retains the full presumption of innocence.",
+    "tags": ["fundamental-rights", "criminal-law", "due-process"],
+    "related": ["21", "22"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "21",
+    "part": "III",
+    "title": "Protection of life and personal liberty",
+    "title_hi": "प्राण और दैहिक स्वतंत्रता का संरक्षण",
+    "original_text": "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+    "plain_en": "Nobody may be deprived of life or personal liberty except by a procedure established by law — and the Supreme Court has held that the procedure must itself be fair, just and reasonable, not merely written down somewhere. Over five decades the courts have read a long list of rights into this one sentence, including dignity, livelihood, health, a clean environment, speedy trial, legal aid, shelter and privacy. It applies to every person, not only to citizens.",
+    "plain_hi": "किसी व्यक्ति को विधि द्वारा स्थापित प्रक्रिया के अनुसार ही उसके प्राण या दैहिक स्वतंत्रता से वंचित किया जा सकता है — और उच्चतम न्यायालय ने कहा है कि वह प्रक्रिया स्वयं न्यायपूर्ण, उचित और युक्तियुक्त होनी चाहिए, केवल लिखित होना पर्याप्त नहीं। पाँच दशकों में न्यायालयों ने इस एक वाक्य में गरिमा, उपजीविका, स्वास्थ्य, स्वच्छ पर्यावरण, शीघ्र विचारण, विधिक सहायता, आश्रय और निजता जैसे अनेक अधिकार पढ़े हैं। यह प्रत्येक व्यक्ति पर लागू है, केवल नागरिकों पर नहीं।",
+    "recall_relevance": "Any recall procedure must be fair to the representative facing it — clear grounds, notice, a chance to answer, and an independent authority conducting it. A recall mechanism that could be triggered arbitrarily would fall foul of this article.",
+    "tags": ["fundamental-rights", "life-and-liberty", "due-process", "privacy"],
+    "related": ["14", "19", "20", "22", "32"],
+    "case_law": [
+      {
+        "case": "Maneka Gandhi v. Union of India",
+        "citation": "(1978) 1 SCC 248",
+        "year": 1978,
+        "url": "https://indiankanoon.org/search/?formInput=Maneka%20Gandhi%20v%20Union%20of%20India",
+        "held": "\"Procedure established by law\" must be fair, just and reasonable; Articles 14, 19 and 21 are read together, not in isolation."
+      },
+      {
+        "case": "Justice K.S. Puttaswamy (Retd.) v. Union of India",
+        "citation": "(2017) 10 SCC 1",
+        "year": 2017,
+        "url": "https://indiankanoon.org/search/?formInput=K.S.%20Puttaswamy%20privacy",
+        "held": "Privacy is a fundamental right protected under Article 21 and Part III generally."
+      },
+      {
+        "case": "Olga Tellis v. Bombay Municipal Corporation",
+        "citation": "(1985) 3 SCC 545",
+        "year": 1985,
+        "url": "https://indiankanoon.org/search/?formInput=Olga%20Tellis",
+        "held": "The right to life includes the right to livelihood."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "21A",
+    "part": "III",
+    "title": "Right to education",
+    "title_hi": "शिक्षा का अधिकार",
+    "plain_en": "The State must provide free and compulsory education to every child between the ages of six and fourteen. It was inserted by the 86th Amendment in 2002, moving education from a directive principle to an enforceable right, and Parliament gave it effect through the Right of Children to Free and Compulsory Education Act, 2009.",
+    "plain_hi": "राज्य छह से चौदह वर्ष की आयु के प्रत्येक बालक को निःशुल्क और अनिवार्य शिक्षा देगा। इसे 2002 में 86वें संशोधन द्वारा जोड़ा गया, जिससे शिक्षा निदेशक तत्व से प्रवर्तनीय अधिकार बन गई, और संसद ने इसे शिक्षा का अधिकार अधिनियम, 2009 के माध्यम से प्रभावी किया।",
+    "tags": ["fundamental-rights", "education"],
+    "related": ["41", "45", "51A"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "22",
+    "part": "III",
+    "title": "Protection against arrest and detention in certain cases",
+    "title_hi": "कुछ दशाओं में गिरफ्तारी और निरोध से संरक्षण",
+    "plain_en": "A person who is arrested must be told the grounds of arrest, may consult a lawyer of their choice, and must be produced before a magistrate within twenty-four hours. These protections do not apply to preventive detention, for which the article sets separate and weaker safeguards, including review by an advisory board.",
+    "plain_hi": "गिरफ्तार व्यक्ति को गिरफ्तारी के आधार बताए जाने चाहिए, वह अपनी पसंद के वकील से परामर्श कर सकता है, और उसे चौबीस घंटे के भीतर मजिस्ट्रेट के समक्ष प्रस्तुत किया जाना चाहिए। ये संरक्षण निवारक निरोध पर लागू नहीं होते, जिसके लिए यह अनुच्छेद पृथक और अपेक्षाकृत कमज़ोर रक्षोपाय निर्धारित करता है।",
+    "tags": ["fundamental-rights", "criminal-law", "due-process"],
+    "related": ["20", "21"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "23",
+    "part": "III",
+    "title": "Prohibition of traffic in human beings and forced labour",
+    "title_hi": "मानव के दुर्व्यापार और बलात् श्रम का प्रतिषेध",
+    "plain_en": "Trafficking in human beings, begar and other forms of forced labour are prohibited and punishable. Like Article 17, this right operates against private persons as well as the State. Compulsory service for public purposes — such as jury duty or conscription — is expressly excluded.",
+    "plain_hi": "मानव का दुर्व्यापार, बेगार और बलात् श्रम के अन्य रूप प्रतिषिद्ध और दंडनीय हैं। अनुच्छेद 17 की तरह यह अधिकार राज्य के साथ-साथ निजी व्यक्तियों के विरुद्ध भी लागू होता है। लोक प्रयोजनों के लिए अनिवार्य सेवा इससे अपवर्जित है।",
+    "tags": ["fundamental-rights", "social-justice", "labour"],
+    "related": ["24", "39"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "24",
+    "part": "III",
+    "title": "Prohibition of employment of children in factories, etc.",
+    "title_hi": "कारखानों आदि में बालकों के नियोजन का प्रतिषेध",
+    "plain_en": "No child below fourteen years may be employed in a factory or mine, or in any other hazardous employment. Read with Article 21A, the constitutional position is that a child of that age belongs in school.",
+    "plain_hi": "चौदह वर्ष से कम आयु के किसी बालक को कारखाने या खान में, अथवा किसी अन्य परिसंकटमय नियोजन में नियोजित नहीं किया जाएगा। अनुच्छेद 21क के साथ पढ़ने पर संवैधानिक स्थिति यह है कि उस आयु का बालक विद्यालय में होना चाहिए।",
+    "tags": ["fundamental-rights", "children", "labour"],
+    "related": ["21A", "23", "39"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "25",
+    "part": "III",
+    "title": "Freedom of conscience and free profession, practice and propagation of religion",
+    "title_hi": "अंतःकरण की और धर्म के अबाध रूप से मानने, आचरण और प्रचार की स्वतंत्रता",
+    "plain_en": "Everyone has freedom of conscience and the right to profess, practise and propagate religion, subject to public order, morality, health and the other provisions of Part III. The State may still regulate secular activity associated with religion, provide for social welfare and reform, and open Hindu religious institutions of a public character to all classes.",
+    "plain_hi": "प्रत्येक व्यक्ति को अंतःकरण की स्वतंत्रता तथा धर्म को अबाध रूप से मानने, आचरण करने और प्रचार करने का अधिकार है, जो लोक व्यवस्था, सदाचार, स्वास्थ्य और भाग तीन के अन्य उपबंधों के अधीन है। राज्य धर्म से जुड़ी लौकिक गतिविधि का विनियमन कर सकता है और सामाजिक कल्याण तथा सुधार का उपबंध कर सकता है।",
+    "recall_relevance": "The platform treats a representative's religion as irrelevant to their record. This article is why: the Constitution protects belief and forbids the State from acting on it, so a civic accountability movement has no business doing so either.",
+    "tags": ["fundamental-rights", "religion", "secularism"],
+    "related": ["14", "15", "26"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "30",
+    "part": "III",
+    "title": "Right of minorities to establish and administer educational institutions",
+    "title_hi": "शिक्षा संस्थाओं की स्थापना और प्रशासन करने का अल्पसंख्यक-वर्गों का अधिकार",
+    "plain_en": "Religious and linguistic minorities may establish and administer educational institutions of their choice, and the State cannot discriminate against such an institution when granting aid. The right is to administer well, not to maladminister: the State may still impose reasonable regulations on standards, qualifications and service conditions.",
+    "plain_hi": "धार्मिक और भाषाई अल्पसंख्यक-वर्ग अपनी रुचि की शिक्षा संस्थाओं की स्थापना और प्रशासन कर सकते हैं, और सहायता देते समय राज्य ऐसी संस्था के प्रति विभेद नहीं करेगा। यह अधिकार सुप्रशासन का है, कुप्रशासन का नहीं: राज्य मानकों और अर्हताओं पर युक्तियुक्त विनियम लगा सकता है।",
+    "tags": ["fundamental-rights", "minorities", "education"],
+    "related": ["29", "21A"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "32",
+    "part": "III",
+    "title": "Remedies for enforcement of rights conferred by this Part",
+    "title_hi": "इस भाग द्वारा प्रदत्त अधिकारों को प्रवर्तित कराने के लिए उपचार",
+    "original_text": "The right to move the Supreme Court by appropriate proceedings for the enforcement of the rights conferred by this Part is guaranteed.",
+    "plain_en": "Any person may go directly to the Supreme Court to enforce a Fundamental Right, and the Court may issue writs — habeas corpus, mandamus, prohibition, quo warranto and certiorari. Dr Ambedkar called this the heart and soul of the Constitution: it is the article that turns the other rights from declarations into remedies. The right to move the Court under this article is itself a Fundamental Right and cannot be suspended except as the Constitution provides.",
+    "plain_hi": "कोई भी व्यक्ति मूल अधिकार के प्रवर्तन के लिए सीधे उच्चतम न्यायालय जा सकता है, और न्यायालय बंदी प्रत्यक्षीकरण, परमादेश, प्रतिषेध, अधिकार-पृच्छा और उत्प्रेषण रिट जारी कर सकता है। डॉ. आंबेडकर ने इसे संविधान की आत्मा कहा था: यही अनुच्छेद अन्य अधिकारों को घोषणाओं से उपचारों में बदलता है।",
+    "recall_relevance": "Every major electoral-accountability reform in India — disclosure of candidates' criminal records and assets, NOTA, immediate disqualification on conviction — came from a citizen or an organisation using this article or Article 226. It is the existing route by which citizens have won accountability without waiting for legislation.",
+    "tags": ["fundamental-rights", "remedies", "judicial-review", "pil"],
+    "related": ["13", "21", "226"],
+    "case_law": [
+      {
+        "case": "Public Interest Foundation v. Union of India",
+        "citation": "(2019) 3 SCC 224",
+        "year": 2018,
+        "url": "https://indiankanoon.org/search/?formInput=Public%20Interest%20Foundation%20v%20Union%20of%20India",
+        "held": "Directed candidates and parties to publicise candidates' criminal antecedents widely, while holding that adding disqualifications is for Parliament."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "38",
+    "part": "IV",
+    "title": "State to secure a social order for the promotion of welfare of the people",
+    "title_hi": "राज्य लोक कल्याण की अभिवृद्धि के लिए सामाजिक व्यवस्था बनाएगा",
+    "plain_en": "The State must strive to secure a social order in which justice — social, economic and political — informs all national institutions, and must work to reduce inequalities in income, status, facilities and opportunities. Directive Principles like this one are not enforceable in court, but they are meant to guide the making of law and policy.",
+    "plain_hi": "राज्य ऐसी सामाजिक व्यवस्था प्राप्त करने का प्रयास करेगा जिसमें सामाजिक, आर्थिक और राजनीतिक न्याय राष्ट्रीय जीवन की सभी संस्थाओं में व्याप्त हो, और आय, प्रतिष्ठा, सुविधाओं तथा अवसरों की असमानताओं को कम करेगा। निदेशक तत्व न्यायालय द्वारा प्रवर्तनीय नहीं हैं, परंतु विधि और नीति निर्माण का मार्गदर्शन करते हैं।",
+    "tags": ["directive-principles", "social-justice"],
+    "related": ["39", "46"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "39",
+    "part": "IV",
+    "title": "Certain principles of policy to be followed by the State",
+    "title_hi": "राज्य द्वारा अनुसरणीय कुछ नीति तत्व",
+    "plain_en": "The State should direct policy towards adequate means of livelihood for all, distribution of material resources to serve the common good, prevention of concentration of wealth, equal pay for equal work, protection of the health and strength of workers and children, and opportunities for children to develop in freedom and dignity.",
+    "plain_hi": "राज्य अपनी नीति का संचालन इस प्रकार करेगा कि सभी को जीविका के पर्याप्त साधन मिलें, भौतिक संसाधनों का वितरण सामूहिक हित में हो, धन का संकेंद्रण न हो, समान कार्य के लिए समान वेतन मिले, तथा श्रमिकों और बालकों के स्वास्थ्य और शक्ति की रक्षा हो।",
+    "tags": ["directive-principles", "social-justice", "economy"],
+    "related": ["38", "43"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "40",
+    "part": "IV",
+    "title": "Organisation of village panchayats",
+    "title_hi": "ग्राम पंचायतों का संगठन",
+    "plain_en": "The State should organise village panchayats and give them the powers and authority they need to function as units of self-government. For forty years this remained only a directive; it was made structural by the 73rd Amendment in 1992, which inserted Part IX.",
+    "plain_hi": "राज्य ग्राम पंचायतों का संगठन करेगा और उन्हें स्वशासन की इकाई के रूप में कार्य करने के लिए आवश्यक शक्तियाँ और प्राधिकार देगा। चालीस वर्षों तक यह केवल निदेश रहा; 1992 के 73वें संशोधन ने भाग नौ जोड़कर इसे संरचनात्मक बनाया।",
+    "recall_relevance": "The clearest constitutional endorsement of decentralised, close-to-the-citizen government. Several states already allow the recall of panchayat and municipal representatives — the principle is not foreign to Indian law, only absent above the local level.",
+    "tags": ["directive-principles", "local-government", "decentralisation"],
+    "related": ["243A", "243G", "246"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "41",
+    "part": "IV",
+    "title": "Right to work, to education and to public assistance in certain cases",
+    "title_hi": "कुछ दशाओं में काम, शिक्षा और लोक सहायता पाने का अधिकार",
+    "plain_en": "Within the limits of its economic capacity, the State should secure the right to work, to education and to public assistance in cases of unemployment, old age, sickness and disablement. Schemes such as the rural employment guarantee and old-age pensions trace their justification to this article.",
+    "plain_hi": "राज्य अपनी आर्थिक सामर्थ्य की सीमा के भीतर काम, शिक्षा तथा बेकारी, बुढ़ापा, बीमारी और निःशक्तता की दशाओं में लोक सहायता पाने के अधिकार को सुनिश्चित करेगा। ग्रामीण रोजगार गारंटी और वृद्धावस्था पेंशन जैसी योजनाओं का औचित्य इसी अनुच्छेद से आता है।",
+    "tags": ["directive-principles", "welfare"],
+    "related": ["21", "21A", "38"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "44",
+    "part": "IV",
+    "title": "Uniform civil code",
+    "title_hi": "समान नागरिक संहिता",
+    "plain_en": "The State should endeavour to secure a uniform civil code throughout India. It is a directive principle and not an enforceable right, and it remains one of the most debated provisions in the Constitution. This library states what the article says and does not take a position on the policy question.",
+    "plain_hi": "राज्य भारत के संपूर्ण राज्यक्षेत्र में समान नागरिक संहिता प्राप्त करने का प्रयास करेगा। यह निदेशक तत्व है, प्रवर्तनीय अधिकार नहीं, और संविधान के सर्वाधिक विवादित उपबंधों में से एक है। यह पुस्तकालय केवल यह बताता है कि अनुच्छेद क्या कहता है और नीति के प्रश्न पर कोई पक्ष नहीं लेता।",
+    "tags": ["directive-principles", "civil-law"],
+    "related": ["25", "26"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "47",
+    "part": "IV",
+    "title": "Duty of the State to raise the level of nutrition and the standard of living and to improve public health",
+    "title_hi": "पोषाहार स्तर और जीवन स्तर को ऊँचा करने तथा लोक स्वास्थ्य का सुधार करने का राज्य का कर्तव्य",
+    "plain_en": "Raising nutrition levels, the standard of living and public health is a primary duty of the State, which should in particular work to prohibit intoxicating drinks and drugs that are injurious to health, except for medicinal purposes.",
+    "plain_hi": "पोषाहार स्तर, जीवन स्तर और लोक स्वास्थ्य में सुधार राज्य का प्राथमिक कर्तव्य है, और राज्य विशेष रूप से स्वास्थ्य के लिए हानिकारक मादक पेयों और औषधियों के सेवन के प्रतिषेध का प्रयास करेगा।",
+    "tags": ["directive-principles", "health"],
+    "related": ["21", "38"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "50",
+    "part": "IV",
+    "title": "Separation of judiciary from executive",
+    "title_hi": "कार्यपालिका से न्यायपालिका का पृथक्करण",
+    "plain_en": "The State should take steps to separate the judiciary from the executive in the public services. This is the directive behind the separation of judicial and executive magistracy, and it underpins the wider constitutional expectation of an independent judiciary.",
+    "plain_hi": "राज्य लोक सेवाओं में न्यायपालिका को कार्यपालिका से पृथक करने के लिए कदम उठाएगा। न्यायिक और कार्यपालक मजिस्ट्रेटी के पृथक्करण के पीछे यही निदेश है, और यह स्वतंत्र न्यायपालिका की व्यापक संवैधानिक अपेक्षा का आधार है।",
+    "recall_relevance": "Any recall process needs an adjudicator that is not the government of the day. This article, read with the design of the Election Commission under Article 324, is the constitutional argument for putting recall verification in independent hands.",
+    "tags": ["directive-principles", "judiciary", "separation-of-powers"],
+    "related": ["124", "324"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "51A",
+    "part": "IVA",
+    "title": "Fundamental duties",
+    "title_hi": "मूल कर्तव्य",
+    "plain_en": "Eleven duties of every citizen, added by the 42nd Amendment in 1976 (the eleventh in 2002): to abide by the Constitution, cherish the freedom struggle, uphold the sovereignty and integrity of India, defend the country, promote harmony and brotherhood, value the composite culture, protect the environment, develop a scientific temper, safeguard public property and abjure violence, strive towards excellence, and provide education to one's child. They are not directly enforceable, but courts read them alongside the rights.",
+    "plain_hi": "प्रत्येक नागरिक के ग्यारह कर्तव्य, जो 1976 में 42वें संशोधन द्वारा जोड़े गए (ग्यारहवाँ 2002 में): संविधान का पालन, स्वतंत्रता संग्राम के आदर्शों को संजोना, भारत की प्रभुता और अखंडता की रक्षा, देश की रक्षा, सद्भाव और भ्रातृत्व का प्रचार, मिश्रित संस्कृति का सम्मान, पर्यावरण की रक्षा, वैज्ञानिक दृष्टिकोण का विकास, लोक संपत्ति की रक्षा और हिंसा का त्याग, उत्कृष्टता की ओर प्रयास, और अपने बालक को शिक्षा देना।",
+    "recall_relevance": "The duty to abide by the Constitution and to promote harmony cuts both ways: it is the citizen's warrant for demanding accountability, and the reason a recall campaign must be conducted peacefully and without communal framing.",
+    "tags": ["fundamental-duties", "citizenship"],
+    "related": ["21A", "51"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "52",
+    "part": "V",
+    "title": "The President of India",
+    "title_hi": "भारत का राष्ट्रपति",
+    "plain_en": "There shall be a President of India. Short as it is, this article establishes the office that is the formal head of the Union executive and in whose name the executive acts.",
+    "plain_hi": "भारत का एक राष्ट्रपति होगा। संक्षिप्त होते हुए भी यह अनुच्छेद उस पद की स्थापना करता है जो संघ की कार्यपालिका का औपचारिक प्रधान है और जिसके नाम से कार्यपालिका कार्य करती है।",
+    "tags": ["union", "executive", "president"],
+    "related": ["53", "61", "74"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "61",
+    "part": "V",
+    "title": "Procedure for impeachment of the President",
+    "title_hi": "राष्ट्रपति पर महाभियोग की प्रक्रिया",
+    "plain_en": "The President may be removed for violation of the Constitution. The charge must be preferred by either House on at least fourteen days' notice signed by a quarter of that House's members, passed by a two-thirds majority of the total membership, then investigated and confirmed by the other House on the same majority. It has never been used.",
+    "plain_hi": "संविधान के अतिक्रमण के लिए राष्ट्रपति को पद से हटाया जा सकता है। आरोप किसी भी सदन द्वारा, उस सदन के एक-चौथाई सदस्यों द्वारा हस्ताक्षरित चौदह दिन की सूचना पर, कुल सदस्यता के दो-तिहाई बहुमत से पारित किया जाना चाहिए, और फिर दूसरे सदन द्वारा उसी बहुमत से अन्वेषण और पुष्टि की जानी चाहिए। इसका प्रयोग कभी नहीं हुआ।",
+    "recall_relevance": "Impeachment and recall are often confused. Impeachment is removal BY the legislature for a specified breach; recall is removal BY THE VOTERS for loss of confidence. The Constitution provides the first for the President and judges, and provides nothing equivalent to the second for MPs and MLAs. That gap is what this movement exists to close.",
+    "tags": ["union", "president", "accountability", "removal"],
+    "related": ["52", "124", "217"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "74",
+    "part": "V",
+    "title": "Council of Ministers to aid and advise President",
+    "title_hi": "राष्ट्रपति को सहायता और सलाह देने के लिए मंत्रि-परिषद्",
+    "plain_en": "There is a Council of Ministers headed by the Prime Minister to aid and advise the President, who must act in accordance with that advice — though the President may require the Council to reconsider it once. The 42nd and 44th Amendments settled the position that the advice is binding, and courts cannot inquire into what advice was given.",
+    "plain_hi": "प्रधानमंत्री के नेतृत्व में एक मंत्रि-परिषद् राष्ट्रपति को सहायता और सलाह देगी, और राष्ट्रपति उस सलाह के अनुसार कार्य करेगा — हालाँकि वह परिषद् से एक बार पुनर्विचार करने की अपेक्षा कर सकता है। 42वें और 44वें संशोधनों ने यह स्थिति तय की कि सलाह बाध्यकारी है।",
+    "recall_relevance": "This is why India's executive is answerable to the legislature rather than directly to voters — real power sits with a Council of Ministers that no citizen votes for as such. It is the structural reason a recall right over individual legislators matters so much here.",
+    "tags": ["union", "executive", "parliamentary-system"],
+    "related": ["75", "163", "164"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "75",
+    "part": "V",
+    "title": "Other provisions as to Ministers",
+    "title_hi": "मंत्रियों के बारे में अन्य उपबंध",
+    "plain_en": "The Prime Minister is appointed by the President, and other ministers are appointed on the Prime Minister's advice. The Council of Ministers is collectively responsible to the House of the People, its size is capped at 15% of that House's strength, and a minister who is not a member of either House for six consecutive months ceases to be a minister.",
+    "plain_hi": "प्रधानमंत्री की नियुक्ति राष्ट्रपति करता है, और अन्य मंत्रियों की नियुक्ति प्रधानमंत्री की सलाह पर होती है। मंत्रि-परिषद् लोक सभा के प्रति सामूहिक रूप से उत्तरदायी है, उसका आकार उस सदन की सदस्य-संख्या के 15% तक सीमित है, और जो मंत्री लगातार छह मास तक किसी सदन का सदस्य नहीं है, वह मंत्री नहीं रहेगा।",
+    "recall_relevance": "\"Collectively responsible to the House of the People\" is the only accountability mechanism the Constitution gives between elections at the Union level, and it is exercised by MPs, not by voters. A no-confidence motion removes a government; nothing removes an individual MP who has lost their constituency's confidence.",
+    "tags": ["union", "executive", "accountability", "parliamentary-system"],
+    "related": ["74", "164", "102"],
+    "case_law": [
+      {
+        "case": "Manoj Narula v. Union of India",
+        "citation": "(2014) 9 SCC 1",
+        "year": 2014,
+        "url": "https://indiankanoon.org/search/?formInput=Manoj%20Narula%20v%20Union%20of%20India",
+        "held": "The Court declined to read a disqualification into Article 75 for ministers facing serious charges, but held that the Prime Minister is expected to act on constitutional propriety in choosing them."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "79",
+    "part": "V",
+    "title": "Constitution of Parliament",
+    "title_hi": "संसद् का गठन",
+    "plain_en": "Parliament consists of the President and two Houses — the Council of States (Rajya Sabha) and the House of the People (Lok Sabha). The President is part of Parliament, which is why a Bill becomes law only on assent.",
+    "plain_hi": "संसद् में राष्ट्रपति और दो सदन होते हैं — राज्य सभा और लोक सभा। राष्ट्रपति संसद् का भाग है, इसीलिए कोई विधेयक अनुमति मिलने पर ही विधि बनता है।",
+    "tags": ["union", "parliament"],
+    "related": ["80", "81", "111"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "80",
+    "part": "V",
+    "title": "Composition of the Council of States",
+    "title_hi": "राज्य सभा की संरचना",
+    "plain_en": "The Rajya Sabha has up to 238 members representing the states and union territories, plus 12 nominated by the President for special knowledge or practical experience in literature, science, art and social service. State representatives are elected by the elected members of the state legislative assemblies by proportional representation using the single transferable vote.",
+    "plain_hi": "राज्य सभा में राज्यों और संघ राज्यक्षेत्रों का प्रतिनिधित्व करने वाले अधिकतम 238 सदस्य होते हैं, तथा साहित्य, विज्ञान, कला और समाज सेवा में विशेष ज्ञान या व्यावहारिक अनुभव के लिए राष्ट्रपति द्वारा नामनिर्दिष्ट 12 सदस्य होते हैं। राज्यों के प्रतिनिधि राज्य विधान सभाओं के निर्वाचित सदस्यों द्वारा एकल संक्रमणीय मत से आनुपातिक प्रतिनिधित्व द्वारा चुने जाते हैं।",
+    "recall_relevance": "Rajya Sabha members are not elected by voters at all, which is a distinct accountability problem: a recall right exercised by citizens cannot reach them, and any reform proposal has to say honestly what it does and does not cover.",
+    "tags": ["union", "parliament", "rajya-sabha", "elections"],
+    "related": ["79", "81", "83"],
+    "case_law": [
+      {
+        "case": "Kuldip Nayar v. Union of India",
+        "citation": "(2006) 7 SCC 1",
+        "year": 2006,
+        "url": "https://indiankanoon.org/search/?formInput=Kuldip%20Nayar%20v%20Union%20of%20India",
+        "held": "Upheld the removal of the domicile requirement for Rajya Sabha candidates and the use of an open ballot in these elections."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "81",
+    "part": "V",
+    "title": "Composition of the House of the People",
+    "title_hi": "लोक सभा की संरचना",
+    "plain_en": "The Lok Sabha consists of up to 530 members from the states and up to 20 from the union territories, chosen by direct election from territorial constituencies. Seats are allotted so that the ratio of seats to population is, so far as practicable, the same for every state, and constituencies within a state are drawn to similar population sizes.",
+    "plain_hi": "लोक सभा में राज्यों से अधिकतम 530 और संघ राज्यक्षेत्रों से अधिकतम 20 सदस्य होते हैं, जो प्रादेशिक निर्वाचन-क्षेत्रों से प्रत्यक्ष निर्वाचन द्वारा चुने जाते हैं। स्थानों का आवंटन ऐसा किया जाता है कि स्थानों और जनसंख्या का अनुपात, यथासाध्य, प्रत्येक राज्य के लिए समान हो।",
+    "recall_relevance": "Direct election from a territorial constituency is precisely what makes recall coherent for Lok Sabha members: there is an identifiable electorate that chose this person and could, in principle, un-choose them.",
+    "tags": ["union", "parliament", "lok-sabha", "elections", "delimitation"],
+    "related": ["82", "80", "170", "330"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "83",
+    "part": "V",
+    "title": "Duration of Houses of Parliament",
+    "title_hi": "संसद् के सदनों की अवधि",
+    "plain_en": "The Rajya Sabha is a permanent body that is not subject to dissolution; one-third of its members retire every second year. The Lok Sabha lasts five years from its first sitting unless dissolved sooner, and that term may be extended by law during a Proclamation of Emergency, by up to one year at a time.",
+    "plain_hi": "राज्य सभा एक स्थायी निकाय है जिसका विघटन नहीं होता; उसके एक-तिहाई सदस्य प्रत्येक दूसरे वर्ष निवृत्त होते हैं। लोक सभा अपने प्रथम अधिवेशन से पाँच वर्ष तक रहती है, जब तक पहले विघटित न हो, और आपात की उद्घोषणा के दौरान विधि द्वारा यह अवधि एक बार में एक वर्ष तक बढ़ाई जा सकती है।",
+    "recall_relevance": "This is the heart of the matter. Once elected, an MP holds the seat for five years, and the Constitution provides no mechanism by which the voters who elected them can end that term early. Death, resignation, disqualification and dissolution are the only exits — none of them belongs to the electorate.",
+    "tags": ["union", "parliament", "tenure", "recall-gap"],
+    "related": ["81", "85", "172", "190"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "84",
+    "part": "V",
+    "title": "Qualification for membership of Parliament",
+    "title_hi": "संसद् की सदस्यता के लिए अर्हता",
+    "plain_en": "A candidate must be a citizen of India, be at least 30 years old for the Rajya Sabha or 25 for the Lok Sabha, make and subscribe an oath or affirmation in the prescribed form, and possess any other qualifications Parliament prescribes by law.",
+    "plain_hi": "अभ्यर्थी भारत का नागरिक हो, राज्य सभा के लिए कम से कम 30 वर्ष और लोक सभा के लिए 25 वर्ष की आयु का हो, विहित प्ररूप में शपथ या प्रतिज्ञान करे, और संसद् द्वारा विधि द्वारा विहित अन्य अर्हताएँ रखता हो।",
+    "recall_relevance": "Note what is absent: no educational requirement, no clean-record requirement, no residence requirement for the Rajya Sabha. Qualifications are thin by design, and disqualification (Article 102) rather than qualification is where accountability is meant to bite.",
+    "tags": ["union", "parliament", "elections", "qualifications"],
+    "related": ["102", "173", "191"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "85",
+    "part": "V",
+    "title": "Sessions of Parliament, prorogation and dissolution",
+    "title_hi": "संसद् के सत्र, सत्रावसान और विघटन",
+    "plain_en": "The President summons each House as required, and no more than six months may pass between the last sitting of one session and the first sitting of the next. The President may prorogue either House or dissolve the Lok Sabha.",
+    "plain_hi": "राष्ट्रपति प्रत्येक सदन को आवश्यकतानुसार आहूत करता है, और एक सत्र की अंतिम बैठक तथा अगले सत्र की प्रथम बैठक के बीच छह मास से अधिक अंतर नहीं होगा। राष्ट्रपति किसी भी सदन का सत्रावसान कर सकता है या लोक सभा का विघटन कर सकता है।",
+    "recall_relevance": "The six-month rule is the only constitutional floor on how often Parliament must meet. Sitting days have fallen over the decades, which is exactly the kind of institutional trend an attendance and performance tracker exists to make visible.",
+    "tags": ["union", "parliament", "sessions"],
+    "related": ["83", "174"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "101",
+    "part": "V",
+    "title": "Vacation of seats",
+    "title_hi": "स्थानों का रिक्त होना",
+    "plain_en": "A seat in Parliament falls vacant if the member sits in both Houses, or in Parliament and a state legislature, or resigns in writing to the presiding officer, or is absent from all sittings for sixty days without permission of the House, or becomes disqualified.",
+    "plain_hi": "संसद् में स्थान रिक्त हो जाता है यदि सदस्य दोनों सदनों में, या संसद् और राज्य विधानमंडल में बैठता है, या पीठासीन अधिकारी को लिखित त्यागपत्र देता है, या सदन की अनुमति के बिना साठ दिन तक सभी बैठकों से अनुपस्थित रहता है, या निरर्हित हो जाता है।",
+    "recall_relevance": "The sixty-day absence rule is the closest the Constitution comes to removing a legislator for not doing the job — and even that is enforced by the House, at its discretion, not by the constituency. Attendance data is therefore not trivia; it is the one performance measure with a constitutional consequence attached.",
+    "tags": ["union", "parliament", "vacancy", "attendance"],
+    "related": ["102", "190", "83"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "102",
+    "part": "V",
+    "title": "Disqualifications for membership",
+    "title_hi": "सदस्यता के लिए निरर्हताएँ",
+    "plain_en": "A person is disqualified from being an MP if they hold an office of profit under the Union or a state (other than an office exempted by law), are of unsound mind as declared by a court, are an undischarged insolvent, are not a citizen of India or have voluntarily acquired foreign citizenship, or are disqualified by any law made by Parliament. A member is also disqualified on defection, under the Tenth Schedule.",
+    "plain_hi": "कोई व्यक्ति संसद् सदस्य होने के लिए निरर्हित है यदि वह संघ या राज्य के अधीन लाभ का पद धारण करता है (विधि द्वारा छूट प्राप्त पद के सिवाय), न्यायालय द्वारा विकृतचित्त घोषित है, अनुन्मोचित दिवालिया है, भारत का नागरिक नहीं है या स्वेच्छा से विदेशी नागरिकता प्राप्त कर चुका है, अथवा संसद् द्वारा बनाई किसी विधि से निरर्हित है। दसवीं अनुसूची के अधीन दल-बदल पर भी सदस्य निरर्हित होता है।",
+    "recall_relevance": "This is the existing route by which a sitting MP can lose their seat. Section 8 of the Representation of the People Act, 1951 adds disqualification on conviction for listed offences, and after Lily Thomas (2013) that disqualification takes effect immediately. Note what the list does not include: failing to represent the constituency.",
+    "tags": ["union", "parliament", "disqualification", "anti-defection", "accountability"],
+    "related": ["101", "191", "103"],
+    "case_law": [
+      {
+        "case": "Lily Thomas v. Union of India",
+        "citation": "(2013) 7 SCC 653",
+        "year": 2013,
+        "url": "https://indiankanoon.org/search/?formInput=Lily%20Thomas%20v%20Union%20of%20India",
+        "held": "Struck down Section 8(4) of the Representation of the People Act; a convicted legislator is disqualified immediately, not on exhaustion of appeals."
+      },
+      {
+        "case": "Kihoto Hollohan v. Zachillhu",
+        "citation": "(1992) Supp (2) SCC 651",
+        "year": 1992,
+        "url": "https://indiankanoon.org/search/?formInput=Kihoto%20Hollohan",
+        "held": "Upheld the Tenth Schedule's anti-defection provisions but held the Speaker's decision is subject to judicial review."
+      },
+      {
+        "case": "Jaya Bachchan v. Union of India",
+        "citation": "(2006) 5 SCC 266",
+        "year": 2006,
+        "url": "https://indiankanoon.org/search/?formInput=Jaya%20Bachchan%20v%20Union%20of%20India",
+        "held": "Whether an office is an 'office of profit' depends on whether it is capable of yielding profit, not on whether the holder actually took it."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "105",
+    "part": "V",
+    "title": "Powers, privileges and immunities of Parliament and its members",
+    "title_hi": "संसद् के सदनों तथा उसके सदस्यों की शक्तियाँ, विशेषाधिकार और उन्मुक्तियाँ",
+    "plain_en": "There is freedom of speech in Parliament, and no member can be sued or prosecuted for anything said or any vote given in Parliament or its committees. The same immunity covers reports and proceedings published under the authority of a House. Each House also retains other powers and privileges as defined by law.",
+    "plain_hi": "संसद् में वाक्-स्वातंत्र्य है, और संसद् या उसकी समितियों में कही गई किसी बात या दिए गए किसी मत के लिए किसी सदस्य पर वाद या अभियोजन नहीं चलाया जा सकता। यही उन्मुक्ति सदन के प्राधिकार से प्रकाशित रिपोर्टों और कार्यवाहियों पर लागू है।",
+    "recall_relevance": "Parliamentary immunity is why a representative's conduct inside the House cannot be litigated — and therefore why public, documented records of what they said and how they voted are the only real accountability for it.",
+    "tags": ["union", "parliament", "privilege", "free-speech"],
+    "related": ["194", "19"],
+    "case_law": [
+      {
+        "case": "Raja Ram Pal v. Hon'ble Speaker, Lok Sabha",
+        "citation": "(2007) 3 SCC 184",
+        "year": 2007,
+        "url": "https://indiankanoon.org/search/?formInput=Raja%20Ram%20Pal%20v%20Speaker",
+        "held": "Parliament has the power to expel a member for misconduct, and the exercise of that power is subject to limited judicial review."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "110",
+    "part": "V",
+    "title": "Definition of \"Money Bills\"",
+    "title_hi": "\"धन विधेयक\" की परिभाषा",
+    "plain_en": "A Bill is a Money Bill only if it deals exclusively with taxation, government borrowing, the Consolidated Fund or Contingency Fund, appropriation, or matters incidental to these. The Speaker of the Lok Sabha certifies whether a Bill is a Money Bill, and the Rajya Sabha can only recommend changes, which the Lok Sabha may reject.",
+    "plain_hi": "कोई विधेयक धन विधेयक तभी है जब वह केवल कराधान, सरकारी उधार, संचित निधि या आकस्मिकता निधि, विनियोग, अथवा इनसे आनुषंगिक विषयों से संबंधित हो। लोक सभा का अध्यक्ष प्रमाणित करता है कि विधेयक धन विधेयक है या नहीं, और राज्य सभा केवल सिफारिश कर सकती है।",
+    "recall_relevance": "How a Bill is classified decides how much scrutiny it gets. Tracking whether major legislation is passed as a Money Bill is a standard measure of whether the legislative process is being used or bypassed.",
+    "tags": ["union", "parliament", "legislation", "money-bill"],
+    "related": ["109", "111"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "123",
+    "part": "V",
+    "title": "Power of President to promulgate Ordinances during recess of Parliament",
+    "title_hi": "संसद् के विश्रांतिकाल में राष्ट्रपति की अध्यादेश प्रख्यापित करने की शक्ति",
+    "plain_en": "When Parliament is not in session and immediate action is needed, the President may promulgate an Ordinance with the same force as an Act. It must be laid before both Houses and ceases to operate six weeks after Parliament reassembles, unless approved sooner.",
+    "plain_hi": "जब संसद् सत्र में नहीं है और तत्काल कार्रवाई आवश्यक है, राष्ट्रपति अधिनियम के समान बल वाला अध्यादेश प्रख्यापित कर सकता है। उसे दोनों सदनों के समक्ष रखा जाना चाहिए और संसद् के पुनः समवेत होने के छह सप्ताह बाद वह प्रवर्तन में नहीं रहता, जब तक पहले अनुमोदित न हो।",
+    "recall_relevance": "Repeated re-promulgation of ordinances is legislating without a legislature. The Supreme Court has held that re-promulgating an ordinance to avoid a vote is a fraud on the Constitution — a good example of how process, not just outcome, is what accountability tracks.",
+    "tags": ["union", "executive", "legislation", "ordinance"],
+    "related": ["213", "85"],
+    "case_law": [
+      {
+        "case": "Krishna Kumar Singh v. State of Bihar",
+        "citation": "(2017) 3 SCC 1",
+        "year": 2017,
+        "url": "https://indiankanoon.org/search/?formInput=Krishna%20Kumar%20Singh%20v%20State%20of%20Bihar",
+        "held": "Re-promulgation of ordinances without placing them before the legislature is a fraud on the Constitution; ordinances do not create enduring rights once they lapse."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "124",
+    "part": "V",
+    "title": "Establishment and constitution of Supreme Court",
+    "title_hi": "उच्चतम न्यायालय की स्थापना और गठन",
+    "plain_en": "There shall be a Supreme Court of India with a Chief Justice and other judges appointed by the President. A judge holds office until the age of 65 and can be removed only by an order of the President after an address by each House, passed by a majority of the total membership and by two-thirds of members present and voting, on the ground of proved misbehaviour or incapacity.",
+    "plain_hi": "भारत का एक उच्चतम न्यायालय होगा जिसमें मुख्य न्यायमूर्ति और राष्ट्रपति द्वारा नियुक्त अन्य न्यायाधीश होंगे। न्यायाधीश 65 वर्ष की आयु तक पद धारण करता है और उसे केवल सिद्ध कदाचार या असमर्थता के आधार पर, प्रत्येक सदन के समावेदन के बाद राष्ट्रपति के आदेश द्वारा हटाया जा सकता है।",
+    "recall_relevance": "Judges have a removal procedure with a defined ground and a supermajority. Legislators do not. Comparing the two makes the point that the Constitution took removal seriously where it chose to provide for it at all.",
+    "tags": ["judiciary", "supreme-court", "removal", "independence"],
+    "related": ["32", "61", "141", "217"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "148",
+    "part": "V",
+    "title": "Comptroller and Auditor-General of India",
+    "title_hi": "भारत का नियंत्रक-महालेखापरीक्षक",
+    "plain_en": "There shall be a Comptroller and Auditor-General appointed by the President and removable only in the same manner and on the same grounds as a Supreme Court judge. The CAG audits the accounts of the Union and the states and reports to the legislature, which is why its independence is protected this strongly.",
+    "plain_hi": "राष्ट्रपति द्वारा नियुक्त भारत का एक नियंत्रक-महालेखापरीक्षक होगा, जिसे उच्चतम न्यायालय के न्यायाधीश की तरह और उन्हीं आधारों पर ही हटाया जा सकता है। नियंत्रक-महालेखापरीक्षक संघ और राज्यों के लेखाओं की संपरीक्षा करता है और विधानमंडल को रिपोर्ट देता है।",
+    "recall_relevance": "CAG reports are a primary, citable source of evidence about how public money was actually spent in a constituency or a scheme — exactly the kind of public record a citizen report card should be built on rather than on assertion.",
+    "tags": ["accountability", "audit", "finance", "oversight"],
+    "related": ["149", "151"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "163",
+    "part": "VI",
+    "title": "Council of Ministers to aid and advise Governor",
+    "title_hi": "राज्यपाल को सहायता और सलाह देने के लिए मंत्रि-परिषद्",
+    "plain_en": "There is a Council of Ministers headed by the Chief Minister to aid and advise the Governor, except where the Constitution requires the Governor to act in their own discretion. Whether a matter falls in that discretion is decided by the Governor, and that decision cannot be questioned on the ground that they should have acted otherwise.",
+    "plain_hi": "मुख्यमंत्री के नेतृत्व में एक मंत्रि-परिषद् राज्यपाल को सहायता और सलाह देगी, सिवाय जहाँ संविधान राज्यपाल से स्वविवेक से कार्य करने की अपेक्षा करता है। कोई विषय उस विवेक में आता है या नहीं, यह राज्यपाल तय करता है।",
+    "recall_relevance": "The scope of a Governor's discretion has repeatedly decided who governs a state — including in Maharashtra, one of this platform's pilot states. It is a reminder that accountability gaps are not only about voters and legislators but about unelected constitutional offices too.",
+    "tags": ["states", "executive", "governor"],
+    "related": ["164", "174", "356"],
+    "case_law": [
+      {
+        "case": "Nabam Rebia v. Deputy Speaker",
+        "citation": "(2016) 8 SCC 1",
+        "year": 2016,
+        "url": "https://indiankanoon.org/search/?formInput=Nabam%20Rebia",
+        "held": "A Governor's discretion under Article 163 is limited; summoning and messaging powers must ordinarily follow ministerial advice."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "164",
+    "part": "VI",
+    "title": "Other provisions as to Ministers (States)",
+    "title_hi": "मंत्रियों के बारे में अन्य उपबंध (राज्य)",
+    "plain_en": "The Chief Minister is appointed by the Governor, and other ministers on the Chief Minister's advice. The Council of Ministers is collectively responsible to the Legislative Assembly, its size is capped at 15% of the Assembly's strength (with a floor of twelve), and a minister who is not a member of the legislature for six consecutive months ceases to hold office.",
+    "plain_hi": "मुख्यमंत्री की नियुक्ति राज्यपाल करता है, और अन्य मंत्रियों की नियुक्ति मुख्यमंत्री की सलाह पर होती है। मंत्रि-परिषद् विधान सभा के प्रति सामूहिक रूप से उत्तरदायी है, उसका आकार विधान सभा की सदस्य-संख्या के 15% तक सीमित है (न्यूनतम बारह), और जो मंत्री लगातार छह मास तक विधानमंडल का सदस्य नहीं है, वह पद धारण नहीं करेगा।",
+    "tags": ["states", "executive", "chief-minister", "accountability"],
+    "related": ["163", "75", "191"],
+    "case_law": [
+      {
+        "case": "Subhash Desai v. Principal Secretary, Governor of Maharashtra",
+        "citation": "(2023) SCC OnLine SC 807",
+        "year": 2023,
+        "url": "https://indiankanoon.org/search/?formInput=Subhash%20Desai%20Governor%20of%20Maharashtra",
+        "held": "Examined the Governor's and Speaker's roles during the 2022 Maharashtra crisis; held the Governor was not justified in calling for a trust vote on the material available."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "168",
+    "part": "VI",
+    "title": "Constitution of Legislatures in States",
+    "title_hi": "राज्यों में विधानमंडलों का गठन",
+    "plain_en": "Every state has a legislature consisting of the Governor and either one House (the Legislative Assembly) or two (the Legislative Assembly and the Legislative Council). Only a handful of states have a Council, and Articles 169 and 171 govern creating or abolishing one.",
+    "plain_hi": "प्रत्येक राज्य में राज्यपाल तथा एक सदन (विधान सभा) या दो सदन (विधान सभा और विधान परिषद्) वाला विधानमंडल होता है। कुछ ही राज्यों में विधान परिषद् है, और उसके सृजन या उत्सादन का उपबंध अनुच्छेद 169 और 171 करते हैं।",
+    "recall_relevance": "This is why the platform records whether a state or union territory has a legislature at all: without an assembly there is no house through which a state Right to Recall Bill could pass, and that state's page must argue a different case.",
+    "tags": ["states", "legislature"],
+    "related": ["170", "171", "172"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "170",
+    "part": "VI",
+    "title": "Composition of the Legislative Assemblies",
+    "title_hi": "विधान सभाओं की संरचना",
+    "plain_en": "A Legislative Assembly has between 60 and 500 members chosen by direct election from territorial constituencies, with population-to-seat ratios kept as uniform as practicable within the state. Some smaller states have a lower floor fixed by specific articles.",
+    "plain_hi": "विधान सभा में प्रादेशिक निर्वाचन-क्षेत्रों से प्रत्यक्ष निर्वाचन द्वारा चुने गए 60 से 500 सदस्य होते हैं, और राज्य के भीतर जनसंख्या-स्थान अनुपात यथासाध्य समान रखा जाता है।",
+    "tags": ["states", "legislature", "elections", "delimitation"],
+    "related": ["81", "168", "172", "330"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "172",
+    "part": "VI",
+    "title": "Duration of State Legislatures",
+    "title_hi": "राज्य के विधानमंडलों की अवधि",
+    "plain_en": "A Legislative Assembly lasts five years from its first sitting unless dissolved sooner, extendable by law during an Emergency by up to one year at a time. A Legislative Council is not subject to dissolution; one-third of its members retire every second year.",
+    "plain_hi": "विधान सभा अपने प्रथम अधिवेशन से पाँच वर्ष तक रहती है, जब तक पहले विघटित न हो, और आपात के दौरान विधि द्वारा एक बार में एक वर्ष तक बढ़ाई जा सकती है। विधान परिषद् का विघटन नहीं होता; उसके एक-तिहाई सदस्य प्रत्येक दूसरे वर्ष निवृत्त होते हैं।",
+    "recall_relevance": "The state-level twin of Article 83, and the more immediately actionable one: because elections to state assemblies are a State List subject in part, several jurists argue a state legislature could enact recall for its own MLAs without waiting for a constitutional amendment. That argument is the basis of the state-by-state campaign this platform tracks.",
+    "tags": ["states", "legislature", "tenure", "recall-gap"],
+    "related": ["83", "170", "190", "328"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "190",
+    "part": "VI",
+    "title": "Vacation of seats (States)",
+    "title_hi": "स्थानों का रिक्त होना (राज्य)",
+    "plain_en": "A seat in a state legislature falls vacant on dual membership, resignation in writing to the presiding officer, absence from all sittings for sixty days without permission, or disqualification. The state-level mirror of Article 101.",
+    "plain_hi": "राज्य विधानमंडल में स्थान दोहरी सदस्यता, पीठासीन अधिकारी को लिखित त्यागपत्र, अनुमति के बिना साठ दिन तक सभी बैठकों से अनुपस्थिति, अथवा निरर्हता पर रिक्त हो जाता है। यह अनुच्छेद 101 का राज्य-स्तरीय प्रतिरूप है।",
+    "tags": ["states", "legislature", "vacancy", "attendance"],
+    "related": ["101", "191", "172"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "191",
+    "part": "VI",
+    "title": "Disqualifications for membership (States)",
+    "title_hi": "सदस्यता के लिए निरर्हताएँ (राज्य)",
+    "plain_en": "An MLA or MLC is disqualified for holding an office of profit, unsoundness of mind declared by a court, undischarged insolvency, not being an Indian citizen or having voluntarily acquired foreign citizenship, or by any law made by Parliament — and, under the Tenth Schedule, for defection. The state-level mirror of Article 102.",
+    "plain_hi": "विधान सभा या विधान परिषद् का सदस्य लाभ के पद, न्यायालय द्वारा घोषित विकृतचित्तता, अनुन्मोचित दिवालियापन, भारतीय नागरिक न होने या स्वेच्छा से विदेशी नागरिकता प्राप्त करने, अथवा संसद् द्वारा बनाई किसी विधि से निरर्हित होता है — और दसवीं अनुसूची के अधीन दल-बदल पर भी।",
+    "recall_relevance": "The disqualification grounds that exist for MLAs, set against the ground that does not exist: loss of the constituency's confidence. Every state page on this platform is arguing for adding that ground at the state level.",
+    "tags": ["states", "legislature", "disqualification", "anti-defection"],
+    "related": ["102", "190", "192"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "226",
+    "part": "VI",
+    "title": "Power of High Courts to issue certain writs",
+    "title_hi": "उच्च न्यायालयों की कुछ रिट निकालने की शक्ति",
+    "plain_en": "Every High Court may issue writs — habeas corpus, mandamus, prohibition, quo warranto and certiorari — to any person or authority within its jurisdiction, for enforcing Fundamental Rights and for any other purpose. Its scope is wider than Article 32 because it is not limited to Fundamental Rights, and it is usually the faster and cheaper route for a citizen.",
+    "plain_hi": "प्रत्येक उच्च न्यायालय अपनी अधिकारिता के भीतर किसी व्यक्ति या प्राधिकारी को मूल अधिकारों के प्रवर्तन तथा किसी अन्य प्रयोजन के लिए रिट निकाल सकता है। इसका विस्तार अनुच्छेद 32 से अधिक है क्योंकि यह केवल मूल अधिकारों तक सीमित नहीं है, और नागरिक के लिए यह प्रायः तेज़ और सस्ता मार्ग है।",
+    "recall_relevance": "For most citizens this, not Article 32, is the practical door to court — which is why the PIL Resource Centre on this platform explains High Court petitions first.",
+    "tags": ["judiciary", "remedies", "high-court", "pil"],
+    "related": ["32", "227"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "243A",
+    "part": "IX",
+    "title": "Gram Sabha",
+    "title_hi": "ग्राम सभा",
+    "plain_en": "A Gram Sabha — the assembly of all registered voters in a village — may exercise the powers and perform the functions the state legislature gives it by law. It is the Constitution's one instance of direct democracy: a body of citizens themselves, not their representatives.",
+    "plain_hi": "ग्राम सभा — गाँव के सभी पंजीकृत मतदाताओं की सभा — उन शक्तियों का प्रयोग और उन कृत्यों का पालन कर सकती है जो राज्य विधानमंडल विधि द्वारा उसे प्रदान करता है। यह संविधान में प्रत्यक्ष लोकतंत्र का एकमात्र उदाहरण है: प्रतिनिधियों का नहीं, स्वयं नागरिकों का निकाय।",
+    "recall_relevance": "The strongest constitutional precedent for this movement. The Constitution already accepts that citizens can decide directly at the village level; several states have used that acceptance to legislate the recall of panchayat and municipal representatives. Recall is therefore an extension of an existing Indian practice, not an import.",
+    "tags": ["local-government", "direct-democracy", "panchayat", "recall-precedent"],
+    "related": ["40", "243G", "243E"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "243E",
+    "part": "IX",
+    "title": "Duration of Panchayats",
+    "title_hi": "पंचायतों की अवधि",
+    "plain_en": "Every Panchayat lasts five years from its first meeting unless dissolved sooner, and elections must be completed before that term ends or within six months of a dissolution. Crucially, a Panchayat constituted after early dissolution serves only the remainder of the original term — the five-year clock does not restart.",
+    "plain_hi": "प्रत्येक पंचायत अपनी प्रथम बैठक से पाँच वर्ष तक रहती है, जब तक पहले विघटित न हो, और निर्वाचन उस अवधि के समाप्त होने से पूर्व या विघटन के छह मास के भीतर पूरे किए जाने चाहिए। महत्वपूर्ण रूप से, समय-पूर्व विघटन के बाद गठित पंचायत केवल मूल अवधि के शेष भाग तक कार्य करती है।",
+    "recall_relevance": "This article shows the Constitution already contemplating a mid-term removal of an elected body with a fixed-date replacement — the exact mechanism a recall law needs, already drafted, one tier down.",
+    "tags": ["local-government", "panchayat", "tenure", "recall-precedent"],
+    "related": ["243A", "172", "243K"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "243G",
+    "part": "IX",
+    "title": "Powers, authority and responsibilities of Panchayats",
+    "title_hi": "पंचायतों की शक्तियाँ, प्राधिकार और उत्तरदायित्व",
+    "plain_en": "State legislatures may endow Panchayats with the powers and authority needed to function as institutions of self-government, including preparing plans and implementing schemes for the subjects listed in the Eleventh Schedule. The word is \"may\", which is why devolution varies so widely between states.",
+    "plain_hi": "राज्य विधानमंडल पंचायतों को स्वशासन की संस्थाओं के रूप में कार्य करने के लिए आवश्यक शक्तियाँ और प्राधिकार प्रदान कर सकते हैं, जिसमें ग्यारहवीं अनुसूची में सूचीबद्ध विषयों पर योजनाएँ बनाना और कार्यान्वित करना शामिल है। शब्द \"कर सकते हैं\" है, इसीलिए राज्यों के बीच अधिकारों का हस्तांतरण बहुत भिन्न है।",
+    "tags": ["local-government", "panchayat", "decentralisation"],
+    "related": ["40", "243A", "243H"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "324",
+    "part": "XV",
+    "title": "Superintendence, direction and control of elections to be vested in an Election Commission",
+    "title_hi": "निर्वाचनों के अधीक्षण, निदेशन और नियंत्रण का निर्वाचन आयोग में निहित होना",
+    "plain_en": "The superintendence, direction and control of the preparation of electoral rolls and the conduct of all elections to Parliament, state legislatures, and the offices of President and Vice-President is vested in an Election Commission. The Chief Election Commissioner and other Commissioners are appointed by the President; the CEC can be removed only in the manner and on the grounds applicable to a Supreme Court judge.",
+    "plain_hi": "निर्वाचक नामावलियों की तैयारी तथा संसद्, राज्य विधानमंडलों और राष्ट्रपति व उपराष्ट्रपति के पदों के सभी निर्वाचनों के संचालन का अधीक्षण, निदेशन और नियंत्रण एक निर्वाचन आयोग में निहित है। मुख्य निर्वाचन आयुक्त को उच्चतम न्यायालय के न्यायाधीश की तरह और उन्हीं आधारों पर ही हटाया जा सकता है।",
+    "recall_relevance": "Whoever conducts a recall vote must be independent of the government whose legislator is being recalled. The Election Commission is the institution the Constitution already built for exactly that job, and its plenary powers under this article are broad enough to administer a recall process if the law creates one.",
+    "tags": ["elections", "election-commission", "independence", "recall-mechanism"],
+    "related": ["325", "326", "327", "329"],
+    "case_law": [
+      {
+        "case": "Mohinder Singh Gill v. Chief Election Commissioner",
+        "citation": "(1978) 1 SCC 405",
+        "year": 1978,
+        "url": "https://indiankanoon.org/search/?formInput=Mohinder%20Singh%20Gill",
+        "held": "Article 324 confers plenary powers on the Election Commission to fill gaps in electoral law so that free and fair elections are conducted."
+      },
+      {
+        "case": "Anoop Baranwal v. Union of India",
+        "citation": "(2023) SCC OnLine SC 216",
+        "year": 2023,
+        "url": "https://indiankanoon.org/search/?formInput=Anoop%20Baranwal%20v%20Union%20of%20India",
+        "held": "Held that appointments to the Election Commission should be made on the advice of a committee including the Prime Minister, the Leader of the Opposition and the Chief Justice, until Parliament legislates."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "325",
+    "part": "XV",
+    "title": "No person to be ineligible for inclusion in, or to claim to be included in a special, electoral roll on grounds of religion, race, caste or sex",
+    "title_hi": "धर्म, मूलवंश, जाति या लिंग के आधार पर किसी व्यक्ति का निर्वाचक नामावली में सम्मिलित होने के लिए अपात्र न होना",
+    "plain_en": "There is one general electoral roll for every constituency, and no one may be excluded from it — or claim inclusion in a separate roll — on grounds of religion, race, caste or sex. This is the article that abolished separate electorates.",
+    "plain_hi": "प्रत्येक निर्वाचन-क्षेत्र के लिए एक सामान्य निर्वाचक नामावली होगी, और धर्म, मूलवंश, जाति या लिंग के आधार पर किसी को उससे अपवर्जित नहीं किया जाएगा, न ही किसी पृथक नामावली में सम्मिलित होने का दावा किया जा सकता है। इसी अनुच्छेद ने पृथक निर्वाचक-मंडलों को समाप्त किया।",
+    "recall_relevance": "One common roll is the constitutional foundation of a single, shared electorate — and therefore the reason a recall petition must be open to every voter in a constituency, not to a section of them.",
+    "tags": ["elections", "equality", "electoral-roll"],
+    "related": ["15", "324", "326"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "326",
+    "part": "XV",
+    "title": "Elections to the House of the People and to the Legislative Assemblies of States to be on the basis of adult suffrage",
+    "title_hi": "लोक सभा और राज्यों की विधान सभाओं के लिए निर्वाचनों का वयस्क मताधिकार के आधार पर होना",
+    "original_text": "The elections to the House of the People and to the Legislative Assembly of every State shall be on the basis of adult suffrage; that is to say, every person who is a citizen of India and who is not less than eighteen years of age on such date as may be fixed in that behalf by or under any law made by the appropriate Legislature and is not otherwise disqualified under this Constitution or any law made by the appropriate Legislature on the ground of non-residence, unsoundness of mind, crime or corrupt or illegal practice, shall be entitled to be registered as a voter at any such election.",
+    "plain_en": "Every Indian citizen aged eighteen or over is entitled to be registered as a voter for Lok Sabha and Legislative Assembly elections, unless disqualified on grounds of non-residence, unsoundness of mind, crime, or corrupt or illegal practice. The voting age was lowered from 21 by the 61st Amendment in 1988.",
+    "plain_hi": "अठारह वर्ष या उससे अधिक आयु का प्रत्येक भारतीय नागरिक लोक सभा और विधान सभा निर्वाचनों के लिए मतदाता के रूप में पंजीकृत होने का हकदार है, जब तक वह अनिवास, विकृतचित्तता, अपराध, अथवा भ्रष्ट या अवैध आचरण के आधार पर निरर्हित न हो। 1988 में 61वें संशोधन द्वारा मतदान की आयु 21 से घटाकर 18 की गई।",
+    "recall_relevance": "The single most important article for this movement. If sovereignty rests with the adult citizen who casts the vote, the question a recall law asks is why that same citizen has no say for the next five years. Everything on this platform is an argument about the space between this article and Articles 83 and 172.",
+    "tags": ["elections", "suffrage", "voting-rights", "recall-mechanism"],
+    "related": ["325", "324", "83", "172"],
+    "case_law": [
+      {
+        "case": "PUCL v. Union of India (NOTA)",
+        "citation": "(2013) 10 SCC 1",
+        "year": 2013,
+        "url": "https://indiankanoon.org/search/?formInput=PUCL%20v%20Union%20of%20India%20NOTA",
+        "held": "Directed the provision of a 'None of the Above' option, holding that the right to reject every candidate is part of the freedom of expression in voting."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "327",
+    "part": "XV",
+    "title": "Power of Parliament to make provision with respect to elections to Legislatures",
+    "title_hi": "विधानमंडलों के निर्वाचनों के संबंध में उपबंध करने की संसद् की शक्ति",
+    "plain_en": "Subject to the Constitution, Parliament may make law on all matters relating to elections to Parliament and to state legislatures — electoral rolls, delimitation of constituencies, and everything needed to constitute those Houses properly. The Representation of the People Acts of 1950 and 1951 were made under this power.",
+    "plain_hi": "संविधान के अधीन रहते हुए, संसद् संसद् और राज्य विधानमंडलों के निर्वाचनों से संबंधित सभी विषयों पर विधि बना सकती है — निर्वाचक नामावलियाँ, निर्वाचन-क्षेत्रों का परिसीमन, और उन सदनों के सम्यक् गठन के लिए आवश्यक सब कुछ। लोक प्रतिनिधित्व अधिनियम, 1950 और 1951 इसी शक्ति के अधीन बनाए गए।",
+    "recall_relevance": "This is the power Parliament would use to legislate a national Right to Recall for MPs and MLAs. Reading it with Article 328 gives the two legislative routes available: Parliament for the whole country, or a state legislature for its own assembly.",
+    "tags": ["elections", "parliament", "legislation", "recall-mechanism"],
+    "related": ["328", "324", "102"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "328",
+    "part": "XV",
+    "title": "Power of Legislature of a State to make provision with respect to elections to such Legislature",
+    "title_hi": "ऐसे विधानमंडल के निर्वाचनों के संबंध में उपबंध करने की राज्य के विधानमंडल की शक्ति",
+    "plain_en": "So far as Parliament has not already legislated on the matter, a state legislature may make law on elections to its own Houses, including electoral rolls and all other matters needed to constitute them properly.",
+    "plain_hi": "जहाँ तक संसद् ने उस विषय पर विधि नहीं बनाई है, राज्य का विधानमंडल अपने सदनों के निर्वाचनों के संबंध में विधि बना सकता है, जिसमें निर्वाचक नामावलियाँ और उनके सम्यक् गठन के लिए आवश्यक सभी अन्य विषय शामिल हैं।",
+    "recall_relevance": "The article the state-by-state strategy rests on. It is why this platform tracks a campaign stage per state and why the pilot states are approached individually: a single state assembly can act on its own MLAs without waiting for Parliament or a constitutional amendment.",
+    "tags": ["elections", "states", "legislation", "recall-mechanism"],
+    "related": ["327", "172", "324"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "329",
+    "part": "XV",
+    "title": "Bar to interference by courts in electoral matters",
+    "title_hi": "निर्वाचन संबंधी विषयों में न्यायालयों के हस्तक्षेप का वर्जन",
+    "plain_en": "Delimitation orders cannot be questioned in court, and an election to Parliament or a state legislature can be challenged only by an election petition presented as the relevant law provides — not by an ordinary writ petition. The purpose is to stop elections being stalled by litigation midway.",
+    "plain_hi": "परिसीमन आदेशों को न्यायालय में प्रश्नगत नहीं किया जा सकता, और संसद् या राज्य विधानमंडल के निर्वाचन को केवल संबंधित विधि में उपबंधित निर्वाचन अर्जी द्वारा ही चुनौती दी जा सकती है, साधारण रिट अर्जी द्वारा नहीं। उद्देश्य यह है कि निर्वाचन बीच में मुकदमेबाजी से रुक न जाएँ।",
+    "recall_relevance": "A recall law would have to specify its own dispute-resolution route, exactly as election law does, or every recall petition would end in a writ petition. This article is the reason the procedural detail of a recall Bill matters as much as the principle.",
+    "tags": ["elections", "judicial-review", "election-petition"],
+    "related": ["324", "327", "226"],
+    "case_law": [
+      {
+        "case": "N.P. Ponnuswami v. Returning Officer, Namakkal",
+        "citation": "AIR 1952 SC 64",
+        "year": 1952,
+        "url": "https://indiankanoon.org/search/?formInput=N.P.%20Ponnuswami",
+        "held": "Once the electoral process has begun, its validity can be questioned only through an election petition after the result, not by writ."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "330",
+    "part": "XVI",
+    "title": "Reservation of seats for Scheduled Castes and Scheduled Tribes in the House of the People",
+    "title_hi": "लोक सभा में अनुसूचित जातियों और अनुसूचित जनजातियों के लिए स्थानों का आरक्षण",
+    "plain_en": "Seats in the Lok Sabha are reserved for the Scheduled Castes and the Scheduled Tribes, in proportion to their population in the state or union territory concerned. Article 332 makes the equivalent provision for state Legislative Assemblies.",
+    "plain_hi": "लोक सभा में अनुसूचित जातियों और अनुसूचित जनजातियों के लिए, संबंधित राज्य या संघ राज्यक्षेत्र में उनकी जनसंख्या के अनुपात में, स्थान आरक्षित हैं। अनुच्छेद 332 राज्य विधान सभाओं के लिए समान उपबंध करता है।",
+    "recall_relevance": "A recall mechanism must not become a way to unseat representatives from reserved constituencies disproportionately. Any serious proposal needs a safeguard on this, and saying so plainly is part of arguing in good faith.",
+    "tags": ["elections", "reservation", "representation", "social-justice"],
+    "related": ["332", "81", "341"],
+    "case_law": [],
+    "translation_status": { "hi": "human_reviewed" }
+  },
+  {
+    "number": "368",
+    "part": "XX",
+    "title": "Power of Parliament to amend the Constitution and procedure therefor",
+    "title_hi": "संविधान का संशोधन करने की संसद् की शक्ति और उसकी प्रक्रिया",
+    "plain_en": "Parliament may amend the Constitution by a Bill passed in each House by a majority of its total membership and by two-thirds of the members present and voting. Amendments affecting federal features — the distribution of legislative powers, representation of states in Parliament, the Supreme Court and High Courts, and this article itself — additionally need ratification by the legislatures of at least half the states. The Supreme Court has held that this power cannot be used to damage the Constitution's basic structure.",
+    "plain_hi": "संसद् संविधान का संशोधन ऐसे विधेयक द्वारा कर सकती है जो प्रत्येक सदन में उसकी कुल सदस्यता के बहुमत तथा उपस्थित और मत देने वाले सदस्यों के दो-तिहाई बहुमत से पारित हो। संघीय लक्षणों को प्रभावित करने वाले संशोधनों के लिए, इसके अतिरिक्त, कम से कम आधे राज्यों के विधानमंडलों का अनुसमर्थन आवश्यक है। उच्चतम न्यायालय ने कहा है कि इस शक्ति का प्रयोग संविधान के आधारभूत ढाँचे को क्षति पहुँचाने के लिए नहीं किया जा सकता।",
+    "recall_relevance": "If a Right to Recall is achieved by constitutional amendment rather than ordinary legislation, this is the route and this is the arithmetic: two-thirds of both Houses, and for anything touching federal structure, half the states. It is also the reason the state-by-state route under Article 328 is pursued in parallel rather than instead.",
+    "tags": ["amendment", "basic-structure", "federalism", "recall-mechanism"],
+    "related": ["13", "328", "327"],
+    "case_law": [
+      {
+        "case": "Kesavananda Bharati v. State of Kerala",
+        "citation": "(1973) 4 SCC 225",
+        "year": 1973,
+        "url": "https://indiankanoon.org/search/?formInput=Kesavananda%20Bharati",
+        "held": "Parliament's amending power is wide but cannot alter the basic structure of the Constitution."
+      },
+      {
+        "case": "Minerva Mills Ltd. v. Union of India",
+        "citation": "(1980) 3 SCC 625",
+        "year": 1980,
+        "url": "https://indiankanoon.org/search/?formInput=Minerva%20Mills",
+        "held": "Struck down clauses of the 42nd Amendment that sought to make amendments immune from judicial review; limited amending power is itself part of the basic structure."
+      },
+      {
+        "case": "Indira Nehru Gandhi v. Raj Narain",
+        "citation": "(1975) Supp SCC 1",
+        "year": 1975,
+        "url": "https://indiankanoon.org/search/?formInput=Indira%20Nehru%20Gandhi%20v%20Raj%20Narain",
+        "held": "Free and fair elections and democracy are part of the basic structure; an amendment validating a particular election was struck down."
+      }
+    ],
+    "translation_status": { "hi": "human_reviewed" }
+  }
+]

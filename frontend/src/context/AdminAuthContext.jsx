@@ -7,10 +7,11 @@ const Ctx = createContext(null);
 export const useAdminAuth = () => useContext(Ctx);
 
 /*
- * permissions: null/undefined means "legacy full access" -- the bootstrap
- * admin account predates RBAC and the backend grants it everything (see
- * has_permission in backend/server.py). A real restricted account always
- * carries an explicit array, even an empty one.
+ * permissions: null/undefined means "legacy full access" -- an admin account
+ * that predates RBAC, which the backend grants everything rather than lock out
+ * of a live deployment (see resolve_legacy_principal in backend/core/rbac.py).
+ * Any other account carries an explicit array, even an empty one; a Super Admin
+ * simply carries every key.
  */
 export function hasPermission(user, key) {
   if (!user) return false;

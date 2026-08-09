@@ -10,28 +10,57 @@ import DynamicButton from "@/components/DynamicButton";
 
 const NAV_GROUPS = [
   {
-    heading: "Movement",
+    heading: "Accountability",
     links: [
-      { to: "/about", label: "About" },
-      { to: "/campaigns", label: "Campaigns" },
-      { to: "/volunteer", label: "Volunteer" },
+      { to: "/representatives", label: "Representatives" },
+      { to: "/promises", label: "Promise tracker" },
+      { to: "/states", label: "Campaign dashboard" },
+      { to: "/reports", label: "Citizen report cards" },
     ],
   },
   {
     heading: "Learn",
     links: [
-      { to: "/blog", label: "Blog & News" },
+      { to: "/constitution", label: "Constitution Library" },
+      { to: "/academy", label: "Learning Academy" },
+      { to: "/research", label: "Research Centre" },
       { to: "/knowledge", label: "Knowledge Hub" },
-      { to: "/resources", label: "Resources" },
+      { to: "/blog", label: "Blog & News" },
     ],
   },
   {
-    heading: "Connect",
+    heading: "Act",
     links: [
-      { to: "/contact", label: "Contact" },
-      { to: "/join", label: "Join the movement" },
+      { to: "/tools", label: "RTI & representations" },
+      { to: "/petitions", label: "Petitions" },
+      { to: "/forum", label: "Discuss" },
+      { to: "/volunteer-portal", label: "Volunteer task board" },
+      { to: "/events", label: "Events" },
     ],
   },
+  {
+    heading: "The movement",
+    links: [
+      { to: "/about", label: "About" },
+      { to: "/campaigns", label: "Campaigns" },
+      { to: "/contact", label: "Contact" },
+      { to: "/join", label: "Join the movement" },
+      { to: "/certificates", label: "Verify a certificate" },
+    ],
+  },
+];
+
+/*
+ * Published policies, in the footer of every page.
+ *
+ * §7 requires the disclaimer and the content policy to be public and easy to reach,
+ * and the DPDP Act requires the privacy notice to be. A civic platform that buries
+ * these is making a claim it has not earned.
+ */
+const POLICY_LINKS = [
+  { to: "/privacy", label: "Privacy policy" },
+  { to: "/content-policy", label: "Content policy" },
+  { to: "/disclaimer", label: "Disclaimer & sources" },
 ];
 
 export default function Footer() {
@@ -114,7 +143,7 @@ export default function Footer() {
 
           <div
             ref={linksRef}
-            className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-7 lg:pl-8"
+            className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7 lg:grid-cols-5 lg:gap-6 lg:pl-8"
           >
             {NAV_GROUPS.map((group) => (
               <nav key={group.heading} aria-label={group.heading}>
@@ -184,11 +213,38 @@ export default function Footer() {
           </Marquee>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-3 border-t border-border py-8 text-meta text-muted-foreground md:flex-row md:items-center">
-          <p>
-            © {new Date().getFullYear()} #RightToRecall Movement. A non-partisan civic initiative.
+        <div className="border-t border-border py-8 text-meta text-muted-foreground">
+          <nav aria-label="Policies" className="flex flex-wrap gap-x-5 gap-y-2">
+            {POLICY_LINKS.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                data-testid={`footer-${link.to.slice(1)}`}
+                className="underline-offset-4 hover:text-foreground hover:underline"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/*
+           * The standard disclaimer, on every page rather than only on the pages
+           * that carry person-data. §7 asks for it in the footer specifically.
+           */}
+          <p className="mt-5 max-w-4xl leading-relaxed">
+            Information about named individuals is compiled from public records — Election
+            Commission affidavits, court filings, PRS Legislative Research and Gazette
+            notifications. Pending criminal cases are allegations, not convictions, and every person
+            is presumed innocent until convicted by a court. This movement does not independently
+            investigate allegations and takes no position on the guilt of any individual.
           </p>
-          <p>Built for democratic accountability.</p>
+
+          <div className="mt-6 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+            <p>
+              © {new Date().getFullYear()} #RightToRecall Movement. A non-partisan civic initiative.
+            </p>
+            <p>Built for democratic accountability.</p>
+          </div>
         </div>
       </div>
     </footer>
