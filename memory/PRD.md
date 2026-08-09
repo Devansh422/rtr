@@ -86,6 +86,14 @@ routes (from 47), 43 tables (from 9), 26 new frontend pages.
 - **ai**: Constitution Assistant, retrieval-grounded, four refusal rules enforced in code (no sources → no answer; no legal advice; no PII leaves the platform; degrade rather than fail), correctable answer cache, coverage-gap report.
 - **legal**: privacy policy, content policy, disclaimer, consent records — all served from the API so the notice on a form and the published policy cannot drift.
 
+### Plain-language guide at `/docs`
+A non-technical guide to every feature: what it is, what happens step by step when
+you use it, whether you need an account, and what it cannot do. 32 features across 6
+areas, plus how the trust rules work, who does what, and an honest list of what is
+not finished. Content lives in `frontend/src/lib/docsContent.js` as data, so the
+contents list and the feature list cannot disagree — adding a feature means adding one
+object. Linked from the navbar ("How this site works") and every page footer.
+
 ### Core additions
 `citations.py` (verifiability gate), `moderation.py` (non-partisan content policy as
 code), `search.py` (shared index — the seam that keeps modules from importing each

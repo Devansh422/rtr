@@ -55,6 +55,7 @@ const MORE = [
   {
     group: "The movement",
     items: [
+      { to: "/docs", label: "How this site works" },
       { to: "/about", label: "About" },
       { to: "/campaigns", label: "Campaigns" },
       { to: "/blog", label: "Blog" },

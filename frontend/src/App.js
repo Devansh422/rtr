@@ -53,6 +53,7 @@ import Events from "@/pages/Events";
 import EventDetail from "@/pages/EventDetail";
 import Assistant from "@/pages/Assistant";
 import SiteSearch from "@/pages/SiteSearch";
+import Docs from "@/pages/Docs";
 import Legal from "@/pages/Legal";
 import CertificateVerify from "@/pages/CertificateVerify";
 
@@ -116,6 +117,9 @@ function PublicApp() {
           <Route path="/search" element={<SiteSearch />} />
           <Route path="/certificates" element={<CertificateVerify />} />
           <Route path="/certificates/:code" element={<CertificateVerify />} />
+
+          {/* Plain-language guide to every feature */}
+          <Route path="/docs" element={<Docs />} />
 
           {/* Published policies (§1, §7) */}
           <Route path="/privacy" element={<Legal kind="privacy" />} />

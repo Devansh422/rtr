@@ -58,6 +58,7 @@ const NAV_GROUPS = [
  * these is making a claim it has not earned.
  */
 const POLICY_LINKS = [
+  { to: "/docs", label: "How this site works" },
   { to: "/privacy", label: "Privacy policy" },
   { to: "/content-policy", label: "Content policy" },
   { to: "/disclaimer", label: "Disclaimer & sources" },
