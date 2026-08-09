@@ -40,6 +40,28 @@ def utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def as_aware(value: Optional[datetime]) -> Optional[datetime]:
+    """Guarantee a timestamp read back from the database carries a timezone.
+
+    `DateTime(timezone=True)` behaves differently across the two databases this
+    project runs on. Postgres round-trips the offset, so values come back aware.
+    SQLite has no native timestamp type and returns them NAIVE -- and comparing a
+    naive datetime with an aware one raises TypeError rather than returning a
+    wrong answer.
+
+    That difference is invisible in production and fatal in the test suite, which
+    runs on SQLite precisely so it needs no infrastructure. Any code comparing a
+    stored timestamp against `utcnow()` must pass it through here first, or it
+    works in production and crashes in CI -- or worse, is simply never covered.
+
+    Naive values are treated as UTC, which is what they are: every timestamp in
+    this schema is written by `utcnow()`.
+    """
+    if value is None:
+        return None
+    return value if value.tzinfo is not None else value.replace(tzinfo=timezone.utc)
+
+
 class Base(DeclarativeBase):
     pass
 
@@ -292,7 +314,7 @@ class Citizen(Base):
     last_seen_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     def is_muted(self) -> bool:
-        return self.muted_until is not None and self.muted_until > utcnow()
+        return self.muted_until is not None and as_aware(self.muted_until) > utcnow()
 
     def public_dict(self) -> dict:
         return {

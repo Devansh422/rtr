@@ -16,7 +16,7 @@ from backend.core.deps import (
     require_speaking_citizen,
     require_state_scope,
 )
-from backend.core.models import Certificate, Citizen, utcnow
+from backend.core.models import Certificate, Citizen, as_aware, utcnow
 from backend.core.rbac import Principal
 from backend.core.security import slugify
 from backend.modules.events.models import (
@@ -156,7 +156,7 @@ async def register_for_event(
     event = (await session.execute(select(Event).where(Event.slug == slug))).scalar_one_or_none()
     if event is None or event.status != EventStatus.PUBLISHED:
         raise HTTPException(status_code=404, detail="Event not open for registration")
-    if event.starts_at < utcnow():
+    if as_aware(event.starts_at) < utcnow():
         raise HTTPException(status_code=400, detail="This event has already started")
     if event.capacity and event.registration_count >= event.capacity:
         raise HTTPException(status_code=400, detail="This event is full")

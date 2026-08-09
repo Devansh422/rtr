@@ -223,7 +223,7 @@ it is idempotent, none of it overwrites an editor's work, and a fingerprint in
 | States and union territories | 36 | `backend/core/geography.py` |
 | Districts of the pilot states | 47 (Delhi 11, Maharashtra 36) | `backend/seed_modules.py` |
 | ECI-recognised national parties | 6, plus "Independent" | `backend/seed_modules.py` |
-| Constitution articles | 47, published, bilingual | `backend/content/constitution.json` |
+| Constitution articles | 61, published, bilingual | `backend/content/constitution.json` |
 | Forum categories | 7 | `backend/modules/forum/models.py` |
 | RTI / representation templates | 6, legal-approved | `backend/modules/tools/seed_templates.py` |
 | Starter course | 1, with 4 lessons and a 6-question quiz | `backend/seed_modules.py` |
@@ -237,6 +237,96 @@ Two things are deliberately NOT seeded:
 - **Constituencies.** Seat lists come from Election Commission delimitation orders and
   should be imported from that source, not typed from memory. Use
   `POST /api/admin/constituencies/bulk` with a source URL on each row.
+
+## 5b. Loading the demo dataset (optional)
+
+Sample content so that every page and every feature has something to show: 6
+representatives with 45 sourced claims, 9 promises, 5 petitions with signatures, 12
+citizen reports, 6 forum discussions, 5 events, 8 volunteer tasks, 12 research
+documents, an extra course, and 14 members you can sign in as.
+
+**It is never loaded automatically.** Nothing in the boot or deploy path touches it.
+
+### Before you run it anywhere public
+
+This platform publishes claims about named people, and fabricated data on a live
+accountability site is precisely the failure its citation and fact-check gates exist
+to prevent. The dataset is built so it cannot be mistaken for real:
+
+- every person's name starts with `[DEMO]`, which appears in the profile heading,
+  every listing, every search result and every screenshot;
+- parties ("Demo Progressive Party") and constituencies ("Demo North Delhi") are
+  fictional, so no real party or office holder is implicated by any figure;
+- every citation is titled **"DEMO RECORD - not a real source"**, which renders next
+  to each figure on the profile;
+- member emails end in `@demo.rtr.invalid` (RFC 2606 reserved, never routable).
+
+Load it on staging, on a local machine, or on a fresh site you are demonstrating.
+Purge it before the site carries real data.
+
+### Steps
+
+Run from your machine, against the same `DATABASE_URL` the deployment uses. It talks
+to the database directly, so there is nothing to deploy and no downtime.
+
+```sh
+# 1. Same environment variables as the migration in step 1b.
+export DATABASE_URL='postgresql://...'
+export MONGO_URL='mongodb+srv://...' DB_NAME=rtr_movement
+export JWT_SECRET=x ADMIN_EMAIL=you@example.com ADMIN_PASSWORD=your-password
+
+# 2. Schema and reference data must already be in place.
+.venv/bin/python -m backend.scripts.migrate
+
+# 3. See what is currently loaded (safe to run any time).
+.venv/bin/python -m backend.scripts.load_demo --status
+
+# 4. Load it. Prints a warning and asks you to type 'load demo data' to confirm.
+.venv/bin/python -m backend.scripts.load_demo --load
+#    Add --yes to skip the prompt in a script.
+```
+
+Nothing needs redeploying — the frontend reads it on the next page load.
+
+### Checking it worked
+
+```sh
+curl https://YOUR-DOMAIN/api/representatives | head       # 5 published profiles
+curl https://YOUR-DOMAIN/api/petitions | head             # 5 petitions
+curl "https://YOUR-DOMAIN/api/search?q=recall" | head     # ~20 results
+```
+
+Then in a browser: `/states` should have a coloured map, `/representatives` should
+list five `[DEMO]` profiles, and `/representatives/demo-suresh-kolhe` should show a
+**disputed** claim with the reviewer's note — which is the trust layer working.
+
+### Signing in as a demo member
+
+Every demo member signs in at `/login` with the access code **`DEMO-USER`**:
+
+```
+citizen1@demo.rtr.invalid  ...  citizen14@demo.rtr.invalid
+```
+
+`citizen1` has the most activity — signed petitions, filed reports, forum posts, 23
+verified volunteer hours, event tickets and a course certificate — so it is the best
+account for walking through the member experience.
+
+Member sign-in is the only part that needs MongoDB. If Mongo is unreachable when you
+load, the loader says so and everything else still loads; re-run `--load` later to add
+the sign-in records.
+
+### Removing it
+
+```sh
+.venv/bin/python -m backend.scripts.load_demo --purge
+.venv/bin/python -m backend.scripts.load_demo --status   # confirm it is 0
+```
+
+Purge removes every record the loader created and restores the campaign stage of each
+state it changed. It identifies its own records only by the markers above, so it
+cannot touch real data sitting alongside it. Both `--load` and `--purge` are safe to
+re-run: a second load adds nothing.
 
 ### Editing seeded content
 
@@ -302,3 +392,14 @@ works by typing it.
 **The assistant only lists sources instead of answering.** No `GEMINI_API_KEY`, or the
 free-tier daily quota is exhausted. Both are expected operating conditions and the
 fallback is deliberate — `GET /api/health` shows which.
+
+**Demo data will not load: "DATABASE_URL is not set".** The dataset lives entirely in
+the relational database. Export the same `DATABASE_URL` the deployment uses.
+
+**Demo data loaded but pages are still empty.** Run `--status`. If it reports 0, the
+load did not commit — check the output for an error. If it reports records but the
+site shows nothing, you are pointed at a different database than the deployment.
+
+**`[DEMO]` profiles are visible on a live site.** Run
+`python -m backend.scripts.load_demo --purge`. It removes everything and restores the
+campaign stages it changed; real data is untouched.

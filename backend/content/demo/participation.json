@@ -1,0 +1,410 @@
+{
+  "_comment": "Demo events, registrations and volunteer work. Event dates are stored as offsets in days from load time rather than fixed dates, so the 'upcoming' and 'past' tabs are always populated no matter when the loader is run.",
+  "events": [
+    {
+      "slug": "demo-event-pune-workshop",
+      "title": "Workshop: filing your first RTI",
+      "title_hi": "कार्यशाला: अपनी पहली आरटीआई कैसे दाखिल करें",
+      "kind": "workshop",
+      "state": "MH",
+      "district": "MH-PU",
+      "venue": "Demo Community Hall, Kothrud",
+      "address": "3 Example Road\nDemo Kothrud\nPune 411038",
+      "days_from_now": 12,
+      "duration_hours": 3,
+      "capacity": 40,
+      "organiser_name": "Demo Pune volunteer group",
+      "organiser_contact": "9876500000",
+      "description": "DEMO EVENT - sample content.\n\nA practical session: what the RTI Act does and does not cover, how to word a request so it is answered rather than refused, where to send it, what the fee is, and what to do when the deadline passes without a reply.\n\nBring a specific question you want answered. You will leave with a drafted application.",
+      "registrations": [
+        {
+          "citizen": "citizen1",
+          "attended": false
+        },
+        {
+          "citizen": "citizen2",
+          "attended": false
+        },
+        {
+          "citizen": "citizen6",
+          "attended": false
+        },
+        {
+          "citizen": "citizen10",
+          "attended": false
+        },
+        {
+          "citizen": "citizen12",
+          "attended": false
+        }
+      ]
+    },
+    {
+      "slug": "demo-event-online-constitution",
+      "title": "Online session: what the Constitution says about removing a representative",
+      "kind": "webinar",
+      "state": null,
+      "is_online": true,
+      "meeting_url": "https://demo.rtr.invalid/meeting/constitution-session",
+      "days_from_now": 5,
+      "duration_hours": 1,
+      "capacity": 200,
+      "organiser_name": "Demo national volunteer team",
+      "description": "DEMO EVENT - sample content.\n\nA one-hour walk through Articles 83, 172, 61, 124 and 243E, and what the gap between them actually is. No legal background needed. Questions at the end.",
+      "registrations": [
+        {
+          "citizen": "citizen3",
+          "attended": false
+        },
+        {
+          "citizen": "citizen5",
+          "attended": false
+        },
+        {
+          "citizen": "citizen7",
+          "attended": false
+        },
+        {
+          "citizen": "citizen9",
+          "attended": false
+        },
+        {
+          "citizen": "citizen13",
+          "attended": false
+        },
+        {
+          "citizen": "citizen14",
+          "attended": false
+        }
+      ]
+    },
+    {
+      "slug": "demo-event-delhi-signature-drive",
+      "title": "Signature drive: Demo Nagar market",
+      "kind": "signature_drive",
+      "state": "DL",
+      "district": "DL-NO",
+      "venue": "Demo Nagar market square",
+      "days_from_now": 21,
+      "duration_hours": 4,
+      "capacity": 25,
+      "organiser_name": "Demo Delhi volunteer group",
+      "description": "DEMO EVENT - sample content.\n\nCollecting signatures for the attendance-disclosure petition. Two-hour shifts, materials provided. Useful if you have never done street outreach before - you will be paired with someone who has.",
+      "registrations": [
+        {
+          "citizen": "citizen3",
+          "attended": false
+        },
+        {
+          "citizen": "citizen4",
+          "attended": false
+        },
+        {
+          "citizen": "citizen13",
+          "attended": false
+        }
+      ]
+    },
+    {
+      "slug": "demo-event-volunteer-training",
+      "title": "Volunteer training: researching a representative profile",
+      "kind": "training",
+      "state": "MH",
+      "venue": "Demo Library, Pune",
+      "days_from_now": -18,
+      "duration_hours": 4,
+      "capacity": 30,
+      "organiser_name": "Demo research team",
+      "description": "DEMO EVENT - sample content.\n\nHow to build a representative profile from public records: finding the affidavit, reading the attendance return, what counts as a primary source, and why a figure without a citation is worse than no figure.",
+      "registrations": [
+        {
+          "citizen": "citizen1",
+          "attended": true
+        },
+        {
+          "citizen": "citizen2",
+          "attended": true
+        },
+        {
+          "citizen": "citizen5",
+          "attended": true
+        },
+        {
+          "citizen": "citizen9",
+          "attended": true
+        },
+        {
+          "citizen": "citizen12",
+          "attended": false
+        }
+      ]
+    },
+    {
+      "slug": "demo-event-bengaluru-meeting",
+      "title": "Public meeting: the case for recall in Karnataka",
+      "kind": "public_meeting",
+      "state": "KA",
+      "venue": "Demo Auditorium, Bengaluru East",
+      "days_from_now": -45,
+      "duration_hours": 2,
+      "organiser_name": "Demo Karnataka volunteer group",
+      "description": "DEMO EVENT - sample content.\n\nAn open meeting on whether Karnataka should legislate recall for its own Assembly, including the objections. Speakers from three different positions.",
+      "registrations": [
+        {
+          "citizen": "citizen5",
+          "attended": true
+        },
+        {
+          "citizen": "citizen14",
+          "attended": true
+        },
+        {
+          "citizen": "citizen1",
+          "attended": false
+        }
+      ]
+    }
+  ],
+  "volunteer_profiles": [
+    {
+      "citizen": "citizen1",
+      "skills": [
+        "research",
+        "data_entry",
+        "writing"
+      ],
+      "state": "MH",
+      "city": "Pune",
+      "hours_per_week": 6,
+      "languages": [
+        "English",
+        "Marathi",
+        "Hindi"
+      ],
+      "bio": "DEMO: Working through the Pune constituencies. Happy to pair with anyone new to affidavit research."
+    },
+    {
+      "citizen": "citizen2",
+      "skills": [
+        "field",
+        "events",
+        "social_media"
+      ],
+      "state": "MH",
+      "city": "Pune",
+      "hours_per_week": 4,
+      "languages": [
+        "Marathi",
+        "Hindi"
+      ]
+    },
+    {
+      "citizen": "citizen3",
+      "skills": [
+        "legal",
+        "research"
+      ],
+      "state": "DL",
+      "city": "Delhi",
+      "hours_per_week": 8,
+      "languages": [
+        "English",
+        "Hindi"
+      ]
+    },
+    {
+      "citizen": "citizen5",
+      "skills": [
+        "research",
+        "translation",
+        "teaching"
+      ],
+      "state": "KA",
+      "city": "Bengaluru",
+      "hours_per_week": 5,
+      "languages": [
+        "English",
+        "Kannada",
+        "Hindi"
+      ]
+    },
+    {
+      "citizen": "citizen9",
+      "skills": [
+        "translation",
+        "writing"
+      ],
+      "state": "KL",
+      "city": "Kochi",
+      "hours_per_week": 3,
+      "languages": [
+        "English",
+        "Malayalam"
+      ]
+    },
+    {
+      "citizen": "citizen13",
+      "skills": [
+        "design",
+        "media"
+      ],
+      "state": "DL",
+      "city": "Delhi",
+      "hours_per_week": 4,
+      "languages": [
+        "English",
+        "Hindi",
+        "Urdu"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "slug": "demo-task-translate-fundamental-rights",
+      "title": "Translate 6 Fundamental Rights articles into Marathi",
+      "skill": "translation",
+      "state": "MH",
+      "estimated_hours": 8,
+      "capacity": 3,
+      "due_in_days": 30,
+      "description": "DEMO TASK - sample content.\n\nTranslate the plain-language explanations for Articles 14, 15, 19, 21, 25 and 32 into Marathi. The original constitutional text is not translated - only our explanation of it.",
+      "acceptance_criteria": "All six explanations translated, reviewed by a second Marathi speaker, and submitted as a single document with the article number against each one. Terminology consistent with the Hindi versions already published."
+    },
+    {
+      "slug": "demo-task-research-pune-affidavits",
+      "title": "Transcribe affidavit figures for 4 Pune assembly constituencies",
+      "skill": "research",
+      "state": "MH",
+      "estimated_hours": 12,
+      "capacity": 4,
+      "due_in_days": 45,
+      "description": "DEMO TASK - sample content.\n\nWork through the nomination affidavits for four assembly constituencies and record declared assets, liabilities and pending cases, each with the page reference in the source document.",
+      "acceptance_criteria": "A spreadsheet with one row per candidate, every figure carrying a direct link to the affidavit and a page number. Entered independently by two volunteers and reconciled where they differ."
+    },
+    {
+      "slug": "demo-task-attendance-rti",
+      "title": "File RTIs for assembly attendance in 3 states",
+      "skill": "research",
+      "estimated_hours": 4,
+      "capacity": 3,
+      "due_in_days": 21,
+      "description": "DEMO TASK - sample content.\n\nFile RTI applications with three Assembly Secretariats asking for the attendance register for the last completed session. Use the generator on this site; the wording that has worked before is in the forum thread on this.",
+      "acceptance_criteria": "Three applications filed, with the despatch receipt and the diary number recorded for each. Deadlines diarised so the first appeal can be filed on time if there is no reply."
+    },
+    {
+      "slug": "demo-task-design-explainer",
+      "title": "Design a one-page explainer: recall vs impeachment",
+      "skill": "design",
+      "estimated_hours": 6,
+      "capacity": 2,
+      "due_in_days": 25,
+      "description": "DEMO TASK - sample content.\n\nA single printable page a volunteer can hand to someone at a stall. The distinction between removal by the legislature and removal by the voters, and where the Constitution provides each.",
+      "acceptance_criteria": "Print-ready A4 at 300dpi plus an editable source file, readable in greyscale, with no party colours or symbols anywhere in it."
+    },
+    {
+      "slug": "demo-task-verify-promises",
+      "title": "Find status evidence for 5 tracked promises",
+      "skill": "research",
+      "state": "MH",
+      "estimated_hours": 10,
+      "capacity": 2,
+      "due_in_days": 40,
+      "description": "DEMO TASK - sample content.\n\nFive promises are logged with no status evidence. Find a primary source establishing what actually happened - a department progress report, a budget document, an RTI reply.",
+      "acceptance_criteria": "Each promise has a primary source link and a one-paragraph note. Where no evidence can be found, say so - 'cannot be assessed' is a valid and useful outcome."
+    },
+    {
+      "slug": "demo-task-social-explainers",
+      "title": "Write 10 short social posts from the Constitution Library",
+      "skill": "social_media",
+      "estimated_hours": 5,
+      "capacity": 3,
+      "due_in_days": 20,
+      "description": "DEMO TASK - sample content.\n\nOne post per article, each explaining a single provision in under 200 characters and linking to its page.",
+      "acceptance_criteria": "Ten posts, each factually checked against the article page, none mentioning any party or politician, supplied as plain text."
+    },
+    {
+      "slug": "demo-task-legal-review-appeal",
+      "title": "Review the second-appeal template against current Commission practice",
+      "skill": "legal",
+      "estimated_hours": 4,
+      "capacity": 1,
+      "due_in_days": 30,
+      "description": "DEMO TASK - sample content.\n\nCheck the second-appeal template against what Information Commissions currently require - format, enclosures, and anything that gets appeals returned.",
+      "acceptance_criteria": "Written note listing any changes needed, with the rule or practice direction behind each one."
+    },
+    {
+      "slug": "demo-task-data-entry-constituencies",
+      "title": "Enter Delhi assembly constituencies from the delimitation order",
+      "skill": "data_entry",
+      "state": "DL",
+      "estimated_hours": 6,
+      "capacity": 2,
+      "due_in_days": 35,
+      "description": "DEMO TASK - sample content.\n\nEnter all 70 Delhi assembly constituencies from the Election Commission's delimitation order: number, name, reservation status, and the district each falls in.",
+      "acceptance_criteria": "All 70 entered with the order cited as the source on every row, and the count reconciled against the order's own total."
+    }
+  ],
+  "assignments": [
+    {
+      "task": "demo-task-translate-fundamental-rights",
+      "citizen": "citizen9",
+      "status": "verified",
+      "hours_claimed": 9,
+      "hours_verified": 8,
+      "note": "DEMO: All six translated and reviewed by a second speaker. Terminology matched against the Hindi versions.",
+      "review_note": "DEMO: Verified at 8 hours. Excellent work - the reconciliation notes were particularly useful."
+    },
+    {
+      "task": "demo-task-research-pune-affidavits",
+      "citizen": "citizen1",
+      "status": "verified",
+      "hours_claimed": 14,
+      "hours_verified": 14,
+      "note": "DEMO: Four constituencies complete, double-entered with citizen2, three discrepancies found and resolved.",
+      "review_note": "DEMO: Verified in full."
+    },
+    {
+      "task": "demo-task-research-pune-affidavits",
+      "citizen": "citizen2",
+      "status": "verified",
+      "hours_claimed": 12,
+      "hours_verified": 11,
+      "note": "DEMO: Second-pass entry for the double-entry check.",
+      "review_note": "DEMO: Verified at 11 hours."
+    },
+    {
+      "task": "demo-task-attendance-rti",
+      "citizen": "citizen1",
+      "status": "verified",
+      "hours_claimed": 9,
+      "hours_verified": 9,
+      "note": "DEMO: Filed three applications and tracked all three to a reply. Notes on the wording that worked are in the forum.",
+      "review_note": "DEMO: Verified in full. The write-up saved the next volunteer a fortnight."
+    },
+    {
+      "task": "demo-task-attendance-rti",
+      "citizen": "citizen3",
+      "status": "submitted",
+      "hours_claimed": 4.5,
+      "note": "DEMO: Three applications filed and despatched, diary numbers recorded. Deadlines diarised for 30 days out."
+    },
+    {
+      "task": "demo-task-design-explainer",
+      "citizen": "citizen13",
+      "status": "claimed"
+    },
+    {
+      "task": "demo-task-verify-promises",
+      "citizen": "citizen1",
+      "status": "claimed"
+    },
+    {
+      "task": "demo-task-social-explainers",
+      "citizen": "citizen5",
+      "status": "returned",
+      "hours_claimed": 5,
+      "note": "DEMO: Ten posts drafted.",
+      "review_note": "DEMO: Returned - two of the ten name a party, which the content policy does not allow. Everything else is good; rewrite those two and resubmit."
+    }
+  ]
+}

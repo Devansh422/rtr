@@ -1,0 +1,422 @@
+{
+  "_comment": "Demo research documents, media items and one extra course. Documents that point at genuinely public sources (India Code, NALSA, the RTI portal) use their real URLs, because those are real and useful; anything that would be a fabricated record uses a demo URL with a title saying so.",
+  "documents": [
+    {
+      "slug": "demo-doc-constitution-full-text",
+      "title": "The Constitution of India (full text)",
+      "kind": "legislation",
+      "authors": "Government of India",
+      "publisher": "India Code, Legislative Department",
+      "published_on": "2024-01-26",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1362",
+      "licence": "gov_open",
+      "summary": "The complete, current text of the Constitution as maintained by the Legislative Department. This is the authoritative source behind every article page in the library.",
+      "tags": [
+        "constitution",
+        "primary-source"
+      ],
+      "article_refs": [
+        "14",
+        "21",
+        "326",
+        "368"
+      ]
+    },
+    {
+      "slug": "demo-doc-rti-act",
+      "title": "Right to Information Act, 2005",
+      "kind": "legislation",
+      "authors": "Parliament of India",
+      "publisher": "RTI Online, DoPT",
+      "published_on": "2005-06-15",
+      "source_url": "https://rti.gov.in/",
+      "licence": "gov_open",
+      "summary": "The Act every RTI application on this site is filed under. Sections 6, 7, 8, 10 and 19 are the ones the generators rely on.",
+      "tags": [
+        "rti",
+        "transparency",
+        "primary-source"
+      ]
+    },
+    {
+      "slug": "demo-doc-nalsa-legal-aid",
+      "title": "Free legal aid: who is entitled and how to apply",
+      "kind": "report",
+      "authors": "National Legal Services Authority",
+      "publisher": "NALSA",
+      "source_url": "https://nalsa.gov.in/",
+      "licence": "gov_open",
+      "summary": "Who qualifies for free legal aid under the Legal Services Authorities Act, 1987, and where the District Legal Services Authority is in each district. Referenced from the PIL Resource Centre.",
+      "tags": [
+        "legal-aid",
+        "pil"
+      ]
+    },
+    {
+      "slug": "demo-doc-recall-comparative-study",
+      "title": "DEMO: Recall provisions in comparative practice",
+      "kind": "research_paper",
+      "authors": "Demo research team",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-03-14",
+      "source_url": "https://demo.rtr.invalid/research/comparative-recall-study",
+      "licence": "own_work",
+      "summary": "DEMO DOCUMENT - sample content. A survey of recall mechanisms in other jurisdictions: thresholds, minimum periods after election, who verifies signatures, and what has actually happened where recall exists. Written to inform the safeguards a workable Indian law would need.",
+      "tags": [
+        "right-to-recall",
+        "comparative",
+        "research"
+      ],
+      "page_count": 34,
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-doc-panchayat-recall-states",
+      "title": "DEMO: State laws providing recall at panchayat and municipal level",
+      "kind": "research_paper",
+      "authors": "Demo research team",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-02-02",
+      "source_url": "https://demo.rtr.invalid/research/panchayat-recall-survey",
+      "licence": "own_work",
+      "summary": "DEMO DOCUMENT - sample content. Which states already allow the recall of local representatives, what the thresholds are, how often it has been used, and what happened. This is the strongest evidence that recall is not alien to Indian law.",
+      "tags": [
+        "right-to-recall",
+        "panchayat",
+        "state-law"
+      ],
+      "article_refs": [
+        "243A",
+        "243E",
+        "40"
+      ],
+      "page_count": 22,
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-doc-attendance-methodology",
+      "title": "DEMO: How we calculate and check attendance figures",
+      "kind": "report",
+      "authors": "Demo research team",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-04-08",
+      "source_url": "https://demo.rtr.invalid/research/attendance-methodology",
+      "licence": "own_work",
+      "summary": "DEMO DOCUMENT - sample content. The method behind every attendance percentage on this site: which register is used, how partial terms are handled, why a member who joined mid-session is not compared with one who did not, and what the figure does not tell you.",
+      "tags": [
+        "methodology",
+        "attendance",
+        "transparency"
+      ],
+      "page_count": 11,
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-doc-sourcing-standard",
+      "title": "DEMO: Sourcing standard for claims about named people",
+      "kind": "report",
+      "authors": "Demo legal and research teams",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-01-20",
+      "source_url": "https://demo.rtr.invalid/research/sourcing-standard",
+      "licence": "own_work",
+      "summary": "DEMO DOCUMENT - sample content. Which sources count as a primary public record, which do not, what happens to a claim that cannot be sourced, and why the person who enters a figure is never the person who approves it.",
+      "tags": [
+        "methodology",
+        "verification",
+        "policy"
+      ],
+      "page_count": 8,
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-doc-committee-submission-mh",
+      "title": "DEMO: Written submission to the Maharashtra committee",
+      "kind": "committee_report",
+      "authors": "Demo Maharashtra volunteer group",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-06-30",
+      "source_url": "https://demo.rtr.invalid/research/mh-committee-submission",
+      "licence": "own_work",
+      "summary": "DEMO DOCUMENT - sample content. The submission made to the committee considering the private member's Bill, setting out the four safeguards proposed and answering the three objections raised at the first hearing.",
+      "tags": [
+        "maharashtra",
+        "right-to-recall",
+        "submission"
+      ],
+      "state": "MH",
+      "page_count": 16,
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-media-recall-vs-impeachment",
+      "title": "DEMO: Recall vs impeachment (one-page explainer)",
+      "kind": "infographic",
+      "authors": "Demo design volunteers",
+      "publisher": "Right to Recall Movement",
+      "published_on": "2026-05-11",
+      "source_url": "https://demo.rtr.invalid/media/recall-vs-impeachment",
+      "licence": "cc_by_sa",
+      "summary": "DEMO ITEM - sample content. A printable single page setting out the difference between removal by the legislature and removal by the voters. Designed to be readable in greyscale for cheap printing.",
+      "tags": [
+        "explainer",
+        "print",
+        "outreach"
+      ],
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-media-article-326-poster",
+      "title": "DEMO: Article 326 poster",
+      "kind": "poster",
+      "authors": "Demo design volunteers",
+      "publisher": "Right to Recall Movement",
+      "source_url": "https://demo.rtr.invalid/media/article-326-poster",
+      "licence": "cc_by_sa",
+      "summary": "DEMO ITEM - sample content. A2 poster carrying the text of Article 326 in English and Hindi, for stalls and campus noticeboards.",
+      "tags": [
+        "poster",
+        "outreach",
+        "bilingual"
+      ],
+      "article_refs": [
+        "326"
+      ],
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-media-rti-handout",
+      "title": "DEMO: How to file an RTI (handout)",
+      "kind": "template",
+      "authors": "Demo volunteer team",
+      "publisher": "Right to Recall Movement",
+      "source_url": "https://demo.rtr.invalid/media/rti-handout",
+      "licence": "cc_by",
+      "summary": "DEMO ITEM - sample content. Two-sided handout covering the six steps, the fee, the deadlines and the appeal ladder. Used at the RTI workshops.",
+      "tags": [
+        "rti",
+        "handout",
+        "workshop"
+      ],
+      "file_type": "PDF"
+    },
+    {
+      "slug": "demo-media-workshop-slides",
+      "title": "DEMO: Volunteer training slides - researching a profile",
+      "kind": "presentation",
+      "authors": "Demo research team",
+      "publisher": "Right to Recall Movement",
+      "source_url": "https://demo.rtr.invalid/media/training-slides",
+      "licence": "own_work",
+      "summary": "DEMO ITEM - sample content. The slide deck used at the profile-research training: finding the affidavit, reading the attendance return, what counts as a primary source.",
+      "tags": [
+        "training",
+        "research",
+        "volunteers"
+      ],
+      "file_type": "PDF"
+    }
+  ],
+  "course": {
+    "slug": "demo-course-using-rti",
+    "title": "Using the RTI Act to hold an office to account",
+    "title_hi": "किसी कार्यालय को जवाबदेह ठहराने के लिए आरटीआई अधिनियम का उपयोग",
+    "summary": "A practical course on the Right to Information Act: what it covers, how to word a request that gets answered, the deadlines, and what to do when they are missed.",
+    "level": "beginner",
+    "estimated_minutes": 25,
+    "tags": [
+      "rti",
+      "civic-tools",
+      "transparency"
+    ],
+    "lessons": [
+      {
+        "slug": "what-the-act-covers",
+        "title": "What the Act actually covers",
+        "minutes": 6,
+        "article_refs": [
+          "19"
+        ],
+        "body": "DEMO LESSON - sample content.\n\nThe Right to Information Act, 2005 gives you access to information HELD BY a public authority IN MATERIAL FORM. Those two conditions do most of the work.\n\n'Held by' means the office that actually has the record, which is often not the department at the top. If you send your application to the wrong office, Section 6(3) requires them to transfer it within five days - but that costs you five days, so it is worth getting right.\n\n'In material form' is the condition people trip over. The Act gives you documents, files, notings, emails, contracts, reports, samples and models. It does not require anyone to compose an answer for you. 'Provide a copy of the sanction order for the road work in ward 12' is a valid request. 'Why has the road in ward 12 not been repaired?' is not, and gives the office an easy refusal.\n\nThe practical translation: ask yourself which document would contain the answer, and ask for that document.\n\nSection 6(2) is worth knowing too. You do not have to give any reason for wanting the information, and you cannot be asked for one. If an official asks why you want it, they are wrong, and you can say so."
+      },
+      {
+        "slug": "wording-and-filing",
+        "title": "Wording it, and filing it",
+        "minutes": 7,
+        "body": "DEMO LESSON - sample content.\n\nNumber your questions. An application with five numbered points gets a reply addressing five numbered points; an application written as a paragraph gets a paragraph that answers whichever part was easiest.\n\nNarrow the period. 'All correspondence relating to water supply' invites a refusal on the grounds that it would disproportionately divert resources. '1 April 2024 to 31 March 2025' does not.\n\nAsk for the form you want. Certified copies are usually more useful than inspection, and you are entitled to ask.\n\nThe fee is ten rupees for a central public authority, by Indian Postal Order, demand draft, banker's cheque or court fee stamp. States set their own, so check your state's RTI Rules. If you hold a BPL card you pay nothing under Section 7(5) - attach a copy.\n\nKeep three things: a photocopy of the application, the postal receipt, and the date of despatch. Every deadline that follows is counted from that date, so if you lose it you have lost your ability to appeal on time.\n\nOne last line worth adding to every application: ask them to tell you the name and designation of the First Appellate Authority for that office. You will need it if they do not reply, and asking now saves you a fortnight later."
+      },
+      {
+        "slug": "deadlines-and-appeals",
+        "title": "The deadlines, and what to do when they pass",
+        "minutes": 7,
+        "body": "DEMO LESSON - sample content.\n\nThirty days for a reply. Forty-eight hours if the information concerns the life or liberty of a person. Thirty-five days if you filed through an Assistant PIO.\n\nIf they miss the deadline, Section 7(6) entitles you to the information free of any further fee. Say so in your appeal - it is frequently ignored.\n\nA refusal must name the specific clause of Section 8 or 9 relied on. 'Exempt under Section 8' with no clause is not a lawful refusal, and saying so in the first appeal usually resolves it. Section 10 also requires partial disclosure: if part of a record is exempt, the rest must still be given.\n\nFirst appeal: within 30 days, no fee, to the First Appellate Authority in the same office - an officer senior to the PIO. They must decide within 30 days, or 45 with reasons recorded.\n\nSecond appeal: within 90 days, no fee, to the Central Information Commission for central authorities or your State Information Commission. The Commission can order disclosure and impose a penalty on a PIO who refused without reasonable cause.\n\nAttach everything at each stage - the original application, the proof of despatch, and any reply. A second appeal without them is usually returned, and you will have lost months."
+      },
+      {
+        "slug": "using-what-you-get",
+        "title": "Using what comes back",
+        "minutes": 5,
+        "article_refs": [
+          "350"
+        ],
+        "body": "DEMO LESSON - sample content.\n\nAn RTI reply is a primary public record. That makes it one of the strongest things you can attach to anything else you do.\n\nOn this platform, an RTI reply can be cited as the source for a citizen report card, attached to a correction about a representative's record, or added to the Research Centre so the next person does not have to file the same request.\n\nIt is also the standard follow-up to a representation. If you wrote to your MP or MLA and heard nothing, an RTI to the concerned department asking 'what action was taken on representation dated X' creates a record of the silence itself. That record is often more useful than the original answer would have been.\n\nAnd if the reply shows something is genuinely wrong, you now have documented evidence rather than an impression - which is what any court, committee or journalist will ask you for first."
+      }
+    ],
+    "quiz": {
+      "title": "Check your understanding",
+      "pass_percent": 70,
+      "questions": [
+        {
+          "q": "Which of these is a valid RTI request?",
+          "options": [
+            "Provide a copy of the sanction order for the road work in ward 12",
+            "Why has the road in ward 12 not been repaired?",
+            "Explain the department's policy on road repairs",
+            "Do you think the road work was handled properly?"
+          ],
+          "answer": 0,
+          "explanation": "The Act gives you access to information held in material form. Ask for the RECORD that would contain the answer, not for an explanation or an opinion - the last three all invite a refusal on the grounds that no such information is held."
+        },
+        {
+          "q": "How long does a public authority normally have to reply?",
+          "options": [
+            "30 days",
+            "7 days",
+            "60 days",
+            "90 days"
+          ],
+          "answer": 0,
+          "explanation": "30 days normally, 48 hours where the information concerns the life or liberty of a person, and 35 days if the application was filed through an Assistant PIO."
+        },
+        {
+          "q": "You get no reply at all within the time limit. What are you entitled to?",
+          "options": [
+            "The information free of any further fee, under Section 7(6)",
+            "Nothing until you file a second appeal",
+            "Compensation from the department",
+            "An automatic escalation to the Information Commission"
+          ],
+          "answer": 0,
+          "explanation": "Section 7(6) means a missed deadline entitles you to the information without further fee. It is worth quoting in your first appeal, because it is frequently overlooked."
+        },
+        {
+          "q": "Do you have to explain why you want the information?",
+          "options": [
+            "No - Section 6(2) says you cannot even be asked",
+            "Yes, on the application form",
+            "Only for information about public officials",
+            "Only if the authority requests it"
+          ],
+          "answer": 0,
+          "explanation": "Section 6(2) is explicit: no reason is required and none may be demanded. If an official asks, they are wrong."
+        },
+        {
+          "q": "A refusal says only 'exempt under Section 8'. Is that lawful?",
+          "options": [
+            "No - it must name the specific clause relied on",
+            "Yes, Section 8 is sufficient on its own",
+            "Yes, but only for central authorities",
+            "It depends on the fee paid"
+          ],
+          "answer": 0,
+          "explanation": "A refusal has to identify the specific clause. Section 10 also requires partial disclosure, so even where part of a record is genuinely exempt, the remainder must still be provided."
+        },
+        {
+          "q": "How long do you have to file a first appeal, and what does it cost?",
+          "options": [
+            "30 days, no fee",
+            "90 days, no fee",
+            "30 days, ten rupees",
+            "There is no first appeal - you go straight to the Commission"
+          ],
+          "answer": 0,
+          "explanation": "First appeal: within 30 days of the decision or of the date it was due, no fee, to the First Appellate Authority in the same office. The second appeal is 90 days, also free, and goes to the Information Commission."
+        }
+      ]
+    }
+  },
+  "constitution_edits": [
+    {
+      "article": "326",
+      "entries": [
+        {
+          "days_ago": 41,
+          "action": "create",
+          "summary": "DEMO: Drafted Article 326 with plain-English and Hindi explanations"
+        },
+        {
+          "days_ago": 22,
+          "action": "update",
+          "summary": "DEMO: Added the PUCL (NOTA) judgment to case law",
+          "changes": {
+            "case_law": {
+              "before": "1 judgment",
+              "after": "2 judgments"
+            }
+          }
+        },
+        {
+          "days_ago": 9,
+          "action": "correction_resolved",
+          "summary": "DEMO: Correction accepted - the 61st Amendment is now named explicitly",
+          "changes": {
+            "plain_en": {
+              "before": "lowered from 21",
+              "after": "lowered from 21 by the 61st Amendment in 1988"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "article": "83",
+      "entries": [
+        {
+          "days_ago": 41,
+          "action": "create",
+          "summary": "DEMO: Drafted Article 83 with plain-English and Hindi explanations"
+        },
+        {
+          "days_ago": 17,
+          "action": "update",
+          "summary": "DEMO: Sharpened the 'why this matters for Right to Recall' section",
+          "changes": {
+            "recall_relevance": {
+              "before": "shorter draft",
+              "after": "names each of the four existing exits from a seat"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "article": "243A",
+      "entries": [
+        {
+          "days_ago": 38,
+          "action": "create",
+          "summary": "DEMO: Drafted Article 243A with plain-English and Hindi explanations"
+        },
+        {
+          "days_ago": 12,
+          "action": "update",
+          "summary": "DEMO: Added the point that several states already legislate panchayat recall"
+        }
+      ]
+    },
+    {
+      "article": "328",
+      "entries": [
+        {
+          "days_ago": 38,
+          "action": "create",
+          "summary": "DEMO: Drafted Article 328 with plain-English and Hindi explanations"
+        },
+        {
+          "days_ago": 6,
+          "action": "update",
+          "summary": "DEMO: Clarified the 'so far as Parliament has not legislated' qualification"
+        }
+      ]
+    }
+  ]
+}

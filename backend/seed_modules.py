@@ -654,7 +654,9 @@ async def run() -> None:
     articles = _load_constitution_seed()
     fingerprint = _fingerprint(articles)
 
-    async for session in database.session_scope():
+    # See the warning in core/db.transaction: this function returns early on the
+    # fingerprint-hit path, which an `async for` over session_scope would not commit.
+    async with database.transaction() as session:
         try:
             if await _read_meta(session, MODULE_SEED_KEY) == fingerprint:
                 return

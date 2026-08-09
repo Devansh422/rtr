@@ -1,0 +1,77 @@
+{
+  "_comment": "Demo reference data. See README.md in this directory before loading. Parties and constituencies here are fictional; state codes are real because the campaign dashboard is organised on them, and the loader records each state's previous stage so --purge can restore it exactly.",
+
+  "states": [
+    {
+      "code": "MH",
+      "stage": "committee_stage",
+      "note": "DEMO: A private member's Bill proposing recall for municipal and assembly representatives was referred to the Committee on Law and Justice, which has invited public submissions until the end of the session.",
+      "source_url": "https://demo.data.gov.in/records/mh-assembly-committee-referral"
+    },
+    {
+      "code": "DL",
+      "stage": "petition_submitted",
+      "note": "DEMO: A petition signed by residents across all seven parliamentary constituencies was submitted to the Chief Minister's office, asking the government to bring a Bill in the next session.",
+      "source_url": "https://demo.data.gov.in/records/dl-petition-acknowledgement"
+    },
+    {
+      "code": "TN",
+      "stage": "bill_introduced",
+      "note": "DEMO: A Bill providing for the recall of members of the Legislative Assembly was introduced and has been listed for a second reading.",
+      "source_url": "https://demo.data.gov.in/records/tn-assembly-bill-introduction"
+    },
+    {
+      "code": "KA",
+      "stage": "awareness",
+      "note": "DEMO: Volunteer groups in four districts have run public meetings on the recall proposal; no formal demand has yet been submitted to the government.",
+      "source_url": "https://demo.data.gov.in/records/ka-awareness-summary"
+    },
+    {
+      "code": "KL",
+      "stage": "awareness",
+      "note": "DEMO: A series of college and panchayat-level discussions on the constitutional case for recall has been held over the last quarter.",
+      "source_url": "https://demo.data.gov.in/records/kl-awareness-summary"
+    },
+    {
+      "code": "RJ",
+      "stage": "awareness",
+      "note": "DEMO: Signature collection has begun in three districts ahead of a formal representation to the state government.",
+      "source_url": "https://demo.data.gov.in/records/rj-awareness-summary"
+    }
+  ],
+
+  "parties": [
+    {
+      "code": "DMOA",
+      "name": "Demo Progressive Party",
+      "name_hi": "डेमो प्रोग्रेसिव पार्टी",
+      "eci_status": "state",
+      "founded_year": 1998
+    },
+    {
+      "code": "DMOB",
+      "name": "Demo People's Front",
+      "name_hi": "डेमो पीपल्स फ्रंट",
+      "eci_status": "state",
+      "founded_year": 2004
+    },
+    {
+      "code": "DMOC",
+      "name": "Demo Civic Alliance",
+      "name_hi": "डेमो सिविक अलायंस",
+      "eci_status": "registered_unrecognised",
+      "founded_year": 2016
+    }
+  ],
+
+  "constituencies": [
+    { "state": "DL", "house": "lok_sabha", "number": 901, "name": "Demo North Delhi", "name_hi": "डेमो उत्तरी दिल्ली", "district": "DL-NO", "electors": 1842000 },
+    { "state": "DL", "house": "lok_sabha", "number": 902, "name": "Demo South Delhi", "name_hi": "डेमो दक्षिणी दिल्ली", "district": "DL-SO", "electors": 1710500 },
+    { "state": "DL", "house": "assembly", "number": 901, "name": "Demo Nagar", "name_hi": "डेमो नगर", "district": "DL-NO", "electors": 168400 },
+    { "state": "DL", "house": "assembly", "number": 902, "name": "Demo Vihar", "name_hi": "डेमो विहार", "district": "DL-EA", "reserved_for": "SC", "electors": 154900 },
+    { "state": "MH", "house": "lok_sabha", "number": 901, "name": "Demo Pune Central", "name_hi": "डेमो पुणे मध्य", "district": "MH-PU", "electors": 1955000 },
+    { "state": "MH", "house": "assembly", "number": 901, "name": "Demo Kothrud", "name_hi": "डेमो कोथरूड", "district": "MH-PU", "electors": 191200 },
+    { "state": "MH", "house": "assembly", "number": 902, "name": "Demo Vidyanagar", "name_hi": "डेमो विद्यानगर", "district": "MH-NG", "reserved_for": "ST", "electors": 176800 },
+    { "state": "KA", "house": "lok_sabha", "number": 901, "name": "Demo Bengaluru East", "name_hi": "डेमो बेंगलुरु पूर्व", "electors": 2103000 }
+  ]
+}

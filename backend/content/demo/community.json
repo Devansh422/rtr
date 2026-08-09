@@ -1,0 +1,252 @@
+{
+  "_comment": "Demo members and the content they produce. Emails end in @demo.rtr.invalid (RFC 2606 reserved, can never be routable) and every one signs in with the access code DEMO-USER. Report ratings are weighted so that at least one service in Maharashtra clears the five-rating floor and shows a real score, while another stays below it and shows the withheld state instead.",
+
+  "citizens": [
+    { "handle": "citizen1", "display_name": "Anjali K.", "state": "MH", "reputation": 46 },
+    { "handle": "citizen2", "display_name": "Rohit B.", "state": "MH", "reputation": 28 },
+    { "handle": "citizen3", "display_name": "Sameera N.", "state": "DL", "reputation": 22 },
+    { "handle": "citizen4", "display_name": "Vikram T.", "state": "DL", "reputation": 15 },
+    { "handle": "citizen5", "display_name": "Nandini R.", "state": "KA", "reputation": 33 },
+    { "handle": "citizen6", "display_name": "Imran S.", "state": "MH", "reputation": 11 },
+    { "handle": "citizen7", "display_name": "Deepa M.", "state": "TN", "reputation": 19 },
+    { "handle": "citizen8", "display_name": "Harpreet G.", "state": "PB", "reputation": 7 },
+    { "handle": "citizen9", "display_name": "Kavya P.", "state": "KL", "reputation": 25 },
+    { "handle": "citizen10", "display_name": "Ravi J.", "state": "MH", "reputation": 4 },
+    { "handle": "citizen11", "display_name": "Sunita D.", "state": "RJ", "reputation": 13 },
+    { "handle": "citizen12", "display_name": "Aditya V.", "state": "MH", "reputation": 9 },
+    { "handle": "citizen13", "display_name": "Farhan A.", "state": "DL", "reputation": 17 },
+    { "handle": "citizen14", "display_name": "Meghna S.", "state": "KA", "reputation": 2 }
+  ],
+
+  "petitions": [
+    {
+      "slug": "demo-petition-mh-recall-bill",
+      "title": "Introduce a Right to Recall Bill in the Maharashtra Assembly",
+      "summary": "DEMO: Ask the Maharashtra government to bring a Bill providing for the recall of MLAs, with a high signature threshold and verification by the Election Commission.",
+      "body": "DEMO PETITION - sample content.\n\nTo the Chief Minister of Maharashtra,\n\nArticle 326 of the Constitution rests our democracy on the vote of the adult citizen. Article 172 then fixes a five-year term for this Assembly, and provides no way for the voters who elected a member to end that term early.\n\nArticle 328 permits this Assembly to legislate on elections to its own House where Parliament has not already occupied the field. We therefore ask the government to introduce a Bill providing for the recall of members of the Legislative Assembly, subject to four safeguards: a signature threshold high enough to prevent frivolous use, verification conducted by the Election Commission and not by the government of the day, a defined ground rather than an open one, and a fair hearing for the member concerned.\n\nWe make this request of every party equally and take no position on which party should govern.",
+      "addressed_to": "Chief Minister of Maharashtra",
+      "state": "MH",
+      "category": "right-to-recall",
+      "target": 5000,
+      "official": true,
+      "status": "open",
+      "signatures": [
+        { "citizen": "citizen1", "public": true, "comment": "DEMO: Our ward has had no response to anything for two years. There should be a way to say so before 2029." },
+        { "citizen": "citizen2", "public": true, "comment": "" },
+        { "citizen": "citizen6", "public": false, "comment": "" },
+        { "citizen": "citizen10", "public": true, "comment": "DEMO: Signing because the safeguards are spelled out. Recall without a fair hearing would be worse than no recall." },
+        { "citizen": "citizen12", "public": false, "comment": "" },
+        { "citizen": "citizen5", "public": true, "comment": "" },
+        { "citizen": "citizen9", "public": false, "comment": "" },
+        { "citizen": "citizen3", "public": true, "comment": "DEMO: Same demand should go to every state assembly." }
+      ]
+    },
+    {
+      "slug": "demo-petition-dl-attendance-disclosure",
+      "title": "Publish assembly attendance records within seven days of each sitting",
+      "summary": "DEMO: Ask the Delhi Assembly secretariat to publish member attendance in a machine-readable format within a week of each sitting, as several other legislatures already do.",
+      "body": "DEMO PETITION - sample content.\n\nAttendance data for this Assembly is currently published irregularly and as scanned images, which makes it unusable for anyone trying to follow their representative's record.\n\nWe ask the Secretariat to publish, within seven days of each sitting: the list of members present, the questions tabled, and the members who participated in each debate, in a machine-readable format under an open licence.\n\nThis is a request about process, not about any member or party.",
+      "addressed_to": "Secretary, Delhi Legislative Assembly",
+      "state": "DL",
+      "category": "transparency",
+      "target": 2000,
+      "official": false,
+      "author": "citizen3",
+      "status": "open",
+      "signatures": [
+        { "citizen": "citizen3", "public": true, "comment": "DEMO: I filed an RTI for this and was told to inspect the records in person. That is not publication." },
+        { "citizen": "citizen4", "public": true, "comment": "" },
+        { "citizen": "citizen13", "public": false, "comment": "" },
+        { "citizen": "citizen1", "public": false, "comment": "" },
+        { "citizen": "citizen7", "public": true, "comment": "" }
+      ]
+    },
+    {
+      "slug": "demo-petition-ka-public-meetings",
+      "title": "Require every MLA to hold a public meeting in their constituency each quarter",
+      "summary": "DEMO: A standing requirement that members meet constituents publicly, with minutes published afterwards.",
+      "body": "DEMO PETITION - sample content.\n\nThere is currently no requirement for a member of this Assembly to meet their constituents at all between elections.\n\nWe ask that the Assembly adopt a rule requiring every member to hold at least one publicly notified constituency meeting each quarter, with the date notified a fortnight in advance and a record of the issues raised published afterwards.\n\nThis applies to every member equally, regardless of party.",
+      "addressed_to": "Speaker, Karnataka Legislative Assembly",
+      "state": "KA",
+      "category": "accountability",
+      "target": 1000,
+      "official": false,
+      "author": "citizen5",
+      "status": "open",
+      "signatures": [
+        { "citizen": "citizen5", "public": true, "comment": "" },
+        { "citizen": "citizen14", "public": false, "comment": "" },
+        { "citizen": "citizen1", "public": false, "comment": "" }
+      ]
+    },
+    {
+      "slug": "demo-petition-tn-bill-second-reading",
+      "title": "List the Recall Bill for a second reading this session",
+      "summary": "DEMO: The Bill was introduced and has not been listed since. This petition asks for it to be taken up.",
+      "body": "DEMO PETITION - sample content.\n\nThe Bill providing for the recall of members of this Assembly was introduced last session and has not been listed for a second reading since.\n\nWe ask that it be listed, debated and voted on, whatever the outcome of that vote. A Bill that is neither passed nor rejected leaves the question unanswered.",
+      "addressed_to": "Speaker, Tamil Nadu Legislative Assembly",
+      "state": "TN",
+      "category": "right-to-recall",
+      "target": 3000,
+      "official": true,
+      "status": "delivered",
+      "status_note": "DEMO: Delivered to the Speaker's office on 12 May with 1,847 signatures. Acknowledgement received and recorded below.",
+      "outcome_source_url": "https://demo.data.gov.in/records/tn-speaker-acknowledgement",
+      "signatures": [
+        { "citizen": "citizen7", "public": true, "comment": "DEMO: Introduced and then forgotten is the usual outcome. Worth pushing." },
+        { "citizen": "citizen9", "public": true, "comment": "" },
+        { "citizen": "citizen1", "public": false, "comment": "" },
+        { "citizen": "citizen5", "public": false, "comment": "" }
+      ]
+    },
+    {
+      "slug": "demo-petition-mh-ward-water",
+      "title": "Restore piped water supply to Demo Kothrud ward 14",
+      "summary": "DEMO: Water supply to ward 14 has been intermittent since March. This petition asks the municipal corporation for a repair schedule.",
+      "body": "DEMO PETITION - sample content.\n\nSupply to ward 14 has been intermittent since March, with several stretches receiving water once every three days.\n\nWe ask the corporation to publish a repair schedule with dates, and to provide tanker supply to the affected stretches until the mains work is complete.",
+      "addressed_to": "Commissioner, Demo Municipal Corporation",
+      "state": "MH",
+      "category": "water",
+      "target": 500,
+      "official": false,
+      "author": "citizen1",
+      "status": "responded",
+      "status_note": "DEMO: The corporation replied on 2 August confirming a repair schedule and tanker supply to four stretches. Work reported complete in two of them.",
+      "outcome_source_url": "https://demo.data.gov.in/records/mh-corporation-reply-ward14",
+      "signatures": [
+        { "citizen": "citizen1", "public": true, "comment": "DEMO: Filed after three RTIs went unanswered." },
+        { "citizen": "citizen2", "public": true, "comment": "" },
+        { "citizen": "citizen6", "public": true, "comment": "DEMO: Same problem two streets over." },
+        { "citizen": "citizen10", "public": false, "comment": "" },
+        { "citizen": "citizen12", "public": true, "comment": "" }
+      ]
+    }
+  ],
+
+  "reports": [
+    { "slug": "demo-report-mh-water-1", "citizen": "citizen1", "service": "water", "state": "MH", "district": "MH-PU", "constituency": "MH-AC-901", "locality": "Ward 14, Demo Kothrud", "rating": 2, "show_author": true, "status": "published", "title": "Piped supply reduced to once every three days since March", "body": "DEMO REPORT - sample content. Supply to our stretch was daily until the end of February. Since March it has come once every three days, usually for under an hour. Two complaints were filed with the ward office in April (nos. 4412 and 4498) and neither has been answered. The nearest tanker point is a twenty-minute walk, which is not manageable for the older residents on this street.", "verification_note": "DEMO: Checked against the complaint numbers cited, which appear on the corporation's public grievance portal as open." },
+    { "slug": "demo-report-mh-water-2", "citizen": "citizen2", "service": "water", "state": "MH", "district": "MH-PU", "locality": "Ward 12, Demo Kothrud", "rating": 2, "status": "published", "title": "Low pressure on upper floors throughout the ward", "body": "DEMO REPORT - sample content. Water reaches ground floor taps but not the first floor or above, across most of the ward. Residents are pumping manually. This started around the same time as the reduction in supply hours." },
+    { "slug": "demo-report-mh-water-3", "citizen": "citizen6", "service": "water", "state": "MH", "district": "MH-PU", "locality": "Ward 9, Demo Kothrud", "rating": 3, "status": "resolved", "title": "Leaking main flooding the road near the school", "body": "DEMO REPORT - sample content. A leaking main outside the school gate had been flooding the road for six weeks, making the approach unusable during school hours.", "verification_note": "DEMO: Photographs supplied with the report matched the location given.", "response_from": "Demo Municipal Corporation, Water Works Department", "response_text": "DEMO: The leak was traced to a joint failure on the 300mm main and repaired on 14 July. The road surface was reinstated on 18 July.", "response_source_url": "https://demo.data.gov.in/records/mh-works-completion-4412" },
+    { "slug": "demo-report-mh-water-4", "citizen": "citizen10", "service": "water", "state": "MH", "district": "MH-NG", "locality": "Demo Vidyanagar, Sector 3", "rating": 1, "status": "published", "title": "No supply at all to four streets for eleven days", "body": "DEMO REPORT - sample content. Four streets in sector 3 have had no piped supply for eleven days. Residents are buying water privately at 400 rupees per tanker. No notice was given and no restoration date has been announced." },
+    { "slug": "demo-report-mh-water-5", "citizen": "citizen12", "service": "water", "state": "MH", "district": "MH-PU", "locality": "Ward 21, Demo Pune Central", "rating": 3, "status": "published", "title": "Supply restored but quality is poor", "body": "DEMO REPORT - sample content. Supply hours were restored last month but the water is discoloured on most days. A sample was submitted to the ward office three weeks ago and no result has been shared." },
+    { "slug": "demo-report-mh-water-6", "citizen": "citizen1", "service": "water", "state": "MH", "district": "MH-PU", "locality": "Ward 16, Demo Kothrud", "rating": 4, "status": "published", "title": "Supply is reliable here, unlike neighbouring wards", "body": "DEMO REPORT - sample content. Filing this because the scorecard should not only carry complaints. Supply in ward 16 has been daily and adequate throughout the year. The difference with ward 14 next door is stark and worth someone explaining." },
+    { "slug": "demo-report-mh-health-1", "citizen": "citizen2", "service": "health", "state": "MH", "district": "MH-PU", "locality": "Demo Kothrud PHC", "rating": 2, "status": "published", "title": "Primary health centre has had no doctor since June", "body": "DEMO REPORT - sample content. The PHC has been staffed only by an ANM since June. Patients are being sent to the district hospital eighteen kilometres away. The staffing board outside the centre still lists a medical officer who was transferred in May." },
+    { "slug": "demo-report-mh-health-2", "citizen": "citizen6", "service": "health", "state": "MH", "district": "MH-NG", "locality": "Demo Vidyanagar sub-centre", "rating": 3, "status": "published", "title": "Sub-centre open but out of stock of basic medicines", "body": "DEMO REPORT - sample content. The sub-centre is staffed and open on schedule, but has been out of stock of basic medicines for most of the last two months. Patients are being asked to buy from private chemists." },
+    { "slug": "demo-report-dl-ration-1", "citizen": "citizen3", "service": "ration", "state": "DL", "district": "DL-NO", "locality": "Fair price shop, Demo Nagar", "rating": 2, "show_author": true, "status": "published", "title": "Portability device out of order for three weeks", "body": "DEMO REPORT - sample content. The portability device at this shop has been out of order for three weeks. Cardholders registered in other states are being turned away. The shop has a paper register but says it cannot issue against it." },
+    { "slug": "demo-report-dl-roads-1", "citizen": "citizen4", "service": "roads", "state": "DL", "district": "DL-EA", "locality": "Demo Vihar main road", "rating": 1, "status": "published", "title": "Main road unusable after resurfacing was abandoned midway", "body": "DEMO REPORT - sample content. Resurfacing work began in February and stopped in March with the road dug up along a 400 metre stretch. It has been left that way since. Two accidents have been reported at the unlit end." },
+    { "slug": "demo-report-dl-education-1", "citizen": "citizen13", "service": "education", "state": "DL", "district": "DL-NO", "locality": "Government school, Demo Nagar", "rating": 4, "status": "resolved", "title": "School toilets were non-functional for a full term", "body": "DEMO REPORT - sample content. Both toilet blocks were locked and out of use for the whole of the previous term, with no water connection.", "response_from": "Directorate of Education, Demo District", "response_text": "DEMO: A water connection was restored and both blocks were repaired and reopened before the start of the current term. The school has been added to the quarterly inspection list.", "response_source_url": "https://demo.data.gov.in/records/dl-education-inspection-round" },
+    { "slug": "demo-report-ka-transport-1", "citizen": "citizen5", "service": "transport", "state": "KA", "locality": "Demo Bengaluru East, outer wards", "rating": 2, "status": "published", "title": "Last bus from the outer wards is at 7pm", "body": "DEMO REPORT - sample content. The last service from the outer wards to the city leaves at 7pm, which makes evening shift work impossible without private transport. The published timetable claims a 9.30pm service that has not run for at least a year." }
+  ],
+
+  "forum": [
+    {
+      "slug": "demo-thread-recall-safeguards",
+      "category": "right-to-recall",
+      "citizen": "citizen1",
+      "state": "MH",
+      "title": "What safeguards would a recall law actually need to survive a court challenge?",
+      "body": "DEMO POST - sample content.\n\nEvery time this comes up someone says courts would strike it down. Reading Article 21 and the Maneka Gandhi line of cases, it seems to me the answer is that a recall law needs a defined ground, notice, a hearing for the member, and an independent authority running it.\n\nWhat else would be needed? And is there a case for a minimum period after election before a recall can be initiated at all, so that a member gets a fair chance to do anything?",
+      "upvotes": 7,
+      "replies": [
+        { "citizen": "citizen5", "body": "DEMO REPLY: The minimum period is standard in most jurisdictions that have recall - usually a year. Without it you get a permanent campaign, which is the strongest argument against recall and the easiest one to defuse.", "upvotes": 5 },
+        { "citizen": "citizen3", "body": "DEMO REPLY: Agreed on the hearing. The other one people miss is the threshold. If it is a simple majority of those who turn out, a low-turnout recall can unseat someone elected on a high turnout, which is hard to defend.", "upvotes": 4 },
+        { "citizen": "citizen1", "body": "DEMO REPLY: That is a good point. A threshold expressed as a share of registered electors rather than of those voting would deal with it.", "upvotes": 2 }
+      ]
+    },
+    {
+      "slug": "demo-thread-article-328-route",
+      "category": "constitution",
+      "citizen": "citizen3",
+      "title": "Can a single state really legislate recall on its own under Article 328?",
+      "body": "DEMO POST - sample content.\n\nArticle 328 says a state legislature may make law on elections to its own House 'so far as provision in that behalf is not made by Parliament'. The Representation of the People Acts already cover a great deal of the ground.\n\nDoes anyone know whether recall would count as occupied field, or whether it is a genuinely open area? This seems like the hinge of the whole state-by-state strategy.",
+      "upvotes": 11,
+      "replies": [
+        { "citizen": "citizen9", "body": "DEMO REPLY: The argument I have seen is that the RP Acts deal with the conduct of elections and disqualification, not with mid-term removal by the electorate, so it is not occupied. But it is untested, which is why the first state to try it would end up in court whatever it did.", "upvotes": 8 },
+        { "citizen": "citizen7", "body": "DEMO REPLY: Worth adding that panchayat recall exists in several states under state law, and none of those have been struck down. Different tier, but it is not nothing.", "upvotes": 6 }
+      ]
+    },
+    {
+      "slug": "demo-thread-rti-attendance",
+      "category": "civic-tools",
+      "citizen": "citizen4",
+      "title": "Template that worked for me: RTI for assembly attendance records",
+      "body": "DEMO POST - sample content.\n\nFiled using the generator here, with one change that made the difference: I asked for 'a copy of the attendance register maintained under the Rules for the sittings held between X and Y' rather than asking how many days the member attended.\n\nThe first version came back as 'information not held in the form sought'. The second was answered in 24 days. Ask for the record, not the number.",
+      "upvotes": 14,
+      "replies": [
+        { "citizen": "citizen13", "body": "DEMO REPLY: This matches my experience. Also worth naming the exact office - I lost three weeks to a transfer under Section 6(3) because I sent it to the department instead of the Secretariat.", "upvotes": 5 },
+        { "citizen": "citizen1", "body": "DEMO REPLY: Adding both of these to the research forum notes so the next person does not repeat it.", "upvotes": 3 }
+      ]
+    },
+    {
+      "slug": "demo-thread-mh-campaign-update",
+      "category": "state-campaigns",
+      "citizen": "citizen2",
+      "state": "MH",
+      "title": "Maharashtra: committee has invited written submissions, deadline this month",
+      "body": "DEMO POST - sample content.\n\nThe committee looking at the private member's Bill has invited written submissions and the deadline is the end of this month.\n\nIf you are in Maharashtra this is the single most useful thing you can do right now. Submissions from individuals are counted, not just from organisations. Happy to help anyone draft one.",
+      "upvotes": 9,
+      "replies": [
+        { "citizen": "citizen6", "body": "DEMO REPLY: Sent mine. It took about forty minutes using the representation generator as a starting point.", "upvotes": 4 },
+        { "citizen": "citizen12", "body": "DEMO REPLY: Does it need to be posted or is email accepted?", "upvotes": 0 },
+        { "citizen": "citizen2", "body": "DEMO REPLY: Email is accepted per the notice, but post it as well and keep the receipt. Costs nothing and it is a record.", "upvotes": 3 }
+      ]
+    },
+    {
+      "slug": "demo-thread-verifying-affidavits",
+      "category": "research",
+      "citizen": "citizen5",
+      "title": "How do you verify an asset figure when the affidavit is a scanned image?",
+      "body": "DEMO POST - sample content.\n\nWorking through a constituency and about half the affidavits are scans with no text layer. Transcribing by hand is slow and error-prone, and an error here ends up next to somebody's name.\n\nHow are others handling this? Double entry by two people? Or is there a source that has already transcribed them reliably?",
+      "upvotes": 6,
+      "replies": [
+        { "citizen": "citizen9", "body": "DEMO REPLY: Two people entering independently and comparing is what we did. Slow, but the one time we disagreed it turned out one of us had read a 7 as a 1.", "upvotes": 7 },
+        { "citizen": "citizen14", "body": "DEMO REPLY: Happy to be a second pair of eyes on the Karnataka ones if that helps.", "upvotes": 2 }
+      ]
+    },
+    {
+      "slug": "demo-thread-what-recall-is-not",
+      "category": "right-to-recall",
+      "citizen": "citizen9",
+      "title": "Recall is not impeachment, and conflating them loses the argument",
+      "body": "DEMO POST - sample content.\n\nCame up three times at a public meeting last week, so writing it out.\n\nImpeachment is removal BY the legislature for a specified breach - the President under Article 61, judges under Article 124. Recall is removal BY THE VOTERS for loss of confidence. The Constitution provides the first and nothing like the second for MPs and MLAs.\n\nWhen someone says 'we already have a removal mechanism', that is the distinction to make, and it usually ends the objection.",
+      "upvotes": 18,
+      "replies": [
+        { "citizen": "citizen1", "body": "DEMO REPLY: The other one worth having ready is Article 243E - panchayats already have mid-term dissolution with a fixed-date replacement. It is in the Constitution, one tier down.", "upvotes": 9 }
+      ]
+    }
+  ],
+
+  "corrections": [
+    {
+      "entity_type": "representative",
+      "entity_id": "demo-suresh-kolhe",
+      "field_key": "criminal.pending_cases",
+      "citizen": "citizen2",
+      "summary": "DEMO: One of the two pending cases listed was closed by the court in 2023",
+      "detail": "DEMO: The affidavit figure was correct at the time of filing, but one matter has since been closed. The order is on the eCourts portal under the case number given.",
+      "source_url": "https://demo.data.gov.in/records/court-order-closure-2023",
+      "source_title": "DEMO RECORD - not a real source: order of closure",
+      "status": "under_review"
+    },
+    {
+      "entity_type": "constitution_article",
+      "entity_id": "326",
+      "citizen": "citizen9",
+      "summary": "DEMO: The plain-English text should mention the 61st Amendment explicitly",
+      "detail": "DEMO: The explanation says the voting age was lowered from 21 but does not name the amendment that did it, which readers are likely to want.",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/1362",
+      "source_title": "India Code, Constitution of India",
+      "status": "accepted",
+      "resolution_note": "DEMO: Accepted. The 61st Amendment is now named in the plain-English text and in the amendments list on the article."
+    },
+    {
+      "entity_type": "representative",
+      "entity_id": "demo-meera-rathod",
+      "field_key": "attendance.percent",
+      "summary": "DEMO: Attendance figure looks too high compared with the House average",
+      "detail": "DEMO: Submitted without a source. The submitter believed the figure was implausible.",
+      "status": "rejected",
+      "resolution_note": "DEMO: Not accepted. The figure was re-checked against the cited sitting record and is correct as published. A figure being higher than average is not itself evidence that it is wrong, and no alternative source was offered."
+    }
+  ]
+}

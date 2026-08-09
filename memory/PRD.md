@@ -73,7 +73,7 @@ The platform described in `IMPLEMENTATION_PLAN.md` §4 is now built end to end. 
 routes (from 47), 43 tables (from 9), 26 new frontend pages.
 
 ### Modules
-- **constitution**: 47 articles seeded bilingually with verbatim text, plain English + Hindi, case law, "why this matters for Right to Recall", draft/publish gate, public history.
+- **constitution**: 61 articles seeded bilingually with verbatim text, plain English + Hindi, case law, "why this matters for Right to Recall", draft/publish gate, public history.
 - **representatives**: profiles + constituencies + parties, and a citation-gated claim store — one row per (representative, field, period), each carrying its own source and verification status. 17 tracked fields, 8 requiring a primary public record. Fact-check queue; publish is blocked while any high-risk claim is unverified, and nobody can verify a claim they entered.
 - **promises**: two independent citations per entry (that it was made; what became of it). Adverse statuses need a primary source. Seven statuses, not two.
 - **corrections**: generic "Suggest a correction" on any entity, open to anonymous submission. Unresolved submissions are disclosed as a fact without their text; resolved ones publish the objection and the reviewer's reasoning.

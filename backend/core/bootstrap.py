@@ -439,7 +439,11 @@ async def run_postgres_bootstrap() -> None:
 
     fingerprint = _registry_fingerprint()
 
-    async for session in database.session_scope():
+    # `transaction()` rather than `async for session_scope()`: the early return
+    # below writes (seed_bootstrap_admin may reset the password from the
+    # environment), and a return out of an `async for` over an async generator
+    # does not commit. See the warning in core/db.transaction.
+    async with database.transaction() as session:
         try:
             if await _read_meta(session, SEED_FINGERPRINT_KEY) == fingerprint:
                 # Registry unchanged since the last reconciliation; the admin

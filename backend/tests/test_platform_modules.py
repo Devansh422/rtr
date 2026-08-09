@@ -1193,3 +1193,143 @@ class TestPublicApi:
         assert body["openCount"] == 1
         assert "very specific objection" not in body["items"][0]["summary"]
         assert "being reviewed" in body["items"][0]["summary"]
+
+
+# --------------------------------------------------------------------------
+# Regressions found while building the demo dataset
+# --------------------------------------------------------------------------
+class TestSessionLifecycle:
+    """`transaction()` must commit on every clean exit path.
+
+    The generator form (`async for session in session_scope(): ... return`) does
+    NOT, because asyncio defers finalising a suspended async generator to
+    `loop.shutdown_asyncgens()`. That silently discarded writes in three places --
+    the bootstrap admin-password reset among them. These tests pin the contract.
+    """
+
+    async def _engine(self, tmp_path):
+        from sqlalchemy import text
+        from sqlalchemy.ext.asyncio import create_async_engine
+
+        engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path}/t.db")
+        async with engine.begin() as conn:
+            await conn.execute(text("CREATE TABLE t (v TEXT)"))
+        return engine
+
+    async def test_transaction_commits_on_early_return(self, tmp_path, monkeypatch):
+        from sqlalchemy import text
+        from sqlalchemy.ext.asyncio import async_sessionmaker
+
+        from backend.core import db as database
+
+        engine = await self._engine(tmp_path)
+        monkeypatch.setattr(database, "_engine", engine)
+        monkeypatch.setattr(
+            database, "_sessionmaker", async_sessionmaker(engine, expire_on_commit=False)
+        )
+        monkeypatch.setattr(database, "get_engine", lambda: engine)
+
+        async def writes_then_returns():
+            async with database.transaction() as session:
+                await session.execute(text("INSERT INTO t VALUES ('early-return')"))
+                return
+
+        await writes_then_returns()
+
+        async with database.transaction() as session:
+            rows = (await session.execute(text("SELECT v FROM t"))).scalars().all()
+        assert rows == ["early-return"], "an early return must still commit"
+        await engine.dispose()
+
+    async def test_transaction_rolls_back_on_error(self, tmp_path, monkeypatch):
+        from sqlalchemy import text
+        from sqlalchemy.ext.asyncio import async_sessionmaker
+
+        from backend.core import db as database
+
+        engine = await self._engine(tmp_path)
+        monkeypatch.setattr(database, "_engine", engine)
+        monkeypatch.setattr(
+            database, "_sessionmaker", async_sessionmaker(engine, expire_on_commit=False)
+        )
+        monkeypatch.setattr(database, "get_engine", lambda: engine)
+
+        with pytest.raises(ValueError):
+            async with database.transaction() as session:
+                await session.execute(text("INSERT INTO t VALUES ('should-not-persist')"))
+                raise ValueError("boom")
+
+        async with database.transaction() as session:
+            rows = (await session.execute(text("SELECT v FROM t"))).scalars().all()
+        assert rows == [], "a raise must roll back"
+        await engine.dispose()
+
+    def test_startup_paths_do_not_use_the_generator_form(self):
+        """The three callers that return early must use `transaction()`.
+
+        A grep-style assertion rather than a behavioural one, because the failure it
+        guards against is silent: the code runs, reports success, and writes nothing.
+        """
+        import pathlib
+
+        root = pathlib.Path(__file__).resolve().parents[2]
+        for relative in (
+            "backend/core/bootstrap.py",
+            "backend/seed_modules.py",
+            "backend/scripts/load_demo.py",
+        ):
+            source = (root / relative).read_text()
+            assert "async for session in database.session_scope()" not in source, (
+                f"{relative} returns early from its session block; use "
+                "database.transaction() or the writes are silently discarded"
+            )
+
+
+class TestNaiveDatetimeHandling:
+    """SQLite returns naive datetimes where Postgres returns aware ones.
+
+    Comparing the two raises TypeError, so any endpoint that compares a stored
+    timestamp against `utcnow()` breaks on SQLite -- which is what the whole test
+    suite runs on. `as_aware` is the fix; these pin it.
+    """
+
+    def test_as_aware_treats_naive_as_utc(self):
+        from datetime import datetime, timezone
+
+        from backend.core.models import as_aware, utcnow
+
+        naive = datetime(2026, 1, 1, 12, 0, 0)
+        assert as_aware(naive).tzinfo is timezone.utc
+        # The point of the helper: this comparison must not raise.
+        assert as_aware(naive) < utcnow()
+
+    def test_as_aware_leaves_aware_values_alone(self):
+        from datetime import datetime, timedelta, timezone
+
+        from backend.core.models import as_aware
+
+        aware = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone(timedelta(hours=5, minutes=30)))
+        assert as_aware(aware) is aware
+
+    def test_as_aware_passes_none_through(self):
+        from backend.core.models import as_aware
+
+        assert as_aware(None) is None
+
+    async def test_muted_check_works_on_naive_timestamps(self, session):
+        from datetime import datetime, timedelta
+
+        from datetime import timezone
+
+        # Stripped of tzinfo, which is exactly how SQLite hands a stored timestamp
+        # back to the ORM.
+        naive_now = datetime.now(timezone.utc).replace(tzinfo=None)
+
+        citizen = Citizen(email="naive@example.com", display_name="N")
+        citizen.muted_until = naive_now + timedelta(days=1)
+        session.add(citizen)
+        await session.flush()
+        assert citizen.is_muted() is True
+
+        citizen.muted_until = naive_now - timedelta(days=1)
+        assert citizen.is_muted() is False

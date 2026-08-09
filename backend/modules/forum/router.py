@@ -16,7 +16,7 @@ from backend.core.deps import (
     require_permission,
     require_speaking_citizen,
 )
-from backend.core.models import Citizen, utcnow
+from backend.core.models import Citizen, as_aware, utcnow
 from backend.core.rbac import Principal
 from backend.core.security import slugify
 from backend.modules.forum.models import (
@@ -199,15 +199,15 @@ async def list_threads(
     rows = list((await session.execute(stmt)).scalars())
     now = datetime.now(timezone.utc)
     if sort == "new":
-        rows.sort(key=lambda t: t.created_at, reverse=True)
+        rows.sort(key=lambda t: as_aware(t.created_at), reverse=True)
     elif sort == "top":
         # Upvotes decayed by age, so "top" means "useful lately" rather than
         # "posted first". Without the decay the tab is a permanent hall of fame.
         rows.sort(
-            key=lambda t: -(t.upvotes / max(1.0, ((now - t.created_at).days + 2) ** 0.8))
+            key=lambda t: -(t.upvotes / max(1.0, ((now - as_aware(t.created_at)).days + 2) ** 0.8))
         )
     else:
-        rows.sort(key=lambda t: t.last_activity_at, reverse=True)
+        rows.sort(key=lambda t: as_aware(t.last_activity_at), reverse=True)
     rows.sort(key=lambda t: not t.is_pinned)
 
     window = rows[offset : offset + limit]

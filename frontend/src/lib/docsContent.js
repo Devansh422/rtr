@@ -55,7 +55,7 @@ export const SECTIONS = [
           "If you think an explanation is wrong, use 'Suggest a correction' at the top of the page.",
         ],
         honest:
-          "The Library has 47 articles, not all 395. We add them as researchers write and review each one. Where we have not transcribed the exact constitutional text yet, the page says so and links you to India Code, the government's own source, rather than letting our paraphrase stand in for the law.",
+          "The Library has 61 articles, not all 395. We add them as researchers write and review each one. Where we have not transcribed the exact constitutional text yet, the page says so and links you to India Code, the government's own source, rather than letting our paraphrase stand in for the law.",
       },
       {
         id: "academy",
@@ -690,7 +690,7 @@ export const NOT_FINISHED = [
       "Every figure has to be found in a public record, entered with its citation and confirmed by a second person before a profile goes live. That is slow by design. Delhi and Maharashtra are being built first. Researching a constituency is a real task on the volunteer board.",
   },
   {
-    title: "The Constitution Library has 47 articles, not 395",
+    title: "The Constitution Library has 61 articles, not 395",
     body:
       "Each one is written, reviewed and translated by a person. Where an article is missing, the search page and the assistant both say so and send you to India Code rather than guessing.",
   },

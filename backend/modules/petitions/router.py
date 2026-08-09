@@ -15,7 +15,7 @@ from backend.core.deps import (
     require_speaking_citizen,
     require_state_scope,
 )
-from backend.core.models import Citizen, utcnow
+from backend.core.models import Citizen, as_aware, utcnow
 from backend.core.rbac import Principal
 from backend.core.security import slugify
 from backend.modules.petitions.models import (
@@ -171,7 +171,7 @@ async def list_petitions(
     if sort == "signatures":
         rows.sort(key=lambda p: -p.signature_count)
     elif sort == "newest":
-        rows.sort(key=lambda p: p.created_at, reverse=True)
+        rows.sort(key=lambda p: as_aware(p.created_at), reverse=True)
     else:
         # "Trending" = signatures per day since opening, so a week-old petition
         # with 400 signatures ranks above a year-old one with 900. Ranking purely
@@ -180,7 +180,7 @@ async def list_petitions(
         now = datetime.now(timezone.utc)
         rows.sort(
             key=lambda p: -(
-                p.signature_count / max(1, (now - p.created_at).days + 1)
+                p.signature_count / max(1, (now - as_aware(p.created_at)).days + 1)
             )
         )
 
@@ -343,7 +343,7 @@ async def sign_petition(
             status_code=400,
             detail=f"This petition is {STATUS_LABELS[petition.status].lower()} and is no longer collecting signatures.",
         )
-    if petition.closes_at and petition.closes_at < utcnow():
+    if petition.closes_at and as_aware(petition.closes_at) < utcnow():
         raise HTTPException(status_code=400, detail="This petition has closed.")
 
     existing = (

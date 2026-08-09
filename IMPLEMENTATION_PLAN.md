@@ -215,7 +215,7 @@ Every module in the §4 architecture now exists, is wired, tested and has a publ
 
 | Module | What shipped |
 |---|---|
-| `constitution/` | Articles with verbatim text, plain English + Hindi, case law, "why this matters for recall", parts index, draft/publish gate, public history. 47 articles seeded bilingually. |
+| `constitution/` | Articles with verbatim text, plain English + Hindi, case law, "why this matters for recall", parts index, draft/publish gate, public history. 61 articles seeded bilingually. |
 | `representatives/` | Profiles, constituencies, parties, and the **citation-gated claim store** — one row per (representative, field, period), each carrying its own source and verification status. 17 tracked fields, 8 requiring a primary public record. Fact-check queue. Promise Tracker with two independent citations per promise. |
 | `corrections/` | Generic "Suggest a correction" against any entity, with the unresolved/resolved disclosure split described below. |
 | `petitions/` | Petitions, signatures (one per verified member, enforced by constraint), milestones, delivery evidence, aggregate export. |
