@@ -274,8 +274,26 @@ export const SECTIONS = [
           "For a union territory without a legislative assembly, the page says so and explains that the case there has to run through Parliament instead — there is no House for a state bill to pass through.",
       },
       {
+        id: "national-petition",
+        name: "The national petition",
+        path: "/petition",
+        status: STATUS.LIVE,
+        who: ACCESS.ANYONE,
+        oneLine:
+          "One demand, one page: enact a Right to Recall law. Signed state by state, counted state by state.",
+        steps: [
+          "Read the petition in full — what is being asked for, which articles allow it, and the safeguards asked for alongside it.",
+          "Sign with your name, email and state. There is no separate signup: signing creates your member account and signs you in on this device, and your access code is shown once.",
+          "Choose whether your name is listed publicly. The count includes everyone; the published list includes only those who asked to be on it.",
+          "See how your state is doing — every state and union territory is listed, grouped by zonal council, including the ones still on zero.",
+          "Withdraw at any time from your dashboard. Withdrawing really deletes the signature.",
+        ],
+        honest:
+          "One signature per account, enforced by the database rather than by a check the code might skip. What that does not mean: nobody has proved they own the email address they signed with, because this platform does not yet send confirmation mail — so it is a count of accounts acting in good faith, not a verified electoral roll. Your state is asked for so the state-wise count is real; it is never published next to your name unless you asked to be listed.",
+      },
+      {
         id: "petitions",
-        name: "Petitions",
+        name: "Petitions started by members",
         path: "/petitions",
         status: STATUS.LIVE,
         who: `${ACCESS.ANYONE} to read. ${ACCESS.MEMBER} to sign or start one.`,

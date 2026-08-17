@@ -35,6 +35,7 @@ import MyRepresentatives from "@/pages/MyRepresentatives";
 import Promises from "@/pages/Promises";
 import States from "@/pages/States";
 import StatePage from "@/pages/StatePage";
+import CommonCause from "@/pages/CommonCause";
 import Petitions from "@/pages/Petitions";
 import PetitionDetail from "@/pages/PetitionDetail";
 import Reports from "@/pages/Reports";
@@ -88,7 +89,10 @@ function PublicApp() {
           <Route path="/states" element={<States />} />
           <Route path="/states/:slug" element={<StatePage />} />
 
-          {/* Community */}
+          {/* Community. The national petition has its own page, singular: it is
+              the one demand the whole platform points at, and the directory of
+              member-started petitions is a different thing. */}
+          <Route path="/petition" element={<CommonCause />} />
           <Route path="/petitions" element={<Petitions />} />
           <Route path="/petitions/:slug" element={<PetitionDetail />} />
           <Route path="/reports" element={<Reports />} />

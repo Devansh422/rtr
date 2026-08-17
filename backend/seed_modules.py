@@ -19,6 +19,7 @@ file -- and resets it to `draft` when it does, so no unreviewed legal text can r
 the public through a redeploy.
 """
 
+from datetime import date
 from typing import Optional
 import hashlib
 import json
@@ -34,6 +35,8 @@ from backend.modules.academy.models import Course, Lesson, Quiz
 from backend.modules.constitution.models import ConstitutionArticle, compute_sort_key
 from backend.modules.constitution.parts import PARTS_BY_NUMBER
 from backend.modules.forum.models import DEFAULT_CATEGORIES, ForumCategory
+from backend.modules.manifesto.models import ManifestoElection
+from backend.modules.petitions.models import NATIONAL_PETITION_SLUG, Petition, PetitionStatus
 from backend.modules.representatives.models import Party
 from backend.modules.tools.models import DocumentTemplate, ReviewStatus
 from backend.modules.tools.seed_templates import TEMPLATES
@@ -341,6 +344,158 @@ STARTER_COURSE: dict = {
 
 
 # --------------------------------------------------------------------------
+# The common cause
+# --------------------------------------------------------------------------
+# The one national petition the whole platform points at. Shipped in the
+# repository rather than created through the admin panel for the same reason the
+# starter course is: it carries this movement's central demand, it goes out under
+# the platform's name to the institutions named in it, and code review is a
+# better gate for that text than a form field. Seeding never overwrites, so an
+# editor's later improvement to the wording survives every redeploy.
+#
+# Every factual statement below is about the Constitution and is checkable in the
+# Library on this site; no claim is made about any party, government or named
+# person, and the demand is drafted to apply identically to every representative
+# (§1). `closes_at` is deliberately left unset -- a standing national demand that
+# expires in ninety days would have to be re-created, losing its signatures.
+NATIONAL_PETITION: dict = {
+    "slug": NATIONAL_PETITION_SLUG,
+    "title": "Enact a Right to Recall law for elected representatives in India",
+    "title_hi": "भारत में निर्वाचित प्रतिनिधियों के लिए 'राइट टू रिकॉल' कानून बनाया जाए",
+    "summary": (
+        "A citizen's power over a representative currently begins and ends on polling day. "
+        "This petition asks Parliament and the State legislatures to create a lawful, "
+        "safeguarded procedure by which the voters of a constituency can recall the person "
+        "they elected before the end of the term."
+    ),
+    "addressed_to": "Parliament of India and the Legislative Assembly of every State",
+    "target_signatures": 100_000,
+    "body": (
+        "We, the undersigned citizens of India, ask Parliament and the State legislatures to "
+        "enact a Right to Recall: a defined legal procedure by which the registered voters of a "
+        "constituency may remove the representative they elected, before the end of that "
+        "representative's term, subject to the safeguards set out below.\n\n"
+        "WHY. Article 83 fixes the term of the Lok Sabha at five years and Article 172 does the "
+        "same for a State Legislative Assembly. Between one election and the next, the "
+        "Constitution gives the electorate no means of ending a term it has granted. Article 101 "
+        "(and Article 190 for the States) makes absence from every sitting for sixty days a "
+        "ground on which a seat may be declared vacant -- but that is decided by the House, not "
+        "by the constituency. Article 61 provides impeachment for the President and Article 124 "
+        "a removal procedure for judges; neither is exercised by voters. The Constitution's one "
+        "instance of continuing direct democracy is the Gram Sabha under Article 243A. Nothing "
+        "equivalent exists between a voter and their MP or MLA.\n\n"
+        "THE ROUTE. This does not require a constitutional amendment to begin. Under Article "
+        "327, Parliament may legislate on elections to Parliament and to the State legislatures. "
+        "Under Article 328, a State legislature may legislate on elections to its own House so "
+        "far as Parliament has not already occupied the field -- so a single Assembly can act "
+        "for its own members without waiting for anyone. Under Article 324 the Election "
+        "Commission has the superintendence, direction and control of elections, which is the "
+        "institution already built to verify and administer a process of this kind.\n\n"
+        "THE SAFEGUARDS WE ASK FOR. A recall law without limits would be worse than no recall "
+        "law, and we do not ask for one. We ask that any Bill provide: a high signature "
+        "threshold, verified by the Election Commission and not by any private body; a defined "
+        "window within the term, so that a representative is not campaigning permanently; "
+        "defined and stated grounds; written notice to the representative and a real "
+        "opportunity to be heard, as Article 21 requires of any procedure that takes away a "
+        "right; a secret ballot for the recall vote itself; specific protection against the "
+        "misuse of recall in constituencies reserved under Articles 330 and 332; and recovery "
+        "of costs where a drive is found to be frivolous or manufactured.\n\n"
+        "WHAT WE ARE ASKING FOR, SPECIFICALLY. First, that the Union Government publish its "
+        "position on recall and refer the question to a parliamentary committee or the Law "
+        "Commission for a public report within a stated time. Second, that State legislatures "
+        "introduce a Bill under Article 328 providing for the recall of their own members, with "
+        "the safeguards above. Third, that the text of any such Bill, and the report behind it, "
+        "be published for public comment before it is passed.\n\n"
+        "This petition names no party, no government and no individual. It asks for a law that "
+        "would apply identically to every elected representative in India, including those we "
+        "voted for ourselves. Accountability that only applies to one's opponents is not "
+        "accountability."
+    ),
+    "body_hi": (
+        "हम, नीचे हस्ताक्षर करने वाले भारत के नागरिक, संसद और राज्य विधानमंडलों से आग्रह करते हैं कि "
+        "'राइट टू रिकॉल' को कानूनी रूप दिया जाए -- अर्थात एक ऐसी निश्चित विधिक प्रक्रिया, जिसके द्वारा "
+        "किसी निर्वाचन क्षेत्र के पंजीकृत मतदाता, नीचे दी गई सुरक्षाओं के अधीन, अपने चुने हुए प्रतिनिधि को "
+        "उसका कार्यकाल समाप्त होने से पहले वापस बुला सकें।\n\n"
+        "क्यों। अनुच्छेद 83 लोक सभा का कार्यकाल पाँच वर्ष निर्धारित करता है और अनुच्छेद 172 राज्य "
+        "विधान सभा का। एक चुनाव से अगले चुनाव के बीच, संविधान मतदाताओं को उस कार्यकाल को समाप्त "
+        "करने का कोई साधन नहीं देता जो उन्होंने ही दिया है। अनुच्छेद 101 (और राज्यों के लिए अनुच्छेद 190) "
+        "के अंतर्गत साठ दिन तक सभी बैठकों से अनुपस्थिति पर सीट रिक्त घोषित की जा सकती है -- परंतु यह "
+        "निर्णय सदन करता है, निर्वाचन क्षेत्र नहीं। अनुच्छेद 61 राष्ट्रपति के महाभियोग की और अनुच्छेद 124 "
+        "न्यायाधीशों को हटाने की प्रक्रिया देता है; इनमें से कोई भी मतदाता के हाथ में नहीं है। संविधान में "
+        "निरंतर प्रत्यक्ष लोकतंत्र का एकमात्र उदाहरण अनुच्छेद 243A की ग्राम सभा है। मतदाता और उसके "
+        "सांसद या विधायक के बीच ऐसा कुछ नहीं है।\n\n"
+        "रास्ता। इसके लिए शुरुआत में संविधान संशोधन आवश्यक नहीं है। अनुच्छेद 327 के अंतर्गत संसद "
+        "संसद और राज्य विधानमंडलों के चुनावों पर कानून बना सकती है। अनुच्छेद 328 के अंतर्गत कोई राज्य "
+        "विधानमंडल अपने ही सदन के चुनावों पर कानून बना सकता है, जहाँ तक संसद ने उस विषय पर कानून "
+        "न बनाया हो -- अर्थात एक अकेली विधान सभा अपने सदस्यों के लिए स्वयं यह कदम उठा सकती है। "
+        "अनुच्छेद 324 के अंतर्गत निर्वाचन आयोग के पास चुनावों का अधीक्षण, निदेशन और नियंत्रण है, और "
+        "यही वह संस्था है जो ऐसी प्रक्रिया के सत्यापन और संचालन के लिए पहले से मौजूद है।\n\n"
+        "जिन सुरक्षाओं की हम माँग करते हैं। बिना सीमाओं वाला रिकॉल कानून, रिकॉल न होने से भी बुरा "
+        "होगा, और हम ऐसी माँग नहीं करते। किसी भी विधेयक में यह होना चाहिए: हस्ताक्षरों की ऊँची सीमा, "
+        "जिसका सत्यापन निर्वाचन आयोग करे, कोई निजी संस्था नहीं; कार्यकाल के भीतर एक निश्चित अवधि, "
+        "ताकि प्रतिनिधि निरंतर चुनाव-प्रचार में न रहे; स्पष्ट रूप से घोषित आधार; प्रतिनिधि को लिखित सूचना "
+        "और सुनवाई का वास्तविक अवसर, जैसा अनुच्छेद 21 किसी भी अधिकार-हरण करने वाली प्रक्रिया से "
+        "अपेक्षित करता है; रिकॉल मतदान के लिए गुप्त मतपत्र; अनुच्छेद 330 और 332 के अंतर्गत आरक्षित "
+        "निर्वाचन क्षेत्रों में दुरुपयोग के विरुद्ध विशेष संरक्षण; और तुच्छ या कृत्रिम रूप से खड़े किए गए "
+        "अभियानों की स्थिति में व्यय की वसूली।\n\n"
+        "हम विशेष रूप से क्या माँग रहे हैं। पहला, कि संघ सरकार रिकॉल पर अपना पक्ष सार्वजनिक करे और "
+        "इस प्रश्न को किसी संसदीय समिति या विधि आयोग को, एक निश्चित समय-सीमा में सार्वजनिक रिपोर्ट "
+        "के लिए सौंपे। दूसरा, कि राज्य विधानमंडल अनुच्छेद 328 के अंतर्गत अपने सदस्यों के रिकॉल के लिए "
+        "उपर्युक्त सुरक्षाओं सहित विधेयक प्रस्तुत करें। तीसरा, कि ऐसे किसी विधेयक का पाठ और उसके पीछे "
+        "की रिपोर्ट पारित होने से पहले जनता की टिप्पणी के लिए प्रकाशित की जाए।\n\n"
+        "यह याचिका किसी दल, किसी सरकार या किसी व्यक्ति का नाम नहीं लेती। यह ऐसे कानून की माँग "
+        "करती है जो भारत के हर निर्वाचित प्रतिनिधि पर समान रूप से लागू हो -- उन पर भी जिन्हें हमने "
+        "स्वयं वोट दिया है। जवाबदेही यदि केवल विरोधियों पर लागू हो, तो वह जवाबदेही नहीं है।"
+    ),
+}
+
+
+# --------------------------------------------------------------------------
+# Manifesto accountability
+# --------------------------------------------------------------------------
+# The election itself is reference data -- a matter of public record, like the
+# states list. It is seeded so the module has a spine on first boot.
+#
+# NOTHING ELSE IS SEEDED HERE, AND THAT IS DELIBERATE. A manifesto promise is a
+# quotation from a named party's published document, and an assessment is a
+# factual claim about a government. Neither may be invented to make a page look
+# populated: they are entered by the research desk against the actual PDF and the
+# actual RTI reply, through the admin API, where the citation and audit gates
+# apply. An empty module that says "no promises published yet" is honest; a
+# pre-filled one is the exact failure this platform exists to prevent (§1, §7).
+UTTARAKHAND_ELECTION: dict = {
+    "slug": "uttarakhand-2022",
+    "state_code": "UT",
+    # ISO says UT, every citizen says UK, and the code goes on RTI applications.
+    "code_prefix": "UK",
+    "name": "Uttarakhand Assembly Election 2022",
+    "name_hi": "उत्तराखंड विधान सभा चुनाव 2022",
+    "year": 2022,
+    "house": "assembly",
+    "election_date": date(2022, 2, 14),
+    "result_date": date(2022, 3, 10),
+    "source_url": "https://www.eci.gov.in/statistical-reports",
+}
+
+
+async def seed_manifesto_election(session: AsyncSession) -> int:
+    """Open the Uttarakhand 2022 election row, once."""
+    existing = (
+        await session.execute(
+            select(ManifestoElection).where(
+                ManifestoElection.slug == UTTARAKHAND_ELECTION["slug"]
+            )
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        return 0
+
+    session.add(ManifestoElection(**UTTARAKHAND_ELECTION, is_published=True))
+    await session.flush()
+    return 1
+
+
+# --------------------------------------------------------------------------
 # Fingerprint
 # --------------------------------------------------------------------------
 def _load_constitution_seed() -> list[dict]:
@@ -368,6 +523,11 @@ def _fingerprint(articles: list[dict]) -> str:
             "courseHash": hashlib.sha256(
                 json.dumps(STARTER_COURSE, sort_keys=True, ensure_ascii=False).encode("utf-8")
             ).hexdigest(),
+            "nationalPetition": NATIONAL_PETITION["slug"],
+            "nationalPetitionHash": hashlib.sha256(
+                json.dumps(NATIONAL_PETITION, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+            "manifestoElection": UTTARAKHAND_ELECTION["slug"],
         },
         sort_keys=True,
     )
@@ -637,6 +797,58 @@ async def seed_starter_course(session: AsyncSession) -> int:
     return 1
 
 
+async def seed_national_petition(session: AsyncSession) -> int:
+    """Open the national petition, once, if it is not already there.
+
+    Opens immediately rather than entering the moderation queue, on the same
+    reasoning as `create_official_petition`: the review gate for this text is
+    code review, and there is no citizen author to hold accountable for it.
+
+    Never updated in place. If the demand's wording needs to change after
+    signatures exist, that is an editorial act with a public audit trail through
+    the admin API -- not something a redeploy should do silently underneath the
+    people who have already put their names to the old text.
+    """
+    existing = (
+        await session.execute(select(Petition).where(Petition.slug == NATIONAL_PETITION["slug"]))
+    ).scalar_one_or_none()
+    if existing is not None:
+        return 0
+
+    petition = Petition(
+        slug=NATIONAL_PETITION["slug"],
+        title=NATIONAL_PETITION["title"],
+        title_hi=NATIONAL_PETITION["title_hi"],
+        summary=NATIONAL_PETITION["summary"],
+        body=NATIONAL_PETITION["body"],
+        body_hi=NATIONAL_PETITION["body_hi"],
+        addressed_to=NATIONAL_PETITION["addressed_to"],
+        # No state: this is the national demand, and every state-wise number on
+        # the page is an aggregate of its signatures rather than a separate
+        # petition per state.
+        state_code=None,
+        category="right-to-recall",
+        target_signatures=NATIONAL_PETITION["target_signatures"],
+        is_official=True,
+        status=PetitionStatus.OPEN,
+        closes_at=None,
+    )
+    session.add(petition)
+    await session.flush()
+    await search.index(
+        session,
+        entity_type="petition",
+        entity_id=petition.slug,
+        title=petition.title,
+        subtitle=f"Petition to {petition.addressed_to}",
+        body=petition.summary,
+        keywords=["right to recall", "petition", "national"],
+        is_published=True,
+        url_path="/petition",
+    )
+    return 1
+
+
 # --------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------
@@ -667,6 +879,8 @@ async def run() -> None:
                 "parties": await seed_parties(session),
                 "districts": await seed_pilot_districts(session),
                 "course": await seed_starter_course(session),
+                "nationalPetition": await seed_national_petition(session),
+                "manifestoElection": await seed_manifesto_election(session),
             }
             template_inserted, template_updated = await sync_tool_templates(session)
             counts["templatesInserted"] = template_inserted

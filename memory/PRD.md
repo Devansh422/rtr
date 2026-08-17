@@ -117,6 +117,47 @@ tables, no column drift). Frontend builds clean.
 - Admin UI for the new modules. All 70 admin endpoints exist and are tested; the SPA still only exposes the pre-Phase-0 CMS screens.
 - Real Neon project (still verified only against SQLite), self-hosted Umami.
 
+## Update (2026-08-13), the common cause: one national petition, signed state by state
+
+The platform had a petition *directory* and no petition. Added the flagship demand
+itself, on its own page, with a signing path a first-time visitor can complete.
+
+- **`/petition`** (`pages/CommonCause.jsx`) — the national Right to Recall petition:
+  the ask, the live count, the text, the sign form, the state-wise sections. Seeded
+  from the repository (`seed_modules.NATIONAL_PETITION`, bilingual, opens on first
+  boot, never overwritten by a later deploy) and reached by
+  `GET /api/petitions/national`, so which petition is "the" petition is decided in
+  one constant (`NATIONAL_PETITION_SLUG`) rather than hard-coded in the frontend.
+  `national` also works as a slug alias on every `/petitions/{slug}/*` route.
+- **One-step signing** (`POST /petitions/{slug}/sign-public`) — a visitor signs and
+  becomes a member in one request, and gets a session back, so they can withdraw
+  without hunting for an access code. The uniqueness guarantee is unchanged: it
+  creates the member account through `core/membership.ensure_supporter` (the same
+  path `POST /supporters` now uses) and signs as that member, behind the same
+  `(petition, citizen)` constraint.
+- **State-wise sections** (`components/platform/StateSignatureSections.jsx`,
+  `GET /petitions/{slug}/by-state`) — all 36 states and UTs, including those on
+  zero, grouped by zonal council, plus the tile map re-tinted by signature
+  intensity. Percentages are of the signatures that carry a state, with the
+  "not stated" count shown next to them.
+- **Section height now follows content** everywhere except the home page:
+  `.full-section` lost its `min-height: 100svh`, and the home page opts back in via
+  `.full-section-viewport`.
+
+### Decisions worth remembering
+- The zonal grouping is the statutory one (States Reorganisation Act 1956, North Eastern Council Act 1971), not a home-made set of regions: any invented grouping of Indian states carries an argument inside it (§1). `core/geography.ZONES`.
+- The public sign endpoint REFUSES an address that already has an account and sends it to the login page. It returns a session and nothing in it proves the address is the caller's, so continuing would hand over somebody else's dashboard and their right to erase their data.
+- Signatures are still a count of accounts, not of verified people — no email confirmation exists yet. The page says so in as many words rather than letting the number imply more than it can carry. Fixing it means adding confirmation in `core/membership`, where both entry points gain it at once.
+- The counter leads with the next milestone, not the percentage of the final target: "412 more to 5,000" is actionable, "3% of 100,000" reads as "do not bother".
+
+### Verified
+Backend tests written for the seed, the state breakdown (counts, ranks, zone
+totals, and that no signer is identifiable in it) and the one-step sign (consent
+required, state validated, one signature per address, existing accounts refused,
+both rate-limit counters spent) — NOT executed: no Python interpreter on the
+machine this was built on. Frontend files parse clean; no full CRA build was run
+(no `node_modules` installed).
+
 ## Backlog / Next (updated 2026-08-09)
 - P0: real Neon project, run `python -m backend.scripts.migrate`, set `DATABASE_URL` in Vercel, verify `/api/health` reports `"postgres": true`.
 - P0: admin UI for the fact-check queue and the corrections queue — the two screens a volunteer team cannot operate without.

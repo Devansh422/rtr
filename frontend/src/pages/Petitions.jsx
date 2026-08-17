@@ -27,16 +27,19 @@ export default function Petitions() {
     <div data-testid="petitions-page">
       <PageHero eyebrow="Petitions" lines={["Signatures that", "survive scrutiny."]} lede={t("petitions.lede")}>
         <div className="flex flex-wrap gap-3">
+          <LinkButton to="/petition" size="lg">
+            {t("commonCause.sign")}
+          </LinkButton>
           {memberStatus === "in" ? (
-            <LinkButton to="/dashboard" size="lg">
+            <LinkButton to="/dashboard" variant="outline" size="lg">
               {t("petitions.start")}
             </LinkButton>
           ) : (
-            <LinkButton to="/login" size="lg">
-              Sign in to sign or start a petition
+            <LinkButton to="/login" variant="outline" size="lg">
+              Sign in to start a petition
             </LinkButton>
           )}
-          <LinkButton to="/states" variant="outline" size="lg">
+          <LinkButton to="/states" variant="ghost" size="lg">
             {t("nav.states")}
           </LinkButton>
         </div>

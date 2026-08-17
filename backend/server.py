@@ -41,6 +41,7 @@ from backend.modules.corrections import router as corrections_router
 from backend.modules.events import router as events_router
 from backend.modules.forum import router as forum_router
 from backend.modules.legal import router as legal_router
+from backend.modules.manifesto import router as manifesto_router
 from backend.modules.members import router as members_router
 from backend.modules.petitions import router as petitions_router
 from backend.modules.reports import router as reports_router
@@ -168,6 +169,7 @@ for module_router in (
     constitution_router,
     representatives_router,
     corrections_router,
+    manifesto_router,
     search_router,
     # Phase 2-3 -- community and civic tools
     petitions_router,

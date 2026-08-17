@@ -44,6 +44,12 @@ LIMITS: dict[str, Limit] = {
     "report.create": Limit("report.create", 5, 180, "citizen reports"),
     "petition.create": Limit("petition.create", 3, 1440, "petitions"),
     "petition.sign": Limit("petition.sign", 40, 60, "signatures"),
+    # Counted per IP rather than per identity, because the whole point of the
+    # one-step sign is that the signer has no identity yet and a script can
+    # invent a fresh email for every attempt. Set where a household, an office or
+    # a college on one NAT gateway will not reach it in an hour, and where a loop
+    # will reach it immediately.
+    "petition.sign.public": Limit("petition.sign.public", 12, 60, "signatures from this network"),
     "correction.suggest": Limit("correction.suggest", 10, 180, "correction suggestions"),
     "ai.ask": Limit("ai.ask", 20, 60, "assistant questions"),
     "tools.generate": Limit("tools.generate", 20, 60, "document drafts"),

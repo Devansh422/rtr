@@ -67,6 +67,16 @@ PUBLIC_STATUSES = frozenset(
     }
 )
 
+# The one petition the whole platform is organised around: the national demand
+# for a Right to Recall law, which every visitor is asked to sign whatever else
+# they came for. It is seeded from the repository (see backend/seed_modules.py)
+# and addressed by slug rather than by a `is_featured` column, for the reason
+# given in core/geography.py: an identifier that routing, seeding and a public
+# page all depend on should not be editable from an admin screen. A state
+# organiser who wants their own campaign creates a state petition; nobody
+# "features" a different petition by accident.
+NATIONAL_PETITION_SLUG = "right-to-recall-national"
+
 # Signature thresholds worth marking. Chosen to give a new petition an early
 # reachable milestone -- a progress bar whose first marker is 10,000 tells a
 # petition with 40 signatures that it has failed.

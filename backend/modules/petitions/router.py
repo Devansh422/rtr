@@ -4,22 +4,32 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core import audit, erasure, limits, moderation, notify, search
+from backend.core import audit, erasure, limits, membership, moderation, notify, search
 from backend.core.deps import (
     get_session,
     require_permission,
     require_speaking_citizen,
     require_state_scope,
 )
-from backend.core.models import Citizen, as_aware, utcnow
+from backend.core.geography import (
+    CAMPAIGN_STAGE_LABELS,
+    STATES,
+    STATES_BY_CODE,
+    VALID_STATE_CODES,
+    ZONE_SOURCE_URL,
+    ZONES,
+    zone_of,
+)
+from backend.core.models import Citizen, State, as_aware, utcnow
 from backend.core.rbac import Principal
-from backend.core.security import slugify
+from backend.core.security import create_member_token, slugify
 from backend.modules.petitions.models import (
     MILESTONES,
+    NATIONAL_PETITION_SLUG,
     PUBLIC_STATUSES,
     STATUS_LABELS,
     Petition,
@@ -53,12 +63,44 @@ class SignatureIn(BaseModel):
     comment: str = Field(default="", max_length=1000)
     # Explicit opt-in. See the note on the model for why the default is private.
     show_my_name: bool = False
+    # Optional, and only ever FILLS IN a missing value (see sign_petition): a
+    # member whose Citizen row predates the state field can supply it while
+    # signing, so their signature lands in the state-wise breakdown instead of
+    # in "not stated". It never overwrites a state already recorded, because a
+    # petition form is not the place to silently change someone's profile.
+    state_code: Optional[str] = None
+
+
+class PublicSignatureIn(BaseModel):
+    """Sign and become a member in one step. See sign_petition_publicly."""
+
+    name: str = Field(..., min_length=2, max_length=80)
+    email: EmailStr
+    state_code: str = Field(..., min_length=2, max_length=10)
+    city: Optional[str] = Field(default=None, max_length=80)
+    comment: str = Field(default="", max_length=1000)
+    show_my_name: bool = False
+    # DPDP Act 2023: consent must be informed, specific and affirmative, so this
+    # is a required true rather than a default. The consent RECORD is written by
+    # `POST /legal/consent`, which the same form calls -- see the note there on
+    # why a consent write never blocks the submission it accompanies.
+    consent: bool = False
 
 
 class PetitionStatusIn(BaseModel):
     status: str
     note: str = ""
     outcome_source_url: str = ""
+
+
+def _public_path(petition: Petition) -> str:
+    """Where this petition lives on the site.
+
+    The national petition has its own page (`/petition`) rather than a row in the
+    directory, so links, share text and search results all have to agree on that
+    -- including the ones already sitting in somebody's WhatsApp.
+    """
+    return "/petition" if petition.slug == NATIONAL_PETITION_SLUG else f"/petitions/{petition.slug}"
 
 
 def _serialise(petition: Petition, *, include_body: bool = False) -> dict:
@@ -86,7 +128,8 @@ def _serialise(petition: Petition, *, include_body: bool = False) -> dict:
         "nextMilestone": next_milestone(petition.signature_count),
         "closesAt": petition.closes_at.isoformat() if petition.closes_at else None,
         "createdAt": petition.created_at.isoformat() if petition.created_at else None,
-        "url": f"/petitions/{petition.slug}",
+        "isNational": petition.slug == NATIONAL_PETITION_SLUG,
+        "url": _public_path(petition),
     }
     if include_body:
         payload.update(
@@ -97,7 +140,7 @@ def _serialise(petition: Petition, *, include_body: bool = False) -> dict:
                 "outcomeSourceUrl": petition.outcome_source_url or None,
                 "milestones": petition.milestones,
                 "share": notify.share_links(
-                    url=f"/petitions/{petition.slug}",
+                    url=_public_path(petition),
                     text=f"{petition.title} - sign this petition",
                 ),
             }
@@ -130,6 +173,122 @@ async def _recount(session: AsyncSession, petition: Petition) -> None:
         petition.milestones = [*(petition.milestones or []), *new_marks]
 
 
+async def _public_petition(session: AsyncSession, slug: str) -> Petition:
+    # "national" is a reserved alias for the common cause, so every path under
+    # /petitions/{slug} works for it too -- signing, signatures, the state
+    # breakdown -- without a caller having to know its real slug.
+    if slug == "national":
+        slug = NATIONAL_PETITION_SLUG
+    petition = (
+        await session.execute(select(Petition).where(Petition.slug == slug))
+    ).scalar_one_or_none()
+    if petition is None or petition.status not in PUBLIC_STATUSES:
+        raise HTTPException(status_code=404, detail="Petition not found")
+    return petition
+
+
+async def _state_breakdown(session: AsyncSession, petition: Petition) -> dict:
+    """Signatures per state and union territory, grouped by zonal council.
+
+    Aggregates only -- counts, never identities. The same rule as the admin
+    export: where a signature came from is a fact about the campaign, who signed
+    is a fact about a person, and only the first is anyone else's business.
+
+    Every one of the 36 rows is returned, including the ones on zero. A page that
+    lists only the states with signatures tells a reader their state is missing
+    rather than empty, and "nobody here has signed yet" is the more useful thing
+    for the reader to know.
+    """
+    counted = dict(
+        (
+            await session.execute(
+                select(PetitionSignature.state_code, func.count())
+                .where(PetitionSignature.petition_id == petition.id)
+                .group_by(PetitionSignature.state_code)
+            )
+        ).all()
+    )
+    # Campaign stage comes from the states table so a zero-signature state still
+    # says something true about itself ("bill introduced") rather than nothing.
+    stages = {
+        row.code: (row.campaign_stage, row.slug)
+        for row in (await session.execute(select(State))).scalars()
+    }
+
+    recorded = sum(count for code, count in counted.items() if code)
+    unspecified = counted.get(None, 0) + counted.get("", 0)
+
+    def share(count: int) -> float:
+        return round(count / recorded * 100, 1) if recorded else 0.0
+
+    rows = []
+    for seed in STATES:
+        count = counted.get(seed.code, 0)
+        stage, slug = stages.get(seed.code, ("no_demand", seed.slug))
+        rows.append(
+            {
+                "code": seed.code,
+                "name": seed.name,
+                "nameHi": seed.name_hi,
+                "slug": slug,
+                "url": f"/states/{slug}",
+                "zone": zone_of(seed.code),
+                "isUnionTerritory": seed.is_union_territory,
+                "hasLegislature": seed.has_legislature,
+                "isPilot": seed.is_pilot,
+                "assemblySeats": seed.assembly_seats,
+                "campaignStage": stage,
+                "campaignStageLabel": CAMPAIGN_STAGE_LABELS.get(stage, stage),
+                "count": count,
+                "share": share(count),
+            }
+        )
+
+    # Rank by signatures, and only for states that have some: a shared rank of
+    # "27th" across nine states on zero would be a scoreboard nobody asked for.
+    for position, row in enumerate(
+        sorted([r for r in rows if r["count"]], key=lambda r: -r["count"]), start=1
+    ):
+        row["rank"] = position
+    for row in rows:
+        row.setdefault("rank", None)
+
+    by_code = {row["code"]: row for row in rows}
+    zones = [
+        {
+            "key": zone.key,
+            "label": zone.label,
+            "labelHi": zone.label_hi,
+            "count": sum(by_code[code]["count"] for code in zone.codes),
+            "states": sorted(
+                (by_code[code] for code in zone.codes),
+                key=lambda r: (-r["count"], r["name"]),
+            ),
+        }
+        for zone in ZONES
+    ]
+    for zone in zones:
+        zone["share"] = share(zone["count"])
+
+    return {
+        "totalSignatures": petition.signature_count,
+        # The denominator for every percentage here. Kept separate from the total
+        # so the two numbers can differ visibly rather than quietly.
+        "recorded": recorded,
+        "unspecified": unspecified,
+        "statesWithSignatures": sum(1 for row in rows if row["count"]),
+        "totalStates": len(rows),
+        "states": sorted(rows, key=lambda r: (-r["count"], r["name"])),
+        "zones": sorted(zones, key=lambda z: -z["count"]),
+        "zoneSourceUrl": ZONE_SOURCE_URL,
+        "note": (
+            "Percentages are of the signatures that carry a state, not of all signatures. "
+            "Members who signed before the state field existed appear under 'not stated'. "
+            "Counts only -- no signer is identified by this breakdown."
+        ),
+    }
+
+
 async def _index(session: AsyncSession, petition: Petition) -> None:
     await search.index(
         session,
@@ -141,7 +300,7 @@ async def _index(session: AsyncSession, petition: Petition) -> None:
         keywords=[petition.category, petition.state_code or ""],
         state_code=petition.state_code,
         is_published=petition.status in PUBLIC_STATUSES,
-        url_path=f"/petitions/{petition.slug}",
+        url_path=_public_path(petition),
     )
 
 
@@ -190,14 +349,48 @@ async def list_petitions(
     }
 
 
-@router.get("/petitions/{slug}")
-async def get_petition(slug: str, session: AsyncSession = Depends(get_session)):
+# Declared BEFORE /petitions/{slug}: FastAPI matches in declaration order, and
+# "national" would otherwise be read as a slug and 404.
+@router.get("/petitions/national")
+async def get_national_petition(session: AsyncSession = Depends(get_session)):
+    """The common cause -- the one petition the whole platform points at.
+
+    Served under its own path rather than by making the frontend hard-code a slug,
+    so which petition is the national one is decided in exactly one place
+    (modules/petitions/models.NATIONAL_PETITION_SLUG) and the page keeps working
+    if it ever changes.
+    """
     petition = (
-        await session.execute(select(Petition).where(Petition.slug == slug))
+        await session.execute(select(Petition).where(Petition.slug == NATIONAL_PETITION_SLUG))
     ).scalar_one_or_none()
     if petition is None or petition.status not in PUBLIC_STATUSES:
-        raise HTTPException(status_code=404, detail="Petition not found")
+        # A 404 here means seeding has not run, not that a visitor asked for
+        # something that does not exist, so the message says which.
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "The national petition has not been opened on this deployment yet. "
+                "It is seeded at startup; check that the database migration has run."
+            ),
+        )
+    return {
+        **_serialise(petition, include_body=True),
+        "isNational": True,
+        "url": "/petition",
+        "stateBreakdown": await _state_breakdown(session, petition),
+    }
+
+
+@router.get("/petitions/{slug}")
+async def get_petition(slug: str, session: AsyncSession = Depends(get_session)):
+    petition = await _public_petition(session, slug)
     return _serialise(petition, include_body=True)
+
+
+@router.get("/petitions/{slug}/by-state")
+async def petition_by_state(slug: str, session: AsyncSession = Depends(get_session)):
+    """Public state-wise breakdown of a petition's signatures."""
+    return await _state_breakdown(session, await _public_petition(session, slug))
 
 
 @router.get("/petitions/{slug}/signatures")
@@ -212,11 +405,7 @@ async def list_signatures(
     those who chose to be named. The gap between the two numbers is expected and
     the response says so, so it does not read as a discrepancy.
     """
-    petition = (
-        await session.execute(select(Petition).where(Petition.slug == slug))
-    ).scalar_one_or_none()
-    if petition is None or petition.status not in PUBLIC_STATUSES:
-        raise HTTPException(status_code=404, detail="Petition not found")
+    petition = await _public_petition(session, slug)
 
     rows = (
         await session.execute(
@@ -325,6 +514,49 @@ async def create_petition(
     }
 
 
+def _assert_open(petition: Petition) -> None:
+    if petition.status != PetitionStatus.OPEN:
+        raise HTTPException(
+            status_code=400,
+            detail=f"This petition is {STATUS_LABELS[petition.status].lower()} and is no longer collecting signatures.",
+        )
+    if petition.closes_at and as_aware(petition.closes_at) < utcnow():
+        raise HTTPException(status_code=400, detail="This petition has closed.")
+
+
+def _screen_comment(comment: str) -> bool:
+    """Run a signature comment past the content policy. Returns comment_hidden.
+
+    A held comment must not block the signature. The signature is the civic act;
+    the comment is commentary, so it waits for a moderator while the signature
+    counts immediately.
+    """
+    if not comment.strip():
+        return False
+    verdict = moderation.review(comment, names_a_person=True, has_citation=False)
+    if verdict.decision is moderation.Decision.REJECT:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "Your comment cannot be posted as written. Your signature was not recorded -- fix the comment and sign again.",
+                "flags": [f.as_dict() for f in verdict.flags],
+            },
+        )
+    return verdict.decision is moderation.Decision.HOLD
+
+
+def _normalise_state(code: Optional[str]) -> Optional[str]:
+    if not code:
+        return None
+    upper = code.strip().upper()
+    if upper not in VALID_STATE_CODES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"{code} is not a state or union territory code. Expected one of the 36 ISO codes.",
+        )
+    return upper
+
+
 @router.post("/petitions/{slug}/sign")
 async def sign_petition(
     slug: str,
@@ -333,18 +565,8 @@ async def sign_petition(
     citizen: Citizen = Depends(require_speaking_citizen),
     session: AsyncSession = Depends(get_session),
 ):
-    petition = (
-        await session.execute(select(Petition).where(Petition.slug == slug))
-    ).scalar_one_or_none()
-    if petition is None or petition.status not in PUBLIC_STATUSES:
-        raise HTTPException(status_code=404, detail="Petition not found")
-    if petition.status != PetitionStatus.OPEN:
-        raise HTTPException(
-            status_code=400,
-            detail=f"This petition is {STATUS_LABELS[petition.status].lower()} and is no longer collecting signatures.",
-        )
-    if petition.closes_at and as_aware(petition.closes_at) < utcnow():
-        raise HTTPException(status_code=400, detail="This petition has closed.")
+    petition = await _public_petition(session, slug)
+    _assert_open(petition)
 
     existing = (
         await session.execute(
@@ -359,21 +581,12 @@ async def sign_petition(
 
     await limits.check("petition.sign", f"m:{citizen.email}")
 
-    comment_hidden = False
-    if payload.comment.strip():
-        verdict = moderation.review(payload.comment, names_a_person=True, has_citation=False)
-        if verdict.decision is moderation.Decision.REJECT:
-            raise HTTPException(
-                status_code=400,
-                detail={
-                    "message": "Your comment cannot be posted as written. Your signature was not recorded -- fix the comment and sign again.",
-                    "flags": [f.as_dict() for f in verdict.flags],
-                },
-            )
-        # A held comment must not block the signature. The signature is the civic
-        # act; the comment is commentary, so it waits for a moderator while the
-        # signature counts immediately.
-        comment_hidden = verdict.decision is moderation.Decision.HOLD
+    # Fills a gap, never overwrites: see the note on SignatureIn.state_code.
+    state_code = _normalise_state(payload.state_code)
+    if state_code and not citizen.state_code:
+        citizen.state_code = state_code
+
+    comment_hidden = _screen_comment(payload.comment)
 
     session.add(
         PetitionSignature(
@@ -399,7 +612,177 @@ async def sign_petition(
         "nextMilestone": next_milestone(petition.signature_count),
         "commentPending": comment_hidden,
         "share": notify.share_links(
-            url=f"/petitions/{petition.slug}",
+            url=_public_path(petition),
+            text=f"I just signed: {petition.title}",
+        ),
+    }
+
+
+@router.post("/petitions/{slug}/sign-public")
+async def sign_petition_publicly(
+    slug: str,
+    payload: PublicSignatureIn,
+    request: Request,
+    session: AsyncSession = Depends(get_session),
+):
+    """Sign without already having an account: joining and signing in one step.
+
+    WHAT THIS DOES NOT DO IS RELAX THE RULE. The module docstring's guarantee is
+    that a signature belongs to a member account and is unique per petition,
+    enforced by a database constraint rather than by application code. That is
+    exactly as true here: this endpoint creates the member account (the same
+    record `POST /supporters` creates, through the same `core.membership` helper)
+    and then signs as that member. The unique constraint on
+    (petition_id, citizen_id) does the work it always did.
+
+    What changes is the number of forms a citizen fills in to do it. Asking
+    somebody who arrived at a petition to sign up, find an access code in their
+    email, log in and come back is a fair description of how to collect very few
+    signatures, and the two-step version was never a security control -- the
+    account it insists on could be created by anyone in the same ten seconds.
+
+    What it costs, stated plainly rather than hidden: nothing here proves the
+    person controls the address they typed, so a count of these signatures is a
+    count of verified *accounts*, not of verified people. That is a smaller claim
+    than it sounds, it is the same claim the join flow already makes, and the
+    honest place to fix it is email confirmation in `core.membership`, where both
+    entry points would gain it at once. Until then the rate limits below are what
+    stands between this and a script.
+
+    What that unproven address must NEVER buy is access to somebody else's
+    account, so an address that already has one is refused here and sent to the
+    login page (see the check below). The member token returned is therefore only
+    ever for an account this request has just created, and it exists so the
+    browser that signed can withdraw that signature without first hunting for an
+    access code in an inbox.
+    """
+    petition = await _public_petition(session, slug)
+    _assert_open(petition)
+
+    if not payload.consent:
+        raise HTTPException(
+            status_code=400,
+            detail="Please agree to the data notice before signing. Consent cannot be assumed.",
+        )
+    state_code = _normalise_state(payload.state_code)
+    email = payload.email.lower().strip()
+    name = payload.name.strip()
+
+    # Two limits, deliberately. The email one is the same counter a signed-in
+    # member spends, so this endpoint is not a way around it; the IP one is what
+    # a script actually hits, since it can invent a fresh address every time.
+    await limits.check("petition.sign", f"m:{email}")
+    await limits.check("petition.sign.public", limits.identity_for(request))
+
+    comment_hidden = _screen_comment(payload.comment)
+
+    # An address that already has an account is turned away to the login page,
+    # and this is the most important line in the endpoint. Nothing here proves
+    # the person typing owns the address, so continuing would mean signing in
+    # somebody else's name -- and, since this endpoint returns a session, handing
+    # over their dashboard, their data and their right to erase it. Friction for
+    # the few who already have an account is the correct trade.
+    if await membership.member_exists(email):
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "message": (
+                    "This email already has an account here. Sign in and you can sign this "
+                    "petition in one click."
+                ),
+                "code": "member_exists",
+            },
+        )
+
+    supporter = await membership.ensure_supporter(
+        email=email,
+        name=name,
+        # The supporter record's `state` has always been the free-text state NAME
+        # (see core/deps.get_current_citizen), so it stays a name here; the CODE
+        # goes on the Citizen row, which is what state-wise aggregates read.
+        state=STATES_BY_CODE[state_code].name if state_code else None,
+        city=payload.city,
+        pledge=True,
+        source=f"petition:{petition.slug}",
+    )
+
+    citizen = (
+        await session.execute(select(Citizen).where(Citizen.email == email))
+    ).scalar_one_or_none()
+    if citizen is None:
+        citizen = Citizen(
+            email=email,
+            # Their real name becomes their community display name only if they
+            # asked to be listed publicly. Otherwise the neutral handle applies,
+            # for the reason on the Citizen model: nobody should end up posting
+            # in the forum under their legal name because they signed a petition.
+            display_name=name[:60] if payload.show_my_name else email.split("@")[0][:24].title(),
+            state_code=state_code,
+        )
+        session.add(citizen)
+        await session.flush()
+    else:
+        if not citizen.state_code:
+            citizen.state_code = state_code
+        if citizen.is_muted():
+            raise HTTPException(
+                status_code=403,
+                detail=(
+                    "Posting is paused on this account until "
+                    f"{citizen.muted_until.date().isoformat()}. You can contest this "
+                    "through the contact form."
+                ),
+            )
+
+    existing = (
+        await session.execute(
+            select(PetitionSignature).where(
+                PetitionSignature.petition_id == petition.id,
+                PetitionSignature.citizen_id == citizen.id,
+            )
+        )
+    ).scalar_one_or_none()
+    if existing is not None:
+        raise HTTPException(
+            status_code=409,
+            detail=(
+                "This email address has already signed this petition. One signature per "
+                "person is what makes the number worth handing to an office."
+            ),
+        )
+
+    session.add(
+        PetitionSignature(
+            petition_id=petition.id,
+            citizen_id=citizen.id,
+            display_name=name[:60] if payload.show_my_name else citizen.display_name,
+            state_code=citizen.state_code,
+            comment=moderation.scrub_identifiers(payload.comment.strip()),
+            is_public=payload.show_my_name,
+            comment_hidden=comment_hidden,
+        )
+    )
+    await session.flush()
+    await _recount(session, petition)
+
+    contributions = dict(citizen.contributions or {})
+    contributions["petitionsSigned"] = contributions.get("petitionsSigned", 0) + 1
+    citizen.contributions = contributions
+
+    return {
+        "ok": True,
+        "signatureCount": petition.signature_count,
+        "nextMilestone": next_milestone(petition.signature_count),
+        "commentPending": comment_hidden,
+        "state": state_code,
+        "isNewMember": not supporter.already,
+        "movementId": supporter.movement_id,
+        # Plaintext, once, and only for an account created by this request. See
+        # core/membership: it cannot be produced again afterwards.
+        "accessCode": supporter.access_code,
+        "memberToken": create_member_token(email),
+        "share": notify.share_links(
+            url=_public_path(petition),
             text=f"I just signed: {petition.title}",
         ),
     }

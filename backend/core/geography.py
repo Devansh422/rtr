@@ -91,6 +91,55 @@ VALID_STATE_CODES: frozenset[str] = frozenset(STATES_BY_CODE)
 
 
 # --------------------------------------------------------------------------
+# Zones
+# --------------------------------------------------------------------------
+# Thirty-six rows is too many to read as one list, so anything that presents
+# every state at once (the petition's state-wise sections, state-wise aggregates)
+# groups them. The grouping is the STATUTORY one -- the five Zonal Councils
+# constituted under Part III of the States Reorganisation Act 1956, plus the
+# North Eastern Council constituted under the North Eastern Council Act 1971 --
+# and not a set of regions invented here.
+#
+# That choice is a §1 matter, not a cosmetic one. Any home-made grouping of
+# Indian states ("the Hindi belt", "the south") carries an argument inside it,
+# and this platform cannot afford to make one incidentally while laying out a
+# page. A grouping fixed by statute carries none: it is a citable fact about how
+# the Union already organises inter-state consultation.
+#
+# Membership below follows the councils' own membership, which is why Andaman
+# and Nicobar Islands and Lakshadweep sit in the Southern zone and Sikkim in the
+# North Eastern one -- geography would put them elsewhere, the statute does not.
+
+
+@dataclass(frozen=True)
+class Zone:
+    key: str
+    label: str
+    label_hi: str
+    codes: tuple[str, ...]
+
+
+ZONE_SOURCE_URL = "https://www.mha.gov.in/en/divisionofmha/inter-state-council-division"
+
+ZONES: list[Zone] = [
+    Zone("northern", "Northern", "उत्तरी", ("CH", "DL", "HR", "HP", "JK", "LA", "PB", "RJ")),
+    Zone("central", "Central", "मध्य", ("CT", "MP", "UP", "UT")),
+    Zone("eastern", "Eastern", "पूर्वी", ("BR", "JH", "OR", "WB")),
+    Zone("western", "Western", "पश्चिमी", ("DH", "GA", "GJ", "MH")),
+    Zone("southern", "Southern", "दक्षिणी", ("AN", "AP", "KA", "KL", "LD", "PY", "TG", "TN")),
+    Zone("north_eastern", "North Eastern", "पूर्वोत्तर", ("AR", "AS", "MN", "ML", "MZ", "NL", "SK", "TR")),
+]
+
+ZONE_BY_CODE: dict[str, str] = {code: zone.key for zone in ZONES for code in zone.codes}
+ZONES_BY_KEY: dict[str, Zone] = {z.key: z for z in ZONES}
+
+
+def zone_of(code: str) -> str:
+    """The zonal council a state or UT belongs to. Empty string if unknown."""
+    return ZONE_BY_CODE.get((code or "").upper(), "")
+
+
+# --------------------------------------------------------------------------
 # Campaign pipeline
 # --------------------------------------------------------------------------
 # The eight stages a state moves through, in order. Stored as an integer index

@@ -26,6 +26,7 @@ from backend.modules.corrections import models as corrections_models  # noqa: F4
 from backend.modules.events import models as events_models  # noqa: F401
 from backend.modules.forum import models as forum_models  # noqa: F401
 from backend.modules.legal import models as legal_models  # noqa: F401
+from backend.modules.manifesto import models as manifesto_models  # noqa: F401
 from backend.modules.petitions import models as petitions_models  # noqa: F401
 from backend.modules.reports import models as reports_models  # noqa: F401
 from backend.modules.representatives import models as representatives_models  # noqa: F401

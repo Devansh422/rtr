@@ -81,6 +81,28 @@ export const getPetition = (slug) => unwrap(client.get(`/petitions/${slug}`));
 export const getPetitionSignatures = (slug) =>
   orEmpty(client.get(`/petitions/${slug}/signatures`), { items: [], totalSignatures: 0 });
 
+/**
+ * The common cause: the one national petition, with its state-wise breakdown.
+ *
+ * Fetched from `/petitions/national` rather than by a slug written here, so which
+ * petition that is stays decided in one place on the backend.
+ */
+export const getNationalPetition = () => unwrap(client.get("/petitions/national"));
+
+export const getPetitionByState = (slug) =>
+  orEmpty(client.get(`/petitions/${slug}/by-state`), null);
+
+/**
+ * Sign and become a member in one request, for a visitor with no account.
+ *
+ * Propagates errors rather than swallowing them: a 409 (this address has already
+ * signed) and a 429 (rate limited) both need to reach the person who pressed the
+ * button. Returns a member token, which the caller stores so the browser is
+ * signed in afterwards.
+ */
+export const signPetitionPublicly = (slug, payload) =>
+  unwrap(client.post(`/petitions/${slug}/sign-public`, payload));
+
 // --------------------------------------------------------------------------
 // Citizen reports
 // --------------------------------------------------------------------------

@@ -15,7 +15,7 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 import logging
 
-from backend.core import erasure
+from backend.core import erasure, membership
 from backend.core.deps import get_current_member, get_optional_session, require_permission
 from backend.core.models import new_id
 from backend.core.mongo import db
@@ -125,53 +125,42 @@ async def subscribe_newsletter(payload: NewsletterCreate):
 
 @router.post("/supporters")
 async def join_movement(payload: SupporterCreate):
-    # Lowercased for storage so it matches how member_login looks emails up.
-    email = payload.email.lower()
-    existing = await db.supporters.find_one({"email": email})
-    if existing:
+    """Join the movement. Creates the member account, or recognises an existing one.
+
+    The record itself is written by `core.membership`, which the national
+    petition's one-step sign also calls -- one place mints access codes, so a
+    supporter created through a petition can log in exactly like one created here.
+    """
+    record = await membership.ensure_supporter(
+        email=payload.email,
+        name=payload.name,
+        state=payload.state,
+        city=payload.city,
+        mobile=payload.mobile,
+        pledge=payload.pledge,
+        campaign_id=payload.campaign_id,
+        referred_by=payload.referred_by,
+        source="join",
+    )
+    if record.already:
         # No new access code on a repeat join -- their original one still
         # works, and reissuing here would silently invalidate it.
         return {
             "message": "You're already part of the movement!",
             "already": True,
-            "movement_id": existing.get("movement_id"),
-            "name": existing.get("name"),
-            "created_at": existing.get("created_at"),
+            "movement_id": record.movement_id,
+            "name": record.name,
+            "created_at": record.created_at,
         }
-
-    movement_id = f"RTR-{datetime.now(timezone.utc).year}-{new_id().replace('-', '')[:6].upper()}"
-    access_code = generate_access_code()
-    created_at = now_iso()
-    await db.supporters.insert_one(
-        {
-            "id": new_id(),
-            "movement_id": movement_id,
-            "name": payload.name,
-            "email": email,
-            "state": payload.state,
-            "city": payload.city,
-            "mobile": payload.mobile,
-            "pledge": payload.pledge,
-            "campaign_id": payload.campaign_id,
-            "referred_by": payload.referred_by,
-            "access_code_hash": hash_password(access_code),
-            "created_at": created_at,
-        }
-    )
-    if not await db.newsletter.find_one({"email": email}):
-        await db.newsletter.insert_one(
-            {"id": new_id(), "email": email, "source": "supporter", "created_at": created_at}
-        )
-    logger.info("New supporter: %s (%s)", email, movement_id)
     return {
         "message": "You're in! Welcome to the movement.",
         "already": False,
-        "movement_id": movement_id,
-        "name": payload.name,
-        "created_at": created_at,
+        "movement_id": record.movement_id,
+        "name": record.name,
+        "created_at": record.created_at,
         # Plaintext exists only in this one response -- only the bcrypt hash is
         # ever stored. The frontend must show this once and never re-fetch it.
-        "access_code": access_code,
+        "access_code": record.access_code,
     }
 
 

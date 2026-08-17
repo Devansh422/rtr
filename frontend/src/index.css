@@ -120,29 +120,67 @@ code {
   }
 
   /*
-   * Full-viewport section. min-height rather than height, so content that exceeds
-   * the viewport grows instead of clipping, and svh so mobile browser chrome does
-   * not cause a jump. Content is vertically centred.
+   * SECTION HEIGHT. Content decides it everywhere except the home page.
+   *
+   * These sections were all a full viewport tall, with their content vertically
+   * centred. That is the right treatment for a landing page, where each screen
+   * is one idea and the scroll is the argument. It is the wrong treatment for
+   * the rest of the site: a section holding two lines of text was given the same
+   * 100svh as one holding a 36-state table, so short sections stranded their
+   * content in the middle of an empty screen and a reader had to scroll past
+   * white space to reach the next real thing. On a phone in portrait it was
+   * worse, because 100svh is a lot of nothing.
+   *
+   * So `.full-section` is now content-height with generous padding, and the home
+   * page opts into the old behaviour explicitly through `.full-section-viewport`.
+   * The padding matches the py-20/py-28 the home page's own content-height
+   * sections already use, so the vertical rhythm is unchanged where it was
+   * already correct.
    *
    * No scroll-margin-top here on purpose: it would sit in the same @layer as
    * Tailwind's scroll-mt-* utilities at equal specificity, so source order would
    * decide the winner and anchor offsets would break unpredictably.
    */
   .full-section {
-    min-height: 100vh;
-    min-height: 100svh;
+    /* Flex is kept from the viewport-tall version so children that rely on a
+       flex column parent are unaffected; with no min-height, centring is a
+       no-op. */
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
   }
   /* Sections that sit under the fixed navbar need headroom for it. */
   .full-section-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+  }
+  @media (min-width: 768px) {
+    .full-section {
+      padding-top: 7rem;
+      padding-bottom: 7rem;
+    }
+    .full-section-hero {
+      padding-top: 9rem;
+      padding-bottom: 7rem;
+    }
+  }
+
+  /*
+   * The home page's full-viewport section. min-height rather than height, so
+   * content that exceeds the viewport grows instead of clipping, and svh so
+   * mobile browser chrome does not cause a jump.
+   */
+  .full-section-viewport {
     min-height: 100vh;
     min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-top: 6rem;
   }
 
   /*

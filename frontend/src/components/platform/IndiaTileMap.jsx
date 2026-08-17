@@ -60,12 +60,51 @@ const STAGE_TONES = [
   "bg-primary text-primary-foreground border-primary",            // 7 act enforced
 ];
 
-export default function IndiaTileMap({ states, stages = [], className }) {
+/*
+ * Intensity mode. Given a count per state, the same primary ramp carries "how
+ * many", as a proportion of the leading state rather than of an absolute scale:
+ * on the day a petition opens the leader has four signatures, and a ramp pinned
+ * to 100,000 would render the entire country as one flat empty grid.
+ *
+ * Proportional-to-leader has its own honesty problem -- it makes an early map
+ * look busier than the campaign is -- so the legend states the leader's number
+ * outright rather than showing an unlabelled gradient.
+ */
+const INTENSITY_STEPS = [
+  [0.66, 7],
+  [0.33, 6],
+  [0.15, 5],
+  [0.05, 4],
+  [0, 2],
+];
+
+function intensityTone(count, max) {
+  if (!count || !max) return STAGE_TONES[0];
+  const ratio = count / max;
+  const step = INTENSITY_STEPS.find(([threshold]) => ratio > threshold);
+  return STAGE_TONES[step ? step[1] : 2];
+}
+
+export default function IndiaTileMap({
+  states,
+  stages = [],
+  // Optional { CODE: number }. When present the tiles carry this quantity
+  // instead of the campaign stage -- used by the petition's state-wise sections.
+  values,
+  valueLabel = "signatures",
+  // Optional. When given, tiles become buttons that select a state in place
+  // rather than links that navigate away from the page.
+  onSelect,
+  selectedCode,
+  className,
+}) {
   if (!states?.length) return null;
 
   const byCode = Object.fromEntries(states.map((s) => [s.code, s]));
   const rows = 9;
   const columns = 9;
+  const showValues = Boolean(values);
+  const maxValue = showValues ? Math.max(0, ...Object.values(values)) : 0;
 
   return (
     <div className={className} data-testid="india-tile-map">
@@ -76,37 +115,91 @@ export default function IndiaTileMap({ states, stages = [], className }) {
           gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
         }}
         role="group"
-        aria-label="States and union territories by campaign stage"
+        aria-label={
+          showValues
+            ? `States and union territories by ${valueLabel}`
+            : "States and union territories by campaign stage"
+        }
       >
         {Object.entries(GRID).map(([code, [row, column]]) => {
           const state = byCode[code];
           if (!state) return null;
           const stageIndex = state.campaign?.stageIndex ?? 0;
+          const value = showValues ? (values[code] ?? 0) : null;
+          const description = showValues
+            ? `${value.toLocaleString("en-IN")} ${valueLabel}`
+            : (state.campaign?.stageLabel ?? "No demand yet");
+
+          const tileClassName = cn(
+            "flex aspect-square flex-col items-center justify-center rounded border p-1 transition-transform",
+            "hover:scale-110 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            showValues
+              ? intensityTone(value, maxValue)
+              : (STAGE_TONES[stageIndex] ?? STAGE_TONES[0]),
+            // The pilot states are where the pattern is being proven, so they
+            // are marked rather than left to be inferred from their stage.
+            state.isPilot && "ring-2 ring-secondary ring-offset-1 ring-offset-background",
+            selectedCode === code && "ring-2 ring-primary ring-offset-1 ring-offset-background"
+          );
+          const label = `${state.name}, ${description.toLowerCase()}`;
+          const content = <span className="font-heading text-meta font-bold leading-none">{code}</span>;
+
+          if (onSelect) {
+            return (
+              <button
+                key={code}
+                type="button"
+                onClick={() => onSelect(code)}
+                style={{ gridRow: row, gridColumn: column }}
+                title={`${state.name} - ${description}`}
+                aria-label={label}
+                aria-pressed={selectedCode === code}
+                className={tileClassName}
+                data-testid={`map-tile-${code}`}
+              >
+                {content}
+              </button>
+            );
+          }
+
           return (
             <Link
               key={code}
               to={`/states/${state.slug}`}
               style={{ gridRow: row, gridColumn: column }}
-              title={`${state.name} - ${state.campaign?.stageLabel ?? "No demand yet"}`}
-              aria-label={`${state.name}, ${state.campaign?.stageLabel ?? "no demand yet"}`}
-              className={cn(
-                "flex aspect-square flex-col items-center justify-center rounded border p-1 transition-transform",
-                "hover:scale-110 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                STAGE_TONES[stageIndex] ?? STAGE_TONES[0],
-                // The pilot states are where the pattern is being proven, so they
-                // are marked rather than left to be inferred from their stage.
-                state.isPilot && "ring-2 ring-secondary ring-offset-1 ring-offset-background"
-              )}
+              title={`${state.name} - ${description}`}
+              aria-label={label}
+              className={tileClassName}
               data-testid={`map-tile-${code}`}
             >
-              <span className="font-heading text-meta font-bold leading-none">{code}</span>
+              {content}
             </Link>
           );
         })}
       </div>
 
       {/* Legend. A map whose colours are unexplained is decoration. */}
-      {stages.length ? (
+      {showValues ? (
+        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <span className="text-label font-bold uppercase text-muted-foreground">{valueLabel}</span>
+          <span className="inline-flex items-center gap-1.5 text-meta">
+            <span className={cn("h-3 w-3 rounded border", STAGE_TONES[0])} aria-hidden="true" />
+            None yet
+          </span>
+          {[2, 4, 5, 6, 7].map((tone) => (
+            <span
+              key={tone}
+              className={cn("h-3 w-3 rounded border", STAGE_TONES[tone])}
+              aria-hidden="true"
+            />
+          ))}
+          <span className="text-meta text-foreground/60">
+            Shaded against the leading state
+            {maxValue ? ` (${maxValue.toLocaleString("en-IN")} ${valueLabel})` : ""}, not against a
+            national target.
+          </span>
+        </div>
+      ) : stages.length ? (
         <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
           <span className="text-label font-bold uppercase text-muted-foreground">Stage</span>
           {stages.map((stage, index) => (

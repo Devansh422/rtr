@@ -73,6 +73,7 @@ async def seeded(session: AsyncSession) -> AsyncSession:
     await seed_modules.seed_pilot_districts(session)
     await seed_modules.sync_tool_templates(session)
     await seed_modules.seed_starter_course(session)
+    await seed_modules.seed_national_petition(session)
     await session.flush()
     return session
 
@@ -603,6 +604,37 @@ class TestCommunityMechanics:
 
 
 # --------------------------------------------------------------------------
+# Zones -- the grouping the state-wise sections are built on
+# --------------------------------------------------------------------------
+class TestZones:
+    def test_every_state_belongs_to_exactly_one_zone(self):
+        from backend.core.geography import STATES, ZONES, zone_of
+
+        assigned = [code for zone in ZONES for code in zone.codes]
+        assert len(assigned) == len(set(assigned)), "a state cannot sit in two zonal councils"
+        assert set(assigned) == {s.code for s in STATES}, (
+            "a state missing from ZONES would vanish from the petition's state-wise "
+            "sections without anything failing"
+        )
+        assert all(zone_of(s.code) for s in STATES)
+
+    def test_zone_membership_follows_the_councils_not_the_map(self):
+        # The three that would be wrong if somebody "fixed" this by geography.
+        from backend.core.geography import zone_of
+
+        assert zone_of("SK") == "north_eastern"
+        assert zone_of("AN") == "southern"
+        assert zone_of("LD") == "southern"
+
+    def test_zone_lookup_is_case_insensitive_and_safe(self):
+        from backend.core.geography import zone_of
+
+        assert zone_of("mh") == "western"
+        assert zone_of("") == ""
+        assert zone_of("XX") == ""
+
+
+# --------------------------------------------------------------------------
 # Civic tools
 # --------------------------------------------------------------------------
 class TestTools:
@@ -876,9 +908,30 @@ class TestModuleSeeding:
             assert 0 <= question["answer"] < len(question["options"])
             assert question["explanation"].strip(), "a quiz that says 'wrong' without why teaches nothing"
 
+    async def test_national_petition_is_open_bilingual_and_names_nobody(self, seeded):
+        from backend.modules.petitions.models import (
+            NATIONAL_PETITION_SLUG,
+            Petition,
+            PetitionStatus,
+        )
+
+        petition = (
+            await seeded.execute(select(Petition).where(Petition.slug == NATIONAL_PETITION_SLUG))
+        ).scalar_one()
+        assert petition.status == PetitionStatus.OPEN
+        assert petition.is_official
+        assert petition.state_code is None, "the common cause is national, not a state petition"
+        # A standing demand that expires in ninety days would have to be
+        # re-created, and its signatures would not survive that.
+        assert petition.closes_at is None
+        assert petition.title_hi and petition.body_hi, "§8: authored bilingually from the start"
+        assert "Article 328" in petition.body, "the ask should say how it can lawfully be done"
+
     async def test_seeding_everything_twice_changes_nothing(self, seeded):
+        from backend.modules.petitions.models import Petition
+
         counts_before = {}
-        for model in (ConstitutionArticle, DocumentTemplate):
+        for model in (ConstitutionArticle, DocumentTemplate, Petition):
             counts_before[model] = len((await seeded.execute(select(model))).scalars().all())
 
         await seed_modules.seed_constitution(seeded, seed_modules._load_constitution_seed())
@@ -887,6 +940,7 @@ class TestModuleSeeding:
         await seed_modules.seed_pilot_districts(seeded)
         await seed_modules.sync_tool_templates(seeded)
         await seed_modules.seed_starter_course(seeded)
+        await seed_modules.seed_national_petition(seeded)
         await seeded.flush()
 
         for model, before in counts_before.items():
@@ -1056,6 +1110,255 @@ class TestPublicApi:
         with zipfile.ZipFile(BytesIO(response.content)) as archive:
             body = archive.read("word/document.xml").decode("utf-8")
         assert "Article 326" in body and "Article 328" in body
+
+    async def test_national_petition_is_served_from_its_own_path(self, client):
+        body = (await client.get("/api/petitions/national")).json()
+        assert body["isNational"] is True
+        assert body["status"] == "open"
+        # The page is /petition, not /petitions/<slug>, and every link the API
+        # hands out -- including the share text -- has to agree.
+        assert body["url"] == "/petition"
+        assert body["share"]["copy"].endswith("/petition")
+        assert body["body"], "the detail payload must carry the text of the ask"
+
+    async def test_national_petition_carries_a_complete_state_breakdown(self, client):
+        breakdown = (await client.get("/api/petitions/national")).json()["stateBreakdown"]
+        assert breakdown["totalStates"] == 36
+        assert len(breakdown["states"]) == 36, "a state with no signatures is still listed"
+        assert sum(len(z["states"]) for z in breakdown["zones"]) == 36
+        assert {z["key"] for z in breakdown["zones"]} == {
+            "northern",
+            "central",
+            "eastern",
+            "western",
+            "southern",
+            "north_eastern",
+        }
+        assert all(row["count"] == 0 for row in breakdown["states"])
+        assert breakdown["recorded"] == 0
+
+    async def test_state_breakdown_counts_and_ranks_signatures(self, client, seeded):
+        from backend.modules.petitions.models import (
+            NATIONAL_PETITION_SLUG,
+            Petition,
+            PetitionSignature,
+        )
+
+        petition = (
+            await seeded.execute(select(Petition).where(Petition.slug == NATIONAL_PETITION_SLUG))
+        ).scalar_one()
+        # Three in Maharashtra, one in Delhi, one who never told us where they are.
+        for index, state in enumerate(["MH", "MH", "MH", "DL", None]):
+            citizen = Citizen(email=f"signer{index}@example.com", display_name=f"S{index}")
+            citizen.state_code = state
+            seeded.add(citizen)
+            await seeded.flush()
+            seeded.add(
+                PetitionSignature(
+                    petition_id=petition.id, citizen_id=citizen.id, state_code=state
+                )
+            )
+        petition.signature_count = 5
+        await seeded.flush()
+
+        breakdown = (await client.get(f"/api/petitions/{petition.slug}/by-state")).json()
+        by_code = {row["code"]: row for row in breakdown["states"]}
+
+        assert breakdown["totalSignatures"] == 5
+        assert breakdown["recorded"] == 4
+        assert breakdown["unspecified"] == 1
+        assert breakdown["statesWithSignatures"] == 2
+        assert by_code["MH"]["count"] == 3 and by_code["MH"]["rank"] == 1
+        assert by_code["DL"]["count"] == 1 and by_code["DL"]["rank"] == 2
+        assert by_code["KL"]["rank"] is None, "states on zero are not ranked"
+        # Percentages are of the signatures that carry a state, so they add up.
+        assert by_code["MH"]["share"] == 75.0
+        assert breakdown["states"][0]["code"] == "MH", "ranked list leads with the leader"
+        western = next(z for z in breakdown["zones"] if z["key"] == "western")
+        assert western["count"] == 3
+
+    async def test_state_breakdown_identifies_nobody(self, client, seeded):
+        from backend.modules.petitions.models import (
+            NATIONAL_PETITION_SLUG,
+            Petition,
+            PetitionSignature,
+        )
+
+        petition = (
+            await seeded.execute(select(Petition).where(Petition.slug == NATIONAL_PETITION_SLUG))
+        ).scalar_one()
+        citizen = Citizen(email="named@example.com", display_name="Very Identifiable Name")
+        citizen.state_code = "KA"
+        seeded.add(citizen)
+        await seeded.flush()
+        seeded.add(
+            PetitionSignature(
+                petition_id=petition.id,
+                citizen_id=citizen.id,
+                state_code="KA",
+                display_name="Very Identifiable Name",
+                comment="A comment that should not travel with an aggregate",
+                is_public=True,
+            )
+        )
+        await seeded.flush()
+
+        raw = (await client.get(f"/api/petitions/{petition.slug}/by-state")).text
+        assert "Very Identifiable Name" not in raw
+        assert "named@example.com" not in raw
+        assert "should not travel" not in raw
+
+    async def test_by_state_404s_for_an_unpublished_petition(self, client):
+        assert (await client.get("/api/petitions/not-a-real-petition/by-state")).status_code == 404
+
+
+@pytest.fixture
+def offline_membership(monkeypatch):
+    """The one-step sign without Mongo.
+
+    Two of its three dependencies live in Mongo (the supporter record and the
+    rate-limit counters) and the suite deliberately runs without it. Stubbing
+    them here keeps what this endpoint is actually responsible for -- consent,
+    state validation, uniqueness, the signature itself -- under test, and records
+    what it asked for so the test can assert on it.
+    """
+    from backend.core import limits, membership
+
+    calls: dict = {"supporters": [], "limits": [], "members": set()}
+
+    async def fake_member_exists(email):
+        return email.lower() in calls["members"]
+
+    async def fake_ensure_supporter(**kwargs):
+        calls["supporters"].append(kwargs)
+        email = kwargs["email"].lower()
+        calls["members"].add(email)
+        return membership.SupporterRecord(
+            email=email,
+            name=kwargs["name"],
+            movement_id="RTR-2026-ABC123",
+            created_at="2026-08-13T00:00:00+00:00",
+            already=False,
+            access_code="TEST-CODE",
+        )
+
+    async def fake_check(action, identity, **kwargs):
+        calls["limits"].append((action, identity))
+        return True
+
+    # Patched on the module objects the router looks attributes up on at call
+    # time (`membership.ensure_supporter(...)`, `limits.check(...)`), which is
+    # also why the router imports the modules rather than the functions.
+    monkeypatch.setattr(membership, "ensure_supporter", fake_ensure_supporter)
+    monkeypatch.setattr(membership, "member_exists", fake_member_exists)
+    monkeypatch.setattr(limits, "check", fake_check)
+    return calls
+
+
+class TestOneStepSigning:
+    SIGNATURE = {
+        "name": "A Citizen",
+        "email": "one.step@example.com",
+        "state_code": "MH",
+        "city": "Pune",
+        "consent": True,
+    }
+
+    async def test_signing_creates_the_member_and_records_the_signature(
+        self, client, offline_membership
+    ):
+        # "national" works as an alias everywhere under /petitions/{slug}.
+        response = await client.post("/api/petitions/national/sign-public", json=self.SIGNATURE)
+        assert response.status_code == 200, response.text
+        signed = response.json()
+
+        assert signed["signatureCount"] == 1
+        assert signed["isNewMember"] is True
+        assert signed["state"] == "MH"
+        # Signed in as a result of signing: no access code to copy out of an
+        # email before the browser can withdraw the signature it just made.
+        assert signed["memberToken"]
+        assert signed["accessCode"] == "TEST-CODE"
+
+        breakdown = (await client.get("/api/petitions/national")).json()["stateBreakdown"]
+        assert next(r for r in breakdown["states"] if r["code"] == "MH")["count"] == 1
+
+    async def test_the_same_address_cannot_sign_twice(self, client, offline_membership):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        first = await client.post(f"/api/petitions/{slug}/sign-public", json=self.SIGNATURE)
+        assert first.status_code == 200
+        second = await client.post(
+            f"/api/petitions/{slug}/sign-public",
+            json={**self.SIGNATURE, "email": "ONE.STEP@example.com"},
+        )
+        assert second.status_code == 409, "uniqueness must survive a change of case"
+        assert (await client.get("/api/petitions/national")).json()["signatureCount"] == 1
+
+    async def test_an_existing_account_is_sent_to_the_login_page(self, client, offline_membership):
+        """The security property: this endpoint hands out a session, so it must
+        never hand out one for an address that already belongs to somebody."""
+        offline_membership["members"].add("already.a.member@example.com")
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        response = await client.post(
+            f"/api/petitions/{slug}/sign-public",
+            json={**self.SIGNATURE, "email": "Already.A.Member@example.com"},
+        )
+        assert response.status_code == 409
+        body = response.json()["detail"]
+        assert body["code"] == "member_exists"
+        assert "sign in" in body["message"].lower()
+        assert not offline_membership["supporters"], "no record may be touched for that address"
+        assert "memberToken" not in response.text
+
+    async def test_consent_is_required_and_cannot_be_assumed(self, client, offline_membership):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        response = await client.post(
+            f"/api/petitions/{slug}/sign-public", json={**self.SIGNATURE, "consent": False}
+        )
+        assert response.status_code == 400
+        assert "consent" in response.json()["detail"].lower()
+        assert not offline_membership["supporters"], "no record may be created without consent"
+
+    async def test_an_unknown_state_is_rejected_rather_than_filed_under_nothing(
+        self, client, offline_membership
+    ):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        response = await client.post(
+            f"/api/petitions/{slug}/sign-public", json={**self.SIGNATURE, "state_code": "ZZ"}
+        )
+        assert response.status_code == 400
+
+    async def test_a_private_signer_is_not_listed_by_name(self, client, offline_membership):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        await client.post(
+            f"/api/petitions/{slug}/sign-public",
+            json={**self.SIGNATURE, "comment": "This matters in my ward."},
+        )
+        listed = (await client.get(f"/api/petitions/{slug}/signatures")).json()
+        assert listed["totalSignatures"] == 1
+        assert listed["items"] == [], "counted, not published -- show_my_name defaulted to false"
+
+        raw = (await client.get(f"/api/petitions/{slug}/signatures")).text
+        assert "A Citizen" not in raw
+
+    async def test_an_opted_in_signer_is_listed_with_their_state(self, client, offline_membership):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        await client.post(
+            f"/api/petitions/{slug}/sign-public",
+            json={**self.SIGNATURE, "show_my_name": True, "comment": "Recall keeps them honest."},
+        )
+        items = (await client.get(f"/api/petitions/{slug}/signatures")).json()["items"]
+        assert items[0]["displayName"] == "A Citizen"
+        assert items[0]["state"] == "MH"
+        assert items[0]["comment"] == "Recall keeps them honest."
+
+    async def test_both_rate_limit_counters_are_spent(self, client, offline_membership):
+        slug = (await client.get("/api/petitions/national")).json()["slug"]
+        await client.post(f"/api/petitions/{slug}/sign-public", json=self.SIGNATURE)
+        actions = [action for action, _ in offline_membership["limits"]]
+        assert "petition.sign" in actions, "this endpoint is not a way around the member limit"
+        assert "petition.sign.public" in actions
+        assert any(identity.startswith("ip:") for _, identity in offline_membership["limits"])
 
     async def test_policies_are_served_from_the_api(self, client):
         privacy = (await client.get("/api/legal/privacy")).json()

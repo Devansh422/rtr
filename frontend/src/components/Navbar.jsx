@@ -25,10 +25,13 @@ import { useJoin } from "@/context/JoinContext";
  * arrives wanting the "corrections module".
  */
 const LINKS = [
+  // The national petition leads: it is the one action this whole platform is
+  // asking for, and the directory of member-started petitions sits under "Take
+  // part" with everything else somebody might browse.
+  { to: "/petition", label: "Sign the petition" },
   { to: "/constitution", label: "Constitution" },
   { to: "/representatives", label: "Representatives" },
   { to: "/states", label: "States" },
-  { to: "/petitions", label: "Petitions" },
   { to: "/tools", label: "Civic tools" },
 ];
 
@@ -36,6 +39,7 @@ const MORE = [
   {
     group: "Take part",
     items: [
+      { to: "/petitions", label: "All petitions" },
       { to: "/forum", label: "Discuss" },
       { to: "/reports", label: "Citizen report cards" },
       { to: "/volunteer-portal", label: "Volunteer task board" },

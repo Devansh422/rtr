@@ -109,6 +109,13 @@ export const STRINGS = {
     "petitions.signatures": "signatures",
     "petitions.target": "target",
 
+    // ---- The common cause (the national petition) ----
+    "commonCause.nav": "Sign the petition",
+    "commonCause.eyebrow": "The common cause",
+    "commonCause.sign": "Sign the petition",
+    "commonCause.stateEyebrow": "State by state",
+    "commonCause.stateHeading": "Where the signatures are coming from",
+
     // ---- Reports ----
     "reports.title": "Citizen report cards",
     "reports.lede":
@@ -273,6 +280,13 @@ export const STRINGS = {
     "petitions.start": "याचिका शुरू करें",
     "petitions.signatures": "हस्ताक्षर",
     "petitions.target": "लक्ष्य",
+
+    // ---- The common cause (the national petition) ----
+    "commonCause.nav": "याचिका पर हस्ताक्षर करें",
+    "commonCause.eyebrow": "साझा उद्देश्य",
+    "commonCause.sign": "याचिका पर हस्ताक्षर करें",
+    "commonCause.stateEyebrow": "राज्य दर राज्य",
+    "commonCause.stateHeading": "हस्ताक्षर कहाँ से आ रहे हैं",
 
     // ---- Reports ----
     "reports.title": "नागरिक रिपोर्ट कार्ड",

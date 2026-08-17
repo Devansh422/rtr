@@ -68,6 +68,13 @@ PERMISSIONS: list[PermissionDef] = _content_permissions() + [
     PermissionDef("representatives.publish", "Publish representative profile data", "Accountability"),
     PermissionDef("promises.edit", "Draft promise tracker entries", "Accountability"),
     PermissionDef("promises.publish", "Publish promise tracker entries", "Accountability"),
+    # Manifesto accountability. Split edit/publish for the same reason the
+    # representative store is: transcribing a promise, drafting an RTI and
+    # logging a reply are records-keeping, while publishing an assessment is a
+    # public factual claim about a government's performance and belongs with the
+    # people who carry the fact-check responsibility.
+    PermissionDef("manifesto.edit", "Record manifesto promises, RTIs, replies and documents", "Accountability"),
+    PermissionDef("manifesto.publish", "Publish manifesto promises and their assessments", "Accountability"),
     PermissionDef("factcheck.approve", "Approve sourced claims about named people", "Accountability"),
     PermissionDef("legal.review", "Sign off legal templates and disputed claims", "Accountability"),
     # States & campaigns
@@ -176,6 +183,10 @@ ROLES: list[RoleDef] = [
             "promises.edit",
             "constitution.edit",
             "research.manage",
+            # Filing RTIs and logging what came back is this team's daily work;
+            # publishing the assessment drawn from it is not (manifesto.publish
+            # sits with the Fact Checker).
+            "manifesto.edit",
             # Corrections are research work: an incoming objection is a lead to
             # check against a source, which is exactly this team's job.
             "corrections.review",
@@ -192,6 +203,8 @@ ROLES: list[RoleDef] = [
             "promises.publish",
             "representatives.edit",
             "promises.edit",
+            "manifesto.edit",
+            "manifesto.publish",
             "corrections.review",
             "reports.verify",
             "audit.view",

@@ -284,11 +284,21 @@ export default function Home() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <DynamicButton data-testid="hero-join-button" onClick={openJoin} size="sm">
-                Join the Movement
+              {/* The petition leads: it is the one thing this page is asking a
+                  visitor to do, and it asks less of them than joining does. */}
+              <LinkButton to="/petition" data-testid="hero-petition-button" size="sm">
+                Sign the petition
                 <ArrowRight className="h-4 w-4" />
+              </LinkButton>
+              <DynamicButton
+                data-testid="hero-join-button"
+                onClick={openJoin}
+                variant="outline"
+                size="sm"
+              >
+                Join the Movement
               </DynamicButton>
-              <LinkButton href="#why" data-testid="hero-learn-button" variant="outline" size="sm">
+              <LinkButton href="#why" data-testid="hero-learn-button" variant="ghost" size="sm">
                 Learn More
               </LinkButton>
             </div>
@@ -318,7 +328,7 @@ export default function Home() {
        * Image: clip-zoom reveal, no overlay, fade or opacity.
        */}
       <section
-        className="full-section border-t border-border px-6 md:px-12"
+        className="full-section-viewport border-t border-border px-6 md:px-12"
         data-testid="demand-section"
       >
         <div className="mx-auto w-full max-w-4xl py-gap-section">
@@ -382,7 +392,7 @@ export default function Home() {
       </section>
 
       {/* THE CASE: why it matters + how it works */}
-      <section id="why" className="full-section mx-auto w-full max-w-7xl px-6 md:px-12">
+      <section id="why" className="full-section-viewport mx-auto w-full max-w-7xl px-6 md:px-12">
         {/*
          * Header splits so neither side is left with dead space: label and
          * statement on the left, the framing sentence on the right.
@@ -469,7 +479,7 @@ export default function Home() {
       {/*
        * ONGOING CAMPAIGNS then ARTICLES.
        *
-       * Both are content-height (py-20/py-28) rather than `full-section`: a
+       * Both are content-height (py-20/py-28) rather than `full-section-viewport`: a
        * three-card grid does not fill a viewport, so forcing 100vh here would
        * strand the cards in the middle of empty space. The full-height treatment
        * is kept for the narrative sections above, where it earns its place.
@@ -625,7 +635,7 @@ export default function Home() {
 
       {/* TESTIMONIALS */}
       {testimonials.length > 0 && (
-        <section className="full-section border-t border-border bg-muted/30 px-6 md:px-12">
+        <section className="full-section-viewport border-t border-border bg-muted/30 px-6 md:px-12">
           <div className="mx-auto w-full max-w-7xl">
             <Reveal>
               <h2 className="max-w-2xl font-heading text-title-1 font-semibold tracking-tight">
@@ -657,7 +667,7 @@ export default function Home() {
       {/* LEGACY / LEADERS */}
       {leaders.length > 0 && (
         <section
-          className="full-section border-t border-border px-6 md:px-12"
+          className="full-section-viewport border-t border-border px-6 md:px-12"
           data-testid="legacy-section"
         >
           <div className="mx-auto w-full max-w-7xl">
@@ -718,7 +728,7 @@ export default function Home() {
 
       {/* JOIN CTA */}
       <section
-        className="full-section mx-auto w-full max-w-7xl px-6 md:px-12"
+        className="full-section-viewport mx-auto w-full max-w-7xl px-6 md:px-12"
         data-testid="join-community"
       >
         <div className="relative overflow-hidden rounded border border-border">
