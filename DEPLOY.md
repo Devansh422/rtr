@@ -10,6 +10,31 @@ One Vercel project serves both halves of this app:
 Because both are on the same origin, the frontend talks to the API through the
 relative path `/api` and needs no backend URL configured.
 
+## Go-live checklist
+
+The full walkthrough is below. This is the short list of things that are wrong by
+default and must be dealt with before the site is public — each links to the
+section that explains it.
+
+| # | Do this | Why it bites |
+| --- | --- | --- |
+| 1 | **Rotate the admin password.** The old one is in this repo's git history. | Anyone with a clone has a Super Admin login. See "Rotating a leaked admin password". |
+| 2 | **Generate a real `JWT_SECRET`** (`openssl rand -hex 32`). | It signs admin and member tokens *and* salts the audit log's IP hashes. A guessable secret means forgeable sessions. |
+| 3 | **Run the migrations before the deploy goes live** (`python -m backend.scripts.migrate`). | Pushing code does not touch the schema. Code expecting a missing table 500s on every affected endpoint. |
+| 4 | **Set `CORS_ORIGINS` to your domain.** | It defaults to `*`, which lets any site call the API with a member's browser. |
+| 5 | **Do not load the demo dataset.** | It is fabricated data about invented people on an accountability site. See step 5b. |
+| 6 | **Never deploy a locally-built `frontend/build`.** | A local `.env` bakes `REACT_APP_BACKEND_URL=http://localhost:3001` into the bundle. Let Vercel build it, where that file does not exist and the API base correctly resolves to the relative `/api`. |
+| 7 | **Check `/api/health` after deploying.** | It reports which databases and integrations the running instance actually has. |
+
+Two things that are already handled, listed so nobody "fixes" them:
+
+- `httpx` is pinned in `requirements.txt` and must stay pinned. The Gemini,
+  Brevo and Meilisearch clients import it defensively and degrade to a silent
+  no-op without it — a deployment with a valid API key that answers nothing and
+  logs nothing.
+- `requirements.txt` and `api/requirements.txt` must stay byte-identical. A test
+  enforces both of these.
+
 ## Prerequisites
 
 - A Vercel account.
@@ -272,6 +297,31 @@ the first edit.
 
 Change `ADMIN_PASSWORD` in the Vercel dashboard and redeploy. On the next cold
 start the stored hash is rewritten to match the environment variable.
+
+### Rotating a leaked admin password
+
+**Do this before the first public deploy.** The pair
+`socialservant@gmail.com` / `RightToRecall@2026` was hardcoded in
+`backend/tests/test_admin.py` and is therefore in this repository's git history.
+Anyone who has ever cloned it has a working Super Admin login.
+
+The literals have been removed from the file — the suite now reads `ADMIN_EMAIL`
+and `ADMIN_PASSWORD` from the environment — but **deleting them from HEAD does
+not un-leak them.** The history still contains the password, and rewriting
+history does not help either: every existing clone and fork keeps its copy.
+
+The only fix is rotation:
+
+1. Set a new `ADMIN_PASSWORD` in the Vercel dashboard (generate it, do not invent
+   it: `openssl rand -base64 24`).
+2. Redeploy. The next cold start rewrites the stored hash.
+3. Confirm the old password no longer works at `/admin/login`.
+4. If that address is also used for anything else, change it there too — a
+   password published in a git repository should be assumed compromised
+   everywhere it was reused.
+
+Consider moving the admin account to an address that is not the public contact
+address, so the login is not guessable from the site's own footer.
 
 ## 5. What gets seeded on first boot
 

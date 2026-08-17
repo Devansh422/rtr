@@ -8,8 +8,20 @@ import requests
 BASE_URL = os.environ.get("REACT_APP_BACKEND_URL", "").rstrip("/")
 API = f"{BASE_URL}/api"
 
-ADMIN_EMAIL = "socialservant@gmail.com"
-ADMIN_PASSWORD = "RightToRecall@2026"
+# Read from the environment, never hardcoded.
+#
+# These previously held the project's REAL admin address and password as
+# literals. That put a working production credential in the repository and in
+# its git history, where anyone with read access to the clone has it. The
+# defaults below are throwaway values that match nothing deployed; point the
+# suite at an environment by exporting the same ADMIN_EMAIL / ADMIN_PASSWORD
+# that instance was booted with.
+#
+# NOTE: deleting the literals here does NOT un-leak the old password -- it is
+# still in the history of this repository and must be rotated. See DEPLOY.md,
+# "Rotating a leaked admin password".
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "local-dev-password-not-a-real-one")
 
 CONTENT_TYPES = ["campaigns", "blogs", "news", "faq", "testimonials", "resources",
                  "leaders", "jurisdictions", "myths"]

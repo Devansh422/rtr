@@ -11,6 +11,8 @@ backend.core, because config reads them at import time on purpose.
 """
 
 import os
+import pathlib
+import re
 
 import pytest
 
@@ -2365,3 +2367,196 @@ class TestResearchImporter:
 
         document = (await session.execute(select(ResearchDocument))).scalar_one()
         assert document.publisher == "Supreme Court of India"
+
+
+class TestMigrationsMatchTheModels:
+    """Alembic must build exactly the schema the models describe.
+
+    THIS IS THE ONE DIVERGENCE THAT CANNOT BE CAUGHT IN DEVELOPMENT. Local runs
+    and this whole test suite build their schema from the models
+    (AUTO_CREATE_TABLES / create_all), while every deployed environment builds it
+    from the migration chain. So a model column added without a migration works
+    perfectly on a laptop, passes CI, and then fails in production on the first
+    request that touches it -- as a 500 from a driver complaining about a column
+    that does not exist, a long way from the commit that caused it.
+
+    Comparing the two schemas is the only thing that catches it before a deploy.
+    """
+
+    def _schemas(self, tmp_path, monkeypatch):
+        from alembic import command
+        from alembic.config import Config
+        from sqlalchemy import create_engine, inspect
+
+        from backend.core import config as app_config
+        from backend.core.models import Base
+        import backend.models_all  # noqa: F401 - registers every module's tables
+
+        migrated = tmp_path / "migrated.db"
+        modelled = tmp_path / "modelled.db"
+        root = pathlib.Path(__file__).resolve().parents[1]
+
+        config = Config(str(root / "alembic.ini"))
+        config.set_main_option("script_location", str(root / "migrations"))
+
+        # Patch the CONFIG ATTRIBUTE, not the environment variable.
+        # backend/core/config.py reads os.environ once at import, and
+        # migrations/env.py then overwrites alembic's sqlalchemy.url from
+        # `app_config.DATABASE_URL`. Setting the env var here is therefore
+        # ignored, and the first version of this test consequently ran the
+        # migration chain against the developer's live local database instead of
+        # a throwaway file.
+        monkeypatch.setattr(app_config, "DATABASE_URL", f"sqlite:///{migrated}")
+        command.upgrade(config, "head")
+
+        Base.metadata.create_all(create_engine(f"sqlite:///{modelled}"))
+        return (
+            inspect(create_engine(f"sqlite:///{migrated}")),
+            inspect(create_engine(f"sqlite:///{modelled}")),
+        )
+
+    def test_every_model_table_exists_in_the_migrations(self, tmp_path, monkeypatch):
+        migrated, modelled = self._schemas(tmp_path, monkeypatch)
+        from_migrations = {t for t in migrated.get_table_names() if t != "alembic_version"}
+        from_models = set(modelled.get_table_names())
+
+        missing = from_models - from_migrations
+        assert not missing, (
+            f"tables exist on the models with no migration to create them: {sorted(missing)}. "
+            "Add a migration, or production will 500 on the first request that touches them."
+        )
+        orphaned = from_migrations - from_models
+        assert not orphaned, (
+            f"migrations create tables no model describes: {sorted(orphaned)}. "
+            "Either the model was deleted without a down-migration, or the table is dead."
+        )
+
+    def test_no_column_drift_between_the_two(self, tmp_path, monkeypatch):
+        migrated, modelled = self._schemas(tmp_path, monkeypatch)
+        shared = {t for t in migrated.get_table_names() if t != "alembic_version"} & set(
+            modelled.get_table_names()
+        )
+
+        drift = {}
+        for table in sorted(shared):
+            in_migration = {c["name"] for c in migrated.get_columns(table)}
+            on_model = {c["name"] for c in modelled.get_columns(table)}
+            if in_migration != on_model:
+                drift[table] = {
+                    "missing_from_migration": sorted(on_model - in_migration),
+                    "only_in_migration": sorted(in_migration - on_model),
+                }
+
+        assert not drift, f"schema drift between migrations and models: {drift}"
+
+
+class TestServerlessRequirements:
+    """What the deployed function is allowed to assume is installed.
+
+    The serverless bundle installs requirements.txt and nothing else. Anything
+    the app imports that is missing from it fails in production only -- and, for
+    the dependencies that are imported defensively, fails SILENTLY, which is
+    worse than a crash.
+    """
+
+    def _pinned(self, path):
+        names = set()
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.split("#", 1)[0].strip()
+            if not line:
+                continue
+            names.add(re.split(r"[=<>!\[]", line, 1)[0].strip().lower())
+        return names
+
+    def _root(self):
+        return pathlib.Path(__file__).resolve().parents[2]
+
+    def test_the_two_requirements_files_stay_identical(self):
+        """api/requirements.txt is a safety copy for Vercel's builder, which may
+        prefer a requirements.txt co-located with the function. A divergence
+        means the deployed function installs a different set than anyone
+        reviewing the root file believes."""
+        root = self._root()
+        assert (root / "requirements.txt").read_text(encoding="utf-8") == (
+            root / "api" / "requirements.txt"
+        ).read_text(encoding="utf-8"), (
+            "requirements.txt and api/requirements.txt have drifted; they must be "
+            "byte-identical (see the header comment in either file)"
+        )
+
+    def test_defensively_imported_dependencies_are_still_pinned(self):
+        """httpx is imported inside a try/except by the Brevo, Meilisearch and
+        Gemini clients, each of which degrades to a no-op when it is missing.
+
+        That is the whole reason it needs pinning: without it a deployment with
+        GEMINI_API_KEY set answers in retrieval-only mode and logs nothing about
+        why. `pip install fastapi` does not bring httpx -- only `fastapi[all]`
+        does -- so it cannot be assumed.
+        """
+        pinned = self._pinned(self._root() / "requirements.txt")
+        assert "httpx" in pinned, (
+            "httpx is missing from requirements.txt. The Gemini, Brevo and "
+            "Meilisearch clients will silently no-op in production."
+        )
+
+    def test_runtime_imports_are_covered(self):
+        """Every third-party package the app imports at module level is pinned.
+
+        Scoped to backend/core and backend/modules -- the code the serverless
+        function actually loads. Scripts and tests may use anything, because
+        neither ships in the bundle.
+        """
+        root = self._root()
+        pinned = self._pinned(root / "requirements.txt")
+        # Import name -> distribution name, where they differ.
+        aliases = {
+            "jwt": "pyjwt",
+            "dotenv": "python-dotenv",
+            "sqlalchemy": "sqlalchemy",
+            "dateutil": "python-dateutil",
+            "multipart": "python-multipart",
+            "motor": "motor",
+            "bson": "pymongo",
+            "pymongo": "pymongo",
+            "qrcode": "qrcode",
+            "asyncpg": "asyncpg",
+            "greenlet": "greenlet",
+            "certifi": "certifi",
+            "dns": "dnspython",
+            "email_validator": "email-validator",
+        }
+        stdlib_or_local = {"backend", "__future__"}
+
+        missing = {}
+        for path in (root / "backend" / "core").rglob("*.py"):
+            missing.update(self._check(path, pinned, aliases, stdlib_or_local))
+        for path in (root / "backend" / "modules").rglob("*.py"):
+            missing.update(self._check(path, pinned, aliases, stdlib_or_local))
+
+        assert not missing, (
+            f"imported at runtime but not pinned in requirements.txt: {missing}"
+        )
+
+    def _check(self, path, pinned, aliases, skip):
+        import ast
+        import sys
+
+        found = {}
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            # Module level only: a deferred import inside a function is a
+            # deliberate optional dependency, and `httpx` is covered by its own
+            # test above.
+            if isinstance(node, ast.Import):
+                names = [a.name.split(".")[0] for a in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+                names = [node.module.split(".")[0]]
+            else:
+                continue
+            for name in names:
+                if name in skip or name in sys.stdlib_module_names:
+                    continue
+                distribution = aliases.get(name, name)
+                if distribution.lower() not in pinned:
+                    found[name] = str(path.relative_to(path.parents[3]))
+        return found

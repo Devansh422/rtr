@@ -1,10 +1,8 @@
 # Python dependencies for the Vercel serverless function (api/index.py).
 #
-# DUPLICATE of /requirements.txt at the repo root. Vercel's exact requirements.txt
-# discovery order for a mixed Node+Python monorepo isn't documented precisely, so
-# this copy exists as a safety net in case the builder prefers a file co-located
-# with the function over the project root one. If you change one, change both --
-# they must stay byte-identical.
+# A byte-identical copy lives at api/requirements.txt as a safety net in case
+# Vercel's builder prefers a requirements.txt co-located with the function over
+# this project-root one. If you change one, change both.
 #
 # Pins are carried over from backend/requirements.txt, which is a full freeze of
 # the development container. Only what the app actually imports at RUNTIME is
@@ -38,6 +36,17 @@ PyJWT==2.13.0               # access tokens
 
 qrcode==7.4.2               # per-ticket QR codes for event check-in (SVG output, no Pillow needed)
 
-# httpx is not pinned separately: it ships with the FastAPI/starlette stack above
-# and is imported defensively (inside a try) by the Brevo, Meilisearch and Gemini
-# clients, each of which degrades to a no-op if it is missing.
+httpx==0.28.1               # Brevo, Meilisearch and Gemini clients
+# httpx IS required, despite being imported defensively.
+#
+# This previously said httpx "ships with the FastAPI/starlette stack" and was
+# left unpinned on that basis. It does not: `pip install fastapi` brings
+# starlette and pydantic, and httpx only arrives with `fastapi[all]` or a test
+# extra. Verified by installing this file alone into an empty environment --
+# `import httpx` fails.
+#
+# The failure mode that hid it is the reason it matters. All three call sites
+# wrap the import in try/except and degrade to a no-op, so a deployment with
+# GEMINI_API_KEY correctly configured answered every question in retrieval-only
+# mode, sent no email, and never reached Meilisearch -- with nothing in the logs
+# to say why. A dependency whose absence is silent has to be pinned, not assumed.
