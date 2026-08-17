@@ -35,6 +35,26 @@ const LINKS = [
   { to: "/tools", label: "Civic tools" },
 ];
 
+/*
+ * The accountability module gets its own dropdown rather than a line inside
+ * "More", because it is not one more page: it is a database with six entry
+ * points, and a reader who wants the RTI register should not have to land on a
+ * hub and hunt. The trigger shortens to "Manifesto" below xl -- the full label
+ * plus five other top-level links does not fit a 1280px bar, and a nav that
+ * wraps is worse than one that abbreviates.
+ */
+const MANIFESTO = {
+  group: "Manifesto Accountability",
+  items: [
+    { to: "/manifesto", label: "Uttarakhand 2022" },
+    { to: "/manifesto/promises", label: "All promises" },
+    { to: "/manifesto/rti", label: "RTI records" },
+    { to: "/manifesto/replies", label: "Government replies" },
+    { to: "/manifesto/documents", label: "Evidence" },
+    { to: "/manifesto/dashboard", label: "Accountability dashboard" },
+  ],
+};
+
 const MORE = [
   {
     group: "Take part",
@@ -185,6 +205,32 @@ export default function Navbar() {
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
+                data-testid="nav-manifesto"
+                className={`flex items-center gap-1 rounded px-3 py-1.5 text-[0.8rem] font-medium transition-colors duration-200 hover:bg-muted ${
+                  location.pathname.startsWith("/manifesto")
+                    ? "text-secondary"
+                    : "text-foreground/70"
+                }`}
+              >
+                <span className="xl:hidden">Manifesto</span>
+                <span className="hidden xl:inline">Manifesto Accountability</span>
+                <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-60">
+              <DropdownMenuLabel>{MANIFESTO.group}</DropdownMenuLabel>
+              {MANIFESTO.items.map((item) => (
+                <DropdownMenuItem key={item.to} asChild>
+                  <Link to={item.to}>{item.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
                 data-testid="nav-more"
                 className="flex items-center gap-1 rounded px-3 py-1.5 text-[0.8rem] font-medium text-foreground/70 transition-colors duration-200 hover:bg-muted"
               >
@@ -262,7 +308,7 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
-          {MORE.map((section) => (
+          {[MANIFESTO, ...MORE].map((section) => (
             <div key={section.group} className="mt-3">
               <p className="px-4 pb-1 text-label font-bold uppercase text-muted-foreground">
                 {section.group}

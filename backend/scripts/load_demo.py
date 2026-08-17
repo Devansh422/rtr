@@ -64,6 +64,17 @@ from backend.modules.events.models import (  # noqa: E402
     RegistrationStatus,
 )
 from backend.modules.forum.models import ForumReply, ForumThread, PostStatus  # noqa: E402
+from backend.modules.manifesto.models import (  # noqa: E402
+    GovernmentDocument,
+    Manifesto,
+    ManifestoElection,
+    ManifestoPromise,
+    PromiseAssessment,
+    PromiseEvidence,
+    RtiApplication,
+    RtiQuestion,
+    RtiResponse,
+)
 from backend.modules.petitions.models import (  # noqa: E402
     Petition,
     PetitionSignature,
@@ -92,8 +103,17 @@ DEMO_DIR = config.BACKEND_DIR / "content" / "demo"
 
 SLUG_PREFIX = "demo-"
 PARTY_PREFIX = "DMO"
-# RFC 2606 reserves `.invalid`, so this can never be a routable address.
-EMAIL_DOMAIN = "demo.rtr.invalid"
+# RFC 2606 reserves example.com for documentation and IANA holds it, so nothing
+# here can ever reach a real inbox -- the same guarantee `.invalid` gave.
+#
+# It is example.com rather than `.invalid` because `.invalid` cost us the one
+# feature this dataset promises: `email-validator`, behind pydantic's EmailStr,
+# rejects special-use TLDs outright, so every demo member login documented in
+# the README failed at validation with a 422 before it ever reached the password
+# check. Relaxing EmailStr on the login endpoint to accommodate fixture data
+# would have been the wrong trade -- the address format is worth validating on a
+# real endpoint, and the fixture is the part that should bend.
+EMAIL_DOMAIN = "demo-rtr.example.com"
 # One shared access code across every demo member, printed by --load so it can be
 # handed to whoever is testing. Valid format for the member login (XXXX-XXXX, no
 # confusable characters).
@@ -1113,6 +1133,355 @@ async def load_library(session: AsyncSession) -> dict:
     return counts
 
 
+async def load_manifesto(session: AsyncSession) -> dict:
+    """The manifesto accountability chain, end to end, for six demo promises.
+
+    MARKED HARDER THAN ANYTHING ELSE IN THIS DATASET, and deliberately so. The
+    other loaders fabricate claims about fictional people; this one fabricates a
+    quotation from a party's manifesto and a government's answer to an RTI. Both
+    of those are documents that exist in the real world and that people are
+    entitled to rely on, so every promise text opens with `[DEMO PROMISE - NOT A
+    REAL MANIFESTO COMMITMENT]`, every answer with `[DEMO ANSWER]`, the party is
+    fictional, and every identifier starts with `DEMO-`. There is no view in the
+    module where one of those markers is not on screen.
+
+    It attaches to the genuine `uttarakhand-2022` election row rather than
+    inventing an election, because the election is a matter of public record and
+    a second fake one in the selector would be the confusing option. Purge
+    removes the promises by their `DEMO-` code prefix; the election row is left
+    alone because the loader did not create it.
+
+    Written through the ORM plus `audit.record`, like the rest of this file, so
+    the public "Record history" panel on each promise has the real chronology in
+    it -- RTI filed, reply received, document added, status published -- which is
+    one of the things the module exists to show.
+    """
+    data = _load("manifesto")
+    counts = {
+        "manifesto_promises": 0,
+        "manifesto_rtis": 0,
+        "manifesto_questions": 0,
+        "manifesto_documents": 0,
+        "manifesto_evidence": 0,
+        "manifesto_assessments": 0,
+    }
+
+    election = (
+        await session.execute(
+            select(ManifestoElection).where(ManifestoElection.slug == "uttarakhand-2022")
+        )
+    ).scalar_one_or_none()
+    if election is None:
+        # seed_modules opens this row on boot. Without it there is nothing to
+        # hang the dataset off, and inventing an election here would put a
+        # fabricated poll date in a selector of real ones.
+        return {"manifesto_promises": 0, "manifesto_skipped": "election row not seeded"}
+
+    spec = data["manifesto"]
+    manifesto = (
+        await session.execute(select(Manifesto).where(Manifesto.slug == spec["slug"]))
+    ).scalar_one_or_none()
+    if manifesto is None:
+        manifesto = Manifesto(
+            slug=spec["slug"],
+            election_id=election.id,
+            party_code=spec["party_code"],
+            party_name=spec["party_name"],
+            title=spec["title"],
+            title_hi=spec.get("title_hi", ""),
+            published_on=date.fromisoformat(spec["published_on"]),
+            total_pages=spec.get("total_pages"),
+            source_url=_demo_source("manifesto/demo-progressive-party-2022.pdf"),
+            source_note=spec["source_note"],
+            is_published=True,
+        )
+        session.add(manifesto)
+        await session.flush()
+
+    for promise_spec in data["promises"]:
+        if (
+            await session.execute(
+                select(ManifestoPromise).where(ManifestoPromise.code == promise_spec["code"])
+            )
+        ).scalar_one_or_none():
+            continue
+
+        promise = ManifestoPromise(
+            code=promise_spec["code"],
+            election_id=election.id,
+            manifesto_id=manifesto.id,
+            title=promise_spec["title"],
+            title_hi=promise_spec.get("title_hi", ""),
+            promise_text=promise_spec["promise_text"],
+            promise_text_hi=promise_spec.get("promise_text_hi", ""),
+            manifesto_page=promise_spec.get("manifesto_page", ""),
+            manifesto_page_url=_demo_source(
+                f"manifesto/page-{promise_spec.get('manifesto_page', '1')}.pdf"
+            ),
+            department=promise_spec.get("department", ""),
+            category=promise_spec.get("category", "Other"),
+            status=promise_spec["status"],
+            sort_order=counts["manifesto_promises"],
+            is_published=True,
+        )
+        session.add(promise)
+        await session.flush()
+        counts["manifesto_promises"] += 1
+
+        await audit.record(
+            session,
+            actor=DEMO_ACTOR,
+            action="create",
+            entity_type="manifesto_promise",
+            entity_id=promise.code,
+            summary=f"DEMO: published promise {promise.code} from {manifesto.title}",
+            source_url=manifesto.source_url,
+            is_public=True,
+        )
+
+        # ---- Documents first: questions and evidence reference them by code ----
+        #
+        # `uploaded_at` is set from the date the reply arrived rather than left to
+        # default to now(). The timeline derives "Documents received" from that
+        # column, so defaulting it would date every demo document to whenever the
+        # loader happened to run and show a chain whose steps are out of order --
+        # which would misrepresent the one feature the timeline exists to
+        # demonstrate.
+        received_on = (promise_spec.get("rti") or {}).get("response", {}).get("received_on")
+        documents_received_at = (
+            datetime.fromisoformat(received_on).replace(tzinfo=timezone.utc)
+            if received_on
+            else utcnow()
+        )
+        documents_by_code: dict[str, GovernmentDocument] = {}
+        for document_spec in promise_spec.get("documents", []):
+            url = _demo_source(f"documents/{document_spec['code'].lower()}.pdf")
+            is_primary, publisher = classify_source(url)
+            document = GovernmentDocument(
+                code=document_spec["code"],
+                promise_id=promise.id,
+                title=document_spec["title"],
+                kind=document_spec["kind"],
+                issuing_authority=document_spec["issuing_authority"],
+                department=document_spec.get("department", ""),
+                reference_number=document_spec.get("reference_number", ""),
+                issued_on=(
+                    date.fromisoformat(document_spec["issued_on"])
+                    if document_spec.get("issued_on")
+                    else None
+                ),
+                file_url=url,
+                source_url=url,
+                source_note=(
+                    "DEMO RECORD - not a real source. Received with the demo RTI reply."
+                ),
+                obtained_via="rti",
+                is_primary_source=is_primary,
+                publisher=publisher or "Demo",
+                page_count=document_spec.get("page_count"),
+                is_published=True,
+                uploaded_at=documents_received_at,
+            )
+            session.add(document)
+            await session.flush()
+            documents_by_code[document.code] = document
+            counts["manifesto_documents"] += 1
+
+            await audit.record(
+                session,
+                actor=DEMO_ACTOR,
+                action="document_uploaded",
+                entity_type="manifesto_promise",
+                entity_id=promise.code,
+                summary=f"DEMO: added {document.title}",
+                source_url=url,
+                is_public=True,
+            )
+
+        # ---- The RTI application, its questions and its reply ----
+        questions_by_number: dict[int, RtiQuestion] = {}
+        rti_spec = promise_spec.get("rti")
+        if rti_spec:
+            rti = RtiApplication(
+                code=rti_spec["code"],
+                promise_id=promise.id,
+                subject=rti_spec.get("subject", ""),
+                public_authority=rti_spec["public_authority"],
+                department=rti_spec.get("department", ""),
+                pio_designation=rti_spec.get("pio_designation", ""),
+                application_number=rti_spec.get("application_number", ""),
+                prepared_on=(
+                    date.fromisoformat(rti_spec["prepared_on"])
+                    if rti_spec.get("prepared_on")
+                    else None
+                ),
+                filed_on=(
+                    date.fromisoformat(rti_spec["filed_on"]) if rti_spec.get("filed_on") else None
+                ),
+                reply_due_on=(
+                    date.fromisoformat(rti_spec["reply_due_on"])
+                    if rti_spec.get("reply_due_on")
+                    else None
+                ),
+                status=rti_spec["status"],
+                application_url=_demo_source(f"rti/{rti_spec['code'].lower()}-application.pdf"),
+                filing_proof_url=_demo_source(f"rti/{rti_spec['code'].lower()}-receipt.pdf"),
+                is_published=True,
+            )
+            session.add(rti)
+            await session.flush()
+            counts["manifesto_rtis"] += 1
+
+            if rti.filed_on:
+                await audit.record(
+                    session,
+                    actor=DEMO_ACTOR,
+                    action="rti_filed",
+                    entity_type="manifesto_promise",
+                    entity_id=promise.code,
+                    summary=f"DEMO: RTI {rti.code} filed with {rti.public_authority}",
+                    source_url=rti.filing_proof_url,
+                    is_public=True,
+                )
+
+            response = None
+            response_spec = rti_spec.get("response")
+            if response_spec:
+                response = RtiResponse(
+                    rti_id=rti.id,
+                    received_on=(
+                        date.fromisoformat(response_spec["received_on"])
+                        if response_spec.get("received_on")
+                        else None
+                    ),
+                    reply_dated=(
+                        date.fromisoformat(response_spec["reply_dated"])
+                        if response_spec.get("reply_dated")
+                        else None
+                    ),
+                    replying_authority=response_spec["replying_authority"],
+                    department=response_spec.get("department", ""),
+                    reference_number=response_spec.get("reference_number", ""),
+                    document_url=_demo_source(f"rti/{rti_spec['code'].lower()}-reply.pdf"),
+                    page_count=response_spec.get("page_count"),
+                    summary=response_spec.get("summary", ""),
+                    is_published=True,
+                )
+                session.add(response)
+                await session.flush()
+
+                await audit.record(
+                    session,
+                    actor=DEMO_ACTOR,
+                    action="reply_received",
+                    entity_type="manifesto_promise",
+                    entity_id=promise.code,
+                    summary=(
+                        f"DEMO: reply received from {response.replying_authority} "
+                        f"({response.reference_number})"
+                    ),
+                    source_url=response.document_url,
+                    is_public=True,
+                )
+
+            for question_spec in rti_spec.get("questions", []):
+                question = RtiQuestion(
+                    rti_id=rti.id,
+                    number=question_spec["number"],
+                    question_text=question_spec["question"],
+                    question_text_hi=question_spec.get("question_hi", ""),
+                    answer_text=question_spec.get("answer", ""),
+                    answer_status=question_spec.get("answer_status", "awaited"),
+                    response_id=response.id if response else None,
+                    supporting_document_id=(
+                        documents_by_code[question_spec["document"]].id
+                        if question_spec.get("document") in documents_by_code
+                        else None
+                    ),
+                )
+                session.add(question)
+                await session.flush()
+                questions_by_number[question.number] = question
+                counts["manifesto_questions"] += 1
+
+        # ---- What the records state ----
+        for order, evidence_spec in enumerate(promise_spec.get("evidence", [])):
+            evidence = PromiseEvidence(
+                promise_id=promise.id,
+                document_id=(
+                    documents_by_code[evidence_spec["document"]].id
+                    if evidence_spec.get("document") in documents_by_code
+                    else None
+                ),
+                statement=evidence_spec["statement"],
+                statement_hi=evidence_spec.get("statement_hi", ""),
+                locator=evidence_spec.get("locator", ""),
+                recorded_on=(
+                    date.fromisoformat(evidence_spec["recorded_on"])
+                    if evidence_spec.get("recorded_on")
+                    else None
+                ),
+                sort_order=order,
+                is_published=True,
+            )
+            session.add(evidence)
+            await session.flush()
+            counts["manifesto_evidence"] += 1
+
+        # ---- The assessment, kept separate from all of the above ----
+        assessment_spec = promise_spec.get("assessment")
+        if assessment_spec:
+            sources = [
+                {"kind": "document", "id": document.id, "label": document.title}
+                for document in documents_by_code.values()
+            ]
+            assessment = PromiseAssessment(
+                promise_id=promise.id,
+                status=assessment_spec["status"],
+                rationale=assessment_spec.get("rationale", ""),
+                method_note=assessment_spec.get("method_note", ""),
+                sources=sources,
+                assessed_on=(
+                    date.fromisoformat(assessment_spec["assessed_on"])
+                    if assessment_spec.get("assessed_on")
+                    else None
+                ),
+                assessed_by=DEMO_ACTOR.id,
+                version=1,
+                is_current=True,
+                is_published=True,
+            )
+            session.add(assessment)
+            await session.flush()
+            counts["manifesto_assessments"] += 1
+
+            await audit.record(
+                session,
+                actor=DEMO_ACTOR,
+                action="status_changed",
+                entity_type="manifesto_promise",
+                entity_id=promise.code,
+                summary=f"DEMO: assessment published - {assessment_spec['status']}",
+                is_public=True,
+            )
+
+        # Same shape the router's own indexer writes, so a demo promise is
+        # findable in site search exactly as a real one would be.
+        await search.index(
+            session,
+            entity_type="manifesto_promise",
+            entity_id=promise.code,
+            title=f"{promise.code}: {promise.title}",
+            subtitle=f"Manifesto promise - {promise.department or 'department not stated'}",
+            body=promise.promise_text,
+            keywords=[promise.category, promise.department],
+            is_published=promise.is_published,
+            url_path=f"/manifesto/promise/{promise.code}",
+        )
+
+    return counts
+
+
 async def issue_volunteer_certificates(session: AsyncSession) -> int:
     """Certificates for demo volunteers who cleared the verified-hours threshold.
 
@@ -1210,6 +1579,19 @@ async def purge(session: AsyncSession) -> dict:
     await drop(Constituency, Constituency.slug.like(demo_slug), "constituencies")
     await drop(Party, Party.code.like(f"{PARTY_PREFIX}%"), "parties", slug_attr="code")
 
+    # Manifesto promises cascade to their RTI applications, questions, replies,
+    # documents, evidence and assessments. The election row is NOT touched: the
+    # loader attached to it rather than creating it, and it is real reference
+    # data seeded on boot.
+    await drop(
+        ManifestoPromise,
+        ManifestoPromise.code.like("DEMO-%"),
+        "manifesto_promises",
+        slug_attr="code",
+        index_type="manifesto_promise",
+    )
+    await drop(Manifesto, Manifesto.slug.like(demo_slug), "manifestos")
+
     # Corrections reference demo entities but have no slug of their own.
     demo_entities = [
         r["entity_id"] for r in _load("community")["corrections"]
@@ -1303,6 +1685,13 @@ async def status(session: AsyncSession) -> dict:
         "parties": await count(Party, Party.code.like(f"{PARTY_PREFIX}%")),
         "constituencies": await count(Constituency, Constituency.slug.like(demo_slug)),
         "certificates": await count(Certificate, Certificate.holder_email.like(f"%@{EMAIL_DOMAIN}")),
+        "manifesto_promises": await count(
+            ManifestoPromise, ManifestoPromise.code.like("DEMO-%")
+        ),
+        "manifesto_rtis": await count(RtiApplication, RtiApplication.code.like("DEMO-%")),
+        "manifesto_documents": await count(
+            GovernmentDocument, GovernmentDocument.code.like("DEMO-%")
+        ),
     }
 
 
@@ -1356,6 +1745,7 @@ async def _run(action: str) -> None:
         results.update(await load_community(session))
         results.update(await load_participation(session))
         results.update(await load_library(session))
+        results.update(await load_manifesto(session))
         results["volunteer_certificates"] = await issue_volunteer_certificates(session)
 
         print("Loaded:\n")

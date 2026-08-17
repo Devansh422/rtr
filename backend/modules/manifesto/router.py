@@ -678,6 +678,182 @@ async def list_documents(
     }
 
 
+@router.get("/manifesto/rti-summary")
+async def rti_summary(
+    election: Optional[str] = None,
+    status: Optional[str] = None,
+    q: Optional[str] = None,
+    session: AsyncSession = Depends(get_session),
+):
+    """The RTI register as one table: what was asked, what came back, what was attached.
+
+    A separate endpoint from `/manifesto/rti` rather than a flag on it, because
+    it answers a different question. `/manifesto/rti` lists applications;
+    this returns each application WITH its questions, answers and the documents
+    the authority supplied, so the register can be read end to end without
+    opening fifty promise pages. That is the whole value of a register -- a
+    reader who wants to know how often this government actually answers should
+    not have to click through every promise to find out.
+
+    Two columns are deliberately kept apart in the payload and must stay apart in
+    the table (§14, and the distinction the brief calls the most important one):
+
+      `replySummary`   -- what the authority said, in its own words.
+      `promise.status` -- what this platform concludes the records establish.
+
+    They come from different tables, are written by different people at different
+    times, and a row that merges them publishes an inference as a government
+    statement.
+
+    Returns everything rather than a page of it: the register is the artefact,
+    and a summary whose totals describe more rows than it shows is a summary
+    nobody can check. The Uttarakhand corpus is a few hundred applications at
+    most; when a second state makes that untrue, paginate the items and leave the
+    counters counting the whole set.
+    """
+    promise_ids = select(ManifestoPromise.id).where(ManifestoPromise.is_published.is_(True))
+    if election:
+        promise_ids = promise_ids.where(
+            ManifestoPromise.election_id == (await _election_or_404(session, election)).id
+        )
+
+    stmt = (
+        select(RtiApplication, ManifestoPromise)
+        .join(ManifestoPromise, ManifestoPromise.id == RtiApplication.promise_id)
+        .where(RtiApplication.is_published.is_(True), RtiApplication.promise_id.in_(promise_ids))
+        .order_by(RtiApplication.code)
+    )
+    if status:
+        if status not in RTI_STATUSES:
+            raise HTTPException(status_code=400, detail=f"Unknown RTI status: {status}")
+        stmt = stmt.where(RtiApplication.status == status)
+    if q:
+        pattern = f"%{q.strip()}%"
+        stmt = stmt.where(
+            or_(
+                RtiApplication.code.ilike(pattern),
+                RtiApplication.subject.ilike(pattern),
+                RtiApplication.public_authority.ilike(pattern),
+                ManifestoPromise.code.ilike(pattern),
+                ManifestoPromise.title.ilike(pattern),
+            )
+        )
+
+    rows = (await session.execute(stmt)).all()
+    rti_ids = [rti.id for rti, _ in rows]
+    promise_id_list = [promise.id for _, promise in rows]
+
+    # Three queries for the whole table rather than three per row.
+    questions_by_rti: dict[str, list[RtiQuestion]] = {}
+    responses_by_rti: dict[str, list[RtiResponse]] = {}
+    documents_by_promise: dict[str, list[GovernmentDocument]] = {}
+    documents_by_id: dict[str, GovernmentDocument] = {}
+
+    if rti_ids:
+        for question in (
+            await session.execute(
+                select(RtiQuestion).where(RtiQuestion.rti_id.in_(rti_ids)).order_by(RtiQuestion.number)
+            )
+        ).scalars():
+            questions_by_rti.setdefault(question.rti_id, []).append(question)
+
+        for response in (
+            await session.execute(
+                select(RtiResponse)
+                .where(RtiResponse.rti_id.in_(rti_ids), RtiResponse.is_published.is_(True))
+                .order_by(RtiResponse.received_on)
+            )
+        ).scalars():
+            responses_by_rti.setdefault(response.rti_id, []).append(response)
+
+    if promise_id_list:
+        for document in (
+            await session.execute(
+                select(GovernmentDocument)
+                .where(
+                    GovernmentDocument.promise_id.in_(promise_id_list),
+                    GovernmentDocument.is_published.is_(True),
+                )
+                .order_by(GovernmentDocument.issued_on)
+            )
+        ).scalars():
+            documents_by_promise.setdefault(document.promise_id, []).append(document)
+            documents_by_id[document.id] = document
+
+    items = []
+    counters = {
+        "totalRtis": len(rows),
+        "repliesReceived": 0,
+        "repliesAwaited": 0,
+        "informationProvided": 0,
+        "partiallyProvided": 0,
+        "informationInsufficient": 0,
+        "documentsProvided": 0,
+    }
+
+    for rti, promise in rows:
+        questions = questions_by_rti.get(rti.id, [])
+        responses = responses_by_rti.get(rti.id, [])
+        documents = documents_by_promise.get(promise.id, [])
+        derived = service.response_status(rti, questions)
+
+        if rti.status in RTI_ANSWERED_STATUSES:
+            counters["repliesReceived"] += 1
+        else:
+            counters["repliesAwaited"] += 1
+        if derived["key"] == "information_provided":
+            counters["informationProvided"] += 1
+        elif derived["key"] == "partially_provided":
+            counters["partiallyProvided"] += 1
+        elif derived["key"] == "information_insufficient":
+            counters["informationInsufficient"] += 1
+        counters["documentsProvided"] += len(documents)
+
+        latest = responses[-1] if responses else None
+        latest_dict = service.response_dict(latest, rti=rti) if latest else None
+        items.append(
+            {
+                **service.rti_dict(rti, promise=promise),
+                # What was asked, for the table's one-line column. The questions
+                # themselves are below in full; this never replaces them.
+                "informationSought": (
+                    questions[0].question_text if questions else rti.subject
+                ),
+                "questionCount": len(questions),
+                # The authority's own words, attributed as such.
+                "replySummary": latest_dict["summary"] if latest_dict else "",
+                "replyDate": (
+                    latest_dict["receivedOn"] or latest_dict["replyDated"]
+                    if latest_dict
+                    else None
+                ),
+                "replyingAuthority": latest_dict["replyingAuthority"] if latest_dict else None,
+                "replyDocumentUrl": latest_dict["documentUrl"] if latest_dict else None,
+                "responseStatus": derived,
+                "documentsProvided": [service.document_dict(d) for d in documents],
+                "questions": [
+                    service.question_dict(
+                        question,
+                        document=documents_by_id.get(question.supporting_document_id),
+                    )
+                    for question in questions
+                ],
+                "responses": [service.response_dict(r, rti=rti) for r in responses],
+            }
+        )
+
+    return {
+        "total": len(items),
+        "summary": counters,
+        "items": items,
+        "note": (
+            "'Government reply' is what the public authority stated. The promise status "
+            "beside it is this platform's assessment of what the records establish. They "
+            "are different things and are recorded separately."
+        ),
+    }
+
+
 # --------------------------------------------------------------------------
 # Admin payloads
 # --------------------------------------------------------------------------

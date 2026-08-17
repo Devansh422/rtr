@@ -33,6 +33,13 @@ import Representatives from "@/pages/Representatives";
 import RepresentativeProfile from "@/pages/RepresentativeProfile";
 import MyRepresentatives from "@/pages/MyRepresentatives";
 import Promises from "@/pages/Promises";
+import ManifestoAccountability from "@/pages/ManifestoAccountability";
+import ManifestoPromises from "@/pages/ManifestoPromises";
+import ManifestoPromise from "@/pages/ManifestoPromise";
+import ManifestoRti from "@/pages/ManifestoRti";
+import ManifestoReplies from "@/pages/ManifestoReplies";
+import ManifestoDocuments from "@/pages/ManifestoDocuments";
+import ManifestoDashboard from "@/pages/ManifestoDashboard";
 import States from "@/pages/States";
 import StatePage from "@/pages/StatePage";
 import CommonCause from "@/pages/CommonCause";
@@ -84,6 +91,20 @@ function PublicApp() {
           <Route path="/representatives/:slug" element={<RepresentativeProfile />} />
           <Route path="/my-representatives" element={<MyRepresentatives />} />
           <Route path="/promises" element={<Promises />} />
+
+          {/* Manifesto accountability. The literal segments are declared before
+              the state/year pattern, or "/manifesto/promises" would match it as
+              state="promises". The long URL is the canonical one a promise page
+              links to; the short /manifesto/promise/:code form exists for codes
+              read off printed material and shared links. */}
+          <Route path="/manifesto" element={<ManifestoAccountability />} />
+          <Route path="/manifesto/promises" element={<ManifestoPromises />} />
+          <Route path="/manifesto/rti" element={<ManifestoRti />} />
+          <Route path="/manifesto/replies" element={<ManifestoReplies />} />
+          <Route path="/manifesto/documents" element={<ManifestoDocuments />} />
+          <Route path="/manifesto/dashboard" element={<ManifestoDashboard />} />
+          <Route path="/manifesto/promise/:code" element={<ManifestoPromise />} />
+          <Route path="/manifesto/:state/:year/:code" element={<ManifestoPromise />} />
 
           {/* States and the campaign dashboard */}
           <Route path="/states" element={<States />} />

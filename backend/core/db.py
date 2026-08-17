@@ -148,9 +148,35 @@ def get_engine() -> Optional[AsyncEngine]:
             connect_args=_connect_args(config.DATABASE_URL),
             future=True,
         )
+        if url.startswith("sqlite"):
+            _enforce_sqlite_foreign_keys(_engine)
         _sessionmaker = async_sessionmaker(_engine, expire_on_commit=False, class_=AsyncSession)
         logger.info("Postgres engine initialised (%s)", url.split("@")[-1])
     return _engine
+
+
+def _enforce_sqlite_foreign_keys(engine: AsyncEngine) -> None:
+    """Turn on `PRAGMA foreign_keys` for the SQLite development database.
+
+    SQLite parses `ON DELETE CASCADE` and then ignores it unless this pragma is
+    set per connection, so without this a local database silently keeps every
+    child row whose parent was deleted -- orphaned RTI applications, documents
+    and signatures that Postgres would have removed. That is a nastier problem
+    than it sounds: the divergence only shows up as a unique-constraint failure
+    the next time the same fixture is loaded, a long way from the delete that
+    caused it, and it makes local behaviour differ from production in exactly the
+    area (referential integrity) where local testing is supposed to be
+    trustworthy.
+
+    Guarded on the driver, so this is a no-op for the Postgres deployments.
+    """
+    from sqlalchemy import event
+
+    @event.listens_for(engine.sync_engine, "connect")
+    def _set_pragma(dbapi_connection, _record):  # pragma: no cover - driver callback
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
 
 
 @asynccontextmanager

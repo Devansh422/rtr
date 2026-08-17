@@ -27,6 +27,12 @@ __pycache__/
 venv/
 env/
 
+# Local SQLite development database (DATABASE_URL=sqlite+aiosqlite:///./rtr_local.db).
+# Rebuilt from the models on boot by AUTO_CREATE_TABLES; never the source of truth.
+*.db
+*.db-journal
+*.sqlite3
+
 # ── Build output ───────────────────────────────────────────────────────────
 frontend/build/
 build/

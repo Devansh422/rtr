@@ -367,7 +367,7 @@ list five `[DEMO]` profiles, and `/representatives/demo-suresh-kolhe` should sho
 Every demo member signs in at `/login` with the access code **`DEMO-USER`**:
 
 ```
-citizen1@demo.rtr.invalid  ...  citizen14@demo.rtr.invalid
+citizen1@demo-rtr.example.com  ...  citizen14@demo-rtr.example.com
 ```
 
 `citizen1` has the most activity — signed petitions, filed reports, forum posts, 23
@@ -389,6 +389,100 @@ Purge removes every record the loader created and restores the campaign stage of
 state it changed. It identifies its own records only by the markers above, so it
 cannot touch real data sitting alongside it. Both `--load` and `--purge` are safe to
 re-run: a second load adds nothing.
+
+## Bulk import
+
+Three importers fill the research-heavy modules from files, so a state can be
+opened without typing every record through the admin API. All three share the
+same shape: CSV or JSON in, `--dry-run` to see what would change, unpublished
+unless `--publish` is typed, and safe to re-run.
+
+| Script | Fills | Refuses |
+| --- | --- | --- |
+| `import_representatives` | Representative profiles and sourced claims | Claims on high-risk fields from a secondary source; overwriting a fact-checked value |
+| `import_manifesto` | Promises, RTI applications, questions, answers, replies, records | Any status or assessment; a record with no provenance |
+| `import_research` | Research Centre / Knowledge Hub library | A row with no `source_url`; hosting a copy with no stated licence |
+
+### Manifesto promises, RTIs and replies
+
+```sh
+.venv/bin/python -m backend.scripts.import_manifesto --template   # the expected shape
+
+.venv/bin/python -m backend.scripts.import_manifesto \
+    --election uttarakhand-2022 \
+    --promises promises.csv --rti rti.csv \
+    --questions questions.csv --documents documents.csv --dry-run
+```
+
+Four files joined by code — one per stage of the chain, which is how research
+arrives — or one nested JSON file passed to `--promises`. Any subset works: a run
+with only `--documents` attaches records to promises that already exist.
+
+**It cannot set a promise's status or write an assessment, and there is no flag
+for it.** Those are the platform's own conclusions about a government, and §14
+keeps them in a separate table precisely so no bulk process can put one there.
+Every imported promise reads "status not established from available records"
+until a human publishes an assessment against the records. What it does import is
+the factual half — what was promised, what was asked, what came back, what was
+attached — which is transcription, and transcription is what a script should do.
+
+A record with neither `source_note` nor `source_url` is refused: an anonymous PDF
+is not evidence. A reply-due date is computed from the filing date at 30 days
+(s.7(1) of the RTI Act) when the file omits it.
+
+### Research Centre and Knowledge Hub
+
+```sh
+.venv/bin/python -m backend.scripts.import_research --template
+.venv/bin/python -m backend.scripts.import_research --file judgments.csv --dry-run
+```
+
+`source_url` is required on every row — a catalogue entry with no link to the
+original is an unverifiable assertion that a document exists, and this library is
+also what the AI assistant grounds its answers in.
+
+`licence` decides whether a copy may be hosted or only linked. It defaults to
+`linked_only`, and a row that supplies `file_url` **without** stating a licence is
+refused rather than guessed: hosting somebody's report under an assumed licence is
+a redistribution problem nobody notices until a takedown arrives.
+
+## Importing real representative data
+
+Demo data aside, the Representative Database is filled from published open data
+rather than by hand:
+
+```sh
+.venv/bin/python -m backend.scripts.import_representatives --list-sources
+
+# Always dry-run first. Nothing is written and you see exactly what would change.
+.venv/bin/python -m backend.scripts.import_representatives \
+    --source myneta_affidavits --file uttarakhand-2022.csv \
+    --source-url https://myneta.info/uttarakhand2022/ --dry-run
+```
+
+It takes a downloaded CSV or JSON file (or `--url` to fetch a published dataset).
+It is **not** a scraper, and that is deliberate: every source listed in
+IMPLEMENTATION_PLAN.md §124 publishes this data as a file you are permitted to
+download, and the plan says to prefer those downloads to scraping. Parsing a
+published file is stable and attributable; parsing someone's HTML is neither, and
+needs a licence review first.
+
+Three things it guarantees, because it writes claims about named living people in
+bulk with nobody reading each row:
+
+| Guarantee | Why |
+| --- | --- |
+| Every claim is written **UNVERIFIED** | It renders behind a "pending citation review" marker until a Fact Checker follows the source. There is no flag to change this. |
+| A **reviewed claim is never overwritten** | If a Fact Checker has accepted, disputed or retracted a figure, the import leaves it alone and reports the disagreement as a conflict for a human. |
+| New profiles are **drafts** | Publishing a profile about a real person is a human decision. `--publish` makes it explicit. |
+
+Claims on high-risk fields — criminal cases, assets, liabilities, attendance —
+are refused outright unless the citation URL is a primary public record, because
+for those fields "this is what the public record says" is the platform's legal
+defence and a news report about an affidavit is not the affidavit.
+
+Re-running is safe: representatives match on slug, claims on
+(representative, field, period), and anything unchanged is left untouched.
 
 ### Editing seeded content
 

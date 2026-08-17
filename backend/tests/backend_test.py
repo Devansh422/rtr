@@ -61,8 +61,18 @@ def test_volunteer_create_and_persist(client):
     r = client.post(f"{API}/volunteers", json=payload)
     assert r.status_code == 200, r.text
     data = r.json()
-    assert data["email"] == email
-    assert "id" in data
+    assert data.get("already") is False
+    assert data.get("name") == "TEST Volunteer"
+    assert "created_at" in data
+    # Volunteers get their own identifier series and an access code, the same way
+    # supporters do -- one membership helper mints both.
+    vid = data.get("volunteer_id")
+    assert vid and re.match(r"^RTR-VOL-\d{4}-[A-F0-9]{6}$", vid), f"Bad volunteer_id: {vid}"
+    assert isinstance(data.get("access_code"), str) and data["access_code"]
+    # The response deliberately does NOT echo the email back. Nothing needs it --
+    # the client already has it -- and a public endpoint that reflects a submitted
+    # address is a free confirmation oracle for whether a given person volunteered.
+    assert "email" not in data
     # Note: GET /api/volunteers is admin-only in new API (see admin submissions tests)
 
 
@@ -121,10 +131,17 @@ def test_supporter_and_duplicate(client):
     assert d2.get("already") is True
     assert d2.get("movement_id") == mid
 
-    # Auto-newsletter: subscribing same email should say already:true
+    # Joining does NOT subscribe the address to the newsletter, and this asserts
+    # that it does not. The DPDP Act 2023 requires consent to be informed,
+    # specific and affirmative; "they filled in the join form" is consent to
+    # join, not consent to be mailed a newsletter, and the two are separate
+    # purposes recorded separately (see POST /legal/consent). Newsletter signup
+    # is its own affirmative action.
     rn = client.post(f"{API}/newsletter", json={"email": email})
     assert rn.status_code == 200
-    assert rn.json().get("already") is True, "Supporter email was not auto-subscribed to newsletter"
+    assert rn.json().get("already") is False, (
+        "joining the movement must not silently subscribe the address to the newsletter"
+    )
 
 
 def test_supporter_validation_422(client):

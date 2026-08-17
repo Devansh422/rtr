@@ -98,6 +98,34 @@ export const STRINGS = {
     "states.noLegislature": "No legislative assembly",
     "states.stage": "Campaign stage",
 
+    // ---- Manifesto accountability ----
+    // The Hindi here matters more than on most surfaces: this module is about
+    // Uttarakhand, the manifesto it tracks was published in Hindi, and the RTI
+    // replies it quotes are written in Hindi. The promise text, questions,
+    // answers and evidence statements come from the API in both languages and
+    // are rendered from the record itself -- these keys are chrome only.
+    "manifesto.title": "Uttarakhand Manifesto Accountability",
+    "manifesto.chain": "Manifesto promise → RTI → government reply → evidence → public record",
+    "manifesto.lede":
+      "Every promise made in the Uttarakhand Assembly Election, tracked against the state government's own records obtained under the Right to Information Act.",
+    "manifesto.explore": "Explore promises",
+    "manifesto.viewRti": "View RTI records",
+    "manifesto.viewRecord": "View complete record",
+    "manifesto.nav.election": "Uttarakhand 2022",
+    "manifesto.nav.promises": "All promises",
+    "manifesto.nav.rti": "RTI records",
+    "manifesto.nav.replies": "Government replies",
+    "manifesto.nav.evidence": "Evidence",
+    "manifesto.nav.dashboard": "Accountability dashboard",
+    "manifesto.says": "What the manifesto says",
+    "manifesto.recordsSay": "What the government's own records say",
+    "manifesto.assessment": "Evidence-based assessment",
+    "manifesto.whyThisStatus": "Why this status?",
+    "manifesto.viewOriginal": "View the original",
+    "manifesto.download": "Download the original",
+    "manifesto.timeline": "Evidence timeline",
+    "manifesto.recordHistory": "Record history",
+
     // ---- Petitions ----
     "petitions.title": "Petitions",
     "petitions.lede":
@@ -143,7 +171,8 @@ export const STRINGS = {
     "tools.preview": "Preview",
     "tools.legalBasis": "Legal basis",
     "tools.filingNotes": "How to file it",
-    "tools.nothingStored": "Nothing you type here is saved. Download or print before you leave the page.",
+    "tools.nothingStored":
+      "Nothing you type here is saved. Download or print before you leave the page.",
 
     // ---- Academy ----
     "academy.title": "Constitutional Learning Academy",
@@ -269,6 +298,29 @@ export const STRINGS = {
     "states.pilot": "पायलट राज्य",
     "states.noLegislature": "कोई विधान सभा नहीं",
     "states.stage": "अभियान चरण",
+
+    // ---- Manifesto accountability ----
+    "manifesto.title": "उत्तराखंड घोषणापत्र जवाबदेही",
+    "manifesto.chain": "घोषणापत्र का वादा → आरटीआई → सरकारी उत्तर → साक्ष्य → सार्वजनिक अभिलेख",
+    "manifesto.lede":
+      "उत्तराखंड विधान सभा चुनाव में किए गए प्रत्येक वादे का, सूचना का अधिकार अधिनियम के अंतर्गत प्राप्त राज्य सरकार के अपने अभिलेखों के आधार पर अनुसरण।",
+    "manifesto.explore": "वादे देखें",
+    "manifesto.viewRti": "आरटीआई अभिलेख देखें",
+    "manifesto.viewRecord": "पूरा अभिलेख देखें",
+    "manifesto.nav.election": "उत्तराखंड 2022",
+    "manifesto.nav.promises": "सभी वादे",
+    "manifesto.nav.rti": "आरटीआई अभिलेख",
+    "manifesto.nav.replies": "सरकारी उत्तर",
+    "manifesto.nav.evidence": "साक्ष्य",
+    "manifesto.nav.dashboard": "जवाबदेही डैशबोर्ड",
+    "manifesto.says": "घोषणापत्र क्या कहता है",
+    "manifesto.recordsSay": "सरकार के अपने अभिलेख क्या कहते हैं",
+    "manifesto.assessment": "साक्ष्य-आधारित आकलन",
+    "manifesto.whyThisStatus": "यह स्थिति क्यों?",
+    "manifesto.viewOriginal": "मूल दस्तावेज़ देखें",
+    "manifesto.download": "मूल दस्तावेज़ डाउनलोड करें",
+    "manifesto.timeline": "साक्ष्य समयरेखा",
+    "manifesto.recordHistory": "अभिलेख इतिहास",
 
     // ---- Petitions ----
     "petitions.title": "याचिकाएँ",

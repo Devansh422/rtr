@@ -1,0 +1,422 @@
+{
+  "_readme": [
+    "FABRICATED manifesto-accountability records. Read backend/content/demo/README.md.",
+    "This module publishes quotations from a named party's manifesto and factual claims",
+    "about a government, so this dataset is marked harder than any other in the demo set:",
+    "the party is fictional, every promise text opens with [DEMO PROMISE], every promise",
+    "and document ID begins with DEMO-, and every file URL points at a host that does not",
+    "resolve. Nothing here may ever be mistaken for a record obtained under the RTI Act.",
+    "It attaches to the genuine uttarakhand-2022 election row because that election is a",
+    "matter of public record; everything hanging off it here is invented."
+  ],
+
+  "manifesto": {
+    "slug": "demo-uttarakhand-2022-manifesto",
+    "party_code": "DMOP",
+    "party_name": "[DEMO] Demo Progressive Party",
+    "title": "[DEMO] Sankalp Patra 2022 - not a real manifesto",
+    "title_hi": "[DEMO] संकल्प पत्र 2022 - वास्तविक दस्तावेज़ नहीं",
+    "published_on": "2022-01-20",
+    "total_pages": 48,
+    "source_note": "DEMO RECORD - not a real source. A real entry would name where this PDF was downloaded from and when."
+  },
+
+  "promises": [
+    {
+      "code": "DEMO-UK-P001",
+      "title": "[DEMO] Upgrade 100 government schools with science laboratories",
+      "title_hi": "[DEMO] 100 राजकीय विद्यालयों में विज्ञान प्रयोगशालाओं का उन्नयन",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Within three years of forming the government, 100 government inter colleges in the hill districts will be provided with fully equipped science laboratories, and a science teacher will be posted at each.",
+      "promise_text_hi": "[DEMO PROMISE - वास्तविक घोषणा नहीं] सरकार बनने के तीन वर्ष के भीतर पर्वतीय जनपदों के 100 राजकीय इंटर कॉलेजों में पूर्ण सुसज्जित विज्ञान प्रयोगशालाएँ उपलब्ध कराई जाएँगी तथा प्रत्येक में एक विज्ञान शिक्षक की तैनाती की जाएगी।",
+      "manifesto_page": "12",
+      "department": "Education",
+      "category": "Education",
+      "status": "fulfilled",
+      "rti": {
+        "code": "DEMO-RTI-001",
+        "subject": "[DEMO] Science laboratories sanctioned and completed in government inter colleges",
+        "public_authority": "[DEMO] Directorate of School Education, Uttarakhand",
+        "department": "Education",
+        "pio_designation": "[DEMO] Public Information Officer, Directorate of School Education",
+        "application_number": "DEMO/EDU/2025/0117",
+        "prepared_on": "2025-01-05",
+        "filed_on": "2025-01-12",
+        "reply_due_on": "2025-02-11",
+        "status": "reply_received",
+        "questions": [
+          {
+            "number": 1,
+            "question": "[DEMO] How many government inter colleges were sanctioned science laboratories between April 2022 and December 2024? Provide a district-wise list.",
+            "question_hi": "[DEMO] अप्रैल 2022 से दिसंबर 2024 के बीच कितने राजकीय इंटर कॉलेजों को विज्ञान प्रयोगशालाएँ स्वीकृत की गईं? जनपदवार सूची उपलब्ध कराएँ।",
+            "answer": "[DEMO ANSWER] The Directorate has informed that 104 government inter colleges were sanctioned science laboratories in the said period. A district-wise list is enclosed at Annexure A.",
+            "answer_status": "answered",
+            "document": "DEMO-DOC-001"
+          },
+          {
+            "number": 2,
+            "question": "[DEMO] How many of those laboratories were reported complete and in use as on 31 December 2024?",
+            "answer": "[DEMO ANSWER] As per the completion reports received from the concerned District Education Officers, 100 laboratories were reported complete and in use as on 31 December 2024.",
+            "answer_status": "answered",
+            "document": "DEMO-DOC-002"
+          },
+          {
+            "number": 3,
+            "question": "[DEMO] How many science teachers were posted against these institutions in the same period?",
+            "answer": "[DEMO ANSWER] 100 science teachers were posted against the said institutions vide the postings order enclosed.",
+            "answer_status": "answered"
+          }
+        ],
+        "response": {
+          "received_on": "2025-02-08",
+          "reply_dated": "2025-02-05",
+          "replying_authority": "[DEMO] Public Information Officer, Directorate of School Education",
+          "department": "Education",
+          "reference_number": "DEMO/PIO/EDU/2025/441",
+          "page_count": 9,
+          "summary": "[DEMO] Reply answers all three questions and encloses a district-wise list, completion reports and a postings order."
+        }
+      },
+      "documents": [
+        {
+          "code": "DEMO-DOC-001",
+          "title": "[DEMO] Government Order sanctioning science laboratories (district-wise)",
+          "kind": "government_order",
+          "issuing_authority": "[DEMO] Department of School Education, Government of Uttarakhand",
+          "department": "Education",
+          "reference_number": "DEMO-GO/EDU/2023/318",
+          "issued_on": "2023-06-14",
+          "page_count": 6
+        },
+        {
+          "code": "DEMO-DOC-002",
+          "title": "[DEMO] Completion report, science laboratory upgrade programme",
+          "kind": "completion_report",
+          "issuing_authority": "[DEMO] Directorate of School Education, Uttarakhand",
+          "department": "Education",
+          "reference_number": "DEMO-CR/EDU/2024/77",
+          "issued_on": "2024-12-31",
+          "page_count": 12
+        }
+      ],
+      "evidence": [
+        {
+          "statement": "[DEMO] The government order at DEMO-GO/EDU/2023/318 sanctions science laboratories for 104 named government inter colleges across ten hill districts.",
+          "locator": "Pages 2-5, Annexure A",
+          "document": "DEMO-DOC-001",
+          "recorded_on": "2025-02-14"
+        },
+        {
+          "statement": "[DEMO] The completion report states that 100 of the sanctioned laboratories were complete and in use as on 31 December 2024, and lists four as incomplete.",
+          "locator": "Page 1, table 1",
+          "document": "DEMO-DOC-002",
+          "recorded_on": "2025-02-14"
+        }
+      ],
+      "assessment": {
+        "status": "fulfilled",
+        "assessed_on": "2025-02-20",
+        "rationale": "[DEMO] The department's own completion report records 100 laboratories complete and in use, which is the number the promise named, and the reply confirms 100 science teachers posted against those institutions. Both figures come from the government's records rather than from any statement made to this platform.",
+        "method_note": "[DEMO] The sanction order and the completion report were read against each other and against the postings figure in the reply. Physical verification of individual laboratories was not carried out and is not claimed."
+      }
+    },
+
+    {
+      "code": "DEMO-UK-P002",
+      "title": "[DEMO] Open 50 new primary health sub-centres in remote blocks",
+      "title_hi": "[DEMO] दूरस्थ विकासखंडों में 50 नए प्राथमिक स्वास्थ्य उपकेंद्र",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Fifty new primary health sub-centres will be opened in remote blocks, each staffed with an auxiliary nurse midwife and supplied with essential medicines.",
+      "promise_text_hi": "[DEMO PROMISE - वास्तविक घोषणा नहीं] दूरस्थ विकासखंडों में 50 नए प्राथमिक स्वास्थ्य उपकेंद्र खोले जाएँगे, प्रत्येक में एएनएम की तैनाती एवं आवश्यक दवाओं की आपूर्ति सुनिश्चित की जाएगी।",
+      "manifesto_page": "18",
+      "department": "Health and Family Welfare",
+      "category": "Health",
+      "status": "partially_fulfilled",
+      "rti": {
+        "code": "DEMO-RTI-002",
+        "subject": "[DEMO] Primary health sub-centres established since April 2022",
+        "public_authority": "[DEMO] Directorate of Medical Health and Family Welfare, Uttarakhand",
+        "department": "Health and Family Welfare",
+        "pio_designation": "[DEMO] Public Information Officer, Directorate of Medical Health",
+        "application_number": "DEMO/HLT/2025/0204",
+        "prepared_on": "2025-02-01",
+        "filed_on": "2025-02-06",
+        "reply_due_on": "2025-03-08",
+        "status": "partial_reply",
+        "questions": [
+          {
+            "number": 1,
+            "question": "[DEMO] How many new primary health sub-centres were made functional between April 2022 and December 2024, block-wise?",
+            "answer": "[DEMO ANSWER] 31 new primary health sub-centres were made functional in the said period. A block-wise statement is enclosed.",
+            "answer_status": "answered",
+            "document": "DEMO-DOC-003"
+          },
+          {
+            "number": 2,
+            "question": "[DEMO] How many of those sub-centres have an auxiliary nurse midwife posted against them?",
+            "answer": "[DEMO ANSWER] Information regarding posting is maintained at the district level and is not compiled in this directorate. The application is transferred under section 6(3) to the concerned Chief Medical Officers.",
+            "answer_status": "transferred"
+          },
+          {
+            "number": 3,
+            "question": "[DEMO] What was the expenditure incurred on establishing these sub-centres?",
+            "answer": "[DEMO ANSWER] The expenditure figure for the financial year 2024-25 is under compilation and cannot be provided at this stage.",
+            "answer_status": "partially_answered"
+          }
+        ],
+        "response": {
+          "received_on": "2025-03-04",
+          "reply_dated": "2025-03-01",
+          "replying_authority": "[DEMO] Public Information Officer, Directorate of Medical Health and Family Welfare",
+          "department": "Health and Family Welfare",
+          "reference_number": "DEMO/PIO/HLT/2025/882",
+          "page_count": 5,
+          "summary": "[DEMO] One question answered with a block-wise statement, one transferred to district officers under section 6(3), one answered in part."
+        }
+      },
+      "documents": [
+        {
+          "code": "DEMO-DOC-003",
+          "title": "[DEMO] Notification of new primary health sub-centres, block-wise statement",
+          "kind": "notification",
+          "issuing_authority": "[DEMO] Department of Medical Health and Family Welfare, Government of Uttarakhand",
+          "department": "Health and Family Welfare",
+          "reference_number": "DEMO-NOT/HLT/2024/205",
+          "issued_on": "2024-09-19",
+          "page_count": 4
+        }
+      ],
+      "evidence": [
+        {
+          "statement": "[DEMO] The block-wise statement enclosed with the reply lists 31 sub-centres made functional between April 2022 and December 2024, against the 50 named in the promise.",
+          "locator": "Enclosure 1, pages 2-3",
+          "document": "DEMO-DOC-003",
+          "recorded_on": "2025-03-10"
+        },
+        {
+          "statement": "[DEMO] The reply does not state how many of the 31 sub-centres have staff posted; that question was transferred to district officers and no further reply is on file.",
+          "locator": "Reply, paragraph 3",
+          "recorded_on": "2025-03-10"
+        }
+      ],
+      "assessment": {
+        "status": "partially_fulfilled",
+        "assessed_on": "2025-03-12",
+        "rationale": "[DEMO] The department's own statement records 31 of the 50 sub-centres functional. The staffing element of the promise cannot be assessed from the records on file, because that question was transferred and no reply to it has been received. The delivered portion is established; the remainder is not.",
+        "method_note": "[DEMO] Counted from the block-wise statement enclosed with the reply. No independent survey was carried out. A first appeal on the transferred question has not been filed at the time of this assessment."
+      }
+    },
+
+    {
+      "code": "DEMO-UK-P003",
+      "title": "[DEMO] Provide 10,000 jobs to local youth in tourism",
+      "title_hi": "[DEMO] पर्यटन क्षेत्र में स्थानीय युवाओं को 10,000 रोज़गार",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Ten thousand young people of the state will be given employment in the tourism sector through a dedicated skill and placement mission.",
+      "promise_text_hi": "[DEMO PROMISE - वास्तविक घोषणा नहीं] एक समर्पित कौशल एवं नियोजन मिशन के माध्यम से राज्य के दस हज़ार युवाओं को पर्यटन क्षेत्र में रोज़गार दिया जाएगा।",
+      "manifesto_page": "24",
+      "department": "Tourism",
+      "category": "Employment",
+      "status": "information_insufficient",
+      "rti": {
+        "code": "DEMO-RTI-003",
+        "subject": "[DEMO] Employment generated under the tourism skill and placement mission",
+        "public_authority": "[DEMO] Uttarakhand Tourism Development Board",
+        "department": "Tourism",
+        "pio_designation": "[DEMO] Public Information Officer, Uttarakhand Tourism Development Board",
+        "application_number": "DEMO/TOU/2025/0330",
+        "prepared_on": "2025-03-20",
+        "filed_on": "2025-03-26",
+        "reply_due_on": "2025-04-25",
+        "status": "reply_received",
+        "questions": [
+          {
+            "number": 1,
+            "question": "[DEMO] How many young people were placed in employment under the tourism skill and placement mission between April 2022 and March 2025?",
+            "answer": "[DEMO ANSWER] Placement data of this nature is not maintained in the form sought by the applicant. Information cannot be provided under section 2(f) as it would require creating a record.",
+            "answer_status": "not_answered"
+          },
+          {
+            "number": 2,
+            "question": "[DEMO] Provide copies of any review meeting minutes in which progress on this mission was discussed.",
+            "answer": "[DEMO ANSWER] The applicant is advised to inspect the records in the office on a working day. Copies are not being supplied at this stage.",
+            "answer_status": "not_answered"
+          }
+        ],
+        "response": {
+          "received_on": "2025-04-22",
+          "reply_dated": "2025-04-18",
+          "replying_authority": "[DEMO] Public Information Officer, Uttarakhand Tourism Development Board",
+          "department": "Tourism",
+          "reference_number": "DEMO/PIO/TOU/2025/119",
+          "page_count": 2,
+          "summary": "[DEMO] Reply received within the statutory period. Neither question was answered; one was declined under section 2(f) and one was met with an offer of inspection."
+        }
+      },
+      "documents": [],
+      "evidence": [
+        {
+          "statement": "[DEMO] The reply states that placement data in the form sought is not maintained, and supplies no figure for employment generated under the mission.",
+          "locator": "Reply, paragraph 1",
+          "recorded_on": "2025-04-28"
+        }
+      ],
+      "assessment": {
+        "status": "information_insufficient",
+        "assessed_on": "2025-04-30",
+        "rationale": "[DEMO] A reply was received within the statutory period and is published here in full. It does not contain any figure for employment generated, so the records currently available do not establish whether this promise was implemented, in whole or in part. This is a statement about the reply, not a finding that no employment was generated.",
+        "method_note": "[DEMO] The reply is the only record on file for this promise. A first appeal against the refusal under section 2(f) is the next step and has not yet been filed."
+      }
+    },
+
+    {
+      "code": "DEMO-UK-P004",
+      "title": "[DEMO] All-weather road to 40 unconnected villages",
+      "title_hi": "[DEMO] 40 असंबद्ध गाँवों तक हर मौसम में चलने योग्य सड़क",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Forty villages presently without road connectivity will be connected by all-weather motorable roads.",
+      "manifesto_page": "31",
+      "department": "Public Works",
+      "category": "Infrastructure",
+      "status": "under_implementation",
+      "rti": {
+        "code": "DEMO-RTI-004",
+        "subject": "[DEMO] Status and expenditure on rural road connectivity works",
+        "public_authority": "[DEMO] Public Works Department, Uttarakhand",
+        "department": "Public Works",
+        "pio_designation": "[DEMO] Public Information Officer, Public Works Department",
+        "application_number": "DEMO/PWD/2025/0512",
+        "prepared_on": "2025-05-02",
+        "filed_on": "2025-05-09",
+        "reply_due_on": "2025-06-08",
+        "status": "reply_received",
+        "questions": [
+          {
+            "number": 1,
+            "question": "[DEMO] How many road works to unconnected villages were sanctioned since April 2022, and what is the physical progress of each?",
+            "answer": "[DEMO ANSWER] 40 works were sanctioned. As per the latest progress report, 12 are complete, 21 are in progress and 7 are yet to commence. The progress report is enclosed.",
+            "answer_status": "answered",
+            "document": "DEMO-DOC-005"
+          },
+          {
+            "number": 2,
+            "question": "[DEMO] What amount has been sanctioned and what amount has been spent on these works?",
+            "answer": "[DEMO ANSWER] An amount as detailed in the enclosed sanction order has been sanctioned; expenditure to date is stated in the progress report at column 6.",
+            "answer_status": "answered",
+            "document": "DEMO-DOC-004"
+          }
+        ],
+        "response": {
+          "received_on": "2025-06-03",
+          "reply_dated": "2025-05-30",
+          "replying_authority": "[DEMO] Public Information Officer, Public Works Department",
+          "department": "Public Works",
+          "reference_number": "DEMO/PIO/PWD/2025/560",
+          "page_count": 14,
+          "summary": "[DEMO] Both questions answered, with a sanction order and a work-wise progress report enclosed."
+        }
+      },
+      "documents": [
+        {
+          "code": "DEMO-DOC-004",
+          "title": "[DEMO] Sanction order for rural road connectivity works",
+          "kind": "sanction_order",
+          "issuing_authority": "[DEMO] Public Works Department, Government of Uttarakhand",
+          "department": "Public Works",
+          "reference_number": "DEMO-SO/PWD/2023/1042",
+          "issued_on": "2023-03-28",
+          "page_count": 5
+        },
+        {
+          "code": "DEMO-DOC-005",
+          "title": "[DEMO] Work-wise physical and financial progress report",
+          "kind": "department_report",
+          "issuing_authority": "[DEMO] Chief Engineer, Public Works Department, Uttarakhand",
+          "department": "Public Works",
+          "reference_number": "DEMO-PR/PWD/2025/88",
+          "issued_on": "2025-04-30",
+          "page_count": 9
+        }
+      ],
+      "evidence": [
+        {
+          "statement": "[DEMO] The sanction order covers 40 named road works to unconnected villages, which matches the number in the promise.",
+          "locator": "Pages 1-3, schedule of works",
+          "document": "DEMO-DOC-004",
+          "recorded_on": "2025-06-09"
+        },
+        {
+          "statement": "[DEMO] The progress report dated 30 April 2025 records 12 works complete, 21 in progress and 7 not commenced.",
+          "locator": "Page 2, columns 4-6",
+          "document": "DEMO-DOC-005",
+          "recorded_on": "2025-06-09"
+        }
+      ],
+      "assessment": {
+        "status": "under_implementation",
+        "assessed_on": "2025-06-12",
+        "rationale": "[DEMO] The department's own records show the full complement of 40 works sanctioned and funds released, with 12 complete and 21 under way as of April 2025. Work is formally under way and not complete, which is what this status describes.",
+        "method_note": "[DEMO] Taken from the sanction order and the department's progress report. Physical verification of any road was not carried out."
+      }
+    },
+
+    {
+      "code": "DEMO-UK-P005",
+      "title": "[DEMO] Piped drinking water to every household in 15 blocks",
+      "title_hi": "[DEMO] 15 विकासखंडों के प्रत्येक घर तक पेयजल",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Every household in fifteen identified blocks will receive a functional piped drinking water connection.",
+      "manifesto_page": "36",
+      "department": "Drinking Water and Sanitation",
+      "category": "Water",
+      "status": "rti_reply_awaited",
+      "rti": {
+        "code": "DEMO-RTI-005",
+        "subject": "[DEMO] Functional household tap connections in the fifteen identified blocks",
+        "public_authority": "[DEMO] Uttarakhand Jal Sansthan",
+        "department": "Drinking Water and Sanitation",
+        "pio_designation": "[DEMO] Public Information Officer, Uttarakhand Jal Sansthan",
+        "application_number": "DEMO/JAL/2026/0148",
+        "prepared_on": "2026-06-20",
+        "filed_on": "2026-06-29",
+        "reply_due_on": "2026-07-29",
+        "status": "filed",
+        "questions": [
+          {
+            "number": 1,
+            "question": "[DEMO] How many functional household tap connections existed in each of the fifteen identified blocks as on 31 March 2026?",
+            "answer_status": "awaited"
+          },
+          {
+            "number": 2,
+            "question": "[DEMO] Provide the block-wise target and achievement statement placed before the state scheme sanctioning committee.",
+            "answer_status": "awaited"
+          }
+        ]
+      },
+      "documents": [],
+      "evidence": [],
+      "assessment": {
+        "status": "rti_reply_awaited",
+        "assessed_on": "2026-07-30",
+        "rationale": "[DEMO] An application was filed on 29 June 2026 and the statutory reply period has passed without a reply. No assessment of this promise is made until the records arrive.",
+        "method_note": "[DEMO] No records are on file for this promise beyond the application itself."
+      }
+    },
+
+    {
+      "code": "DEMO-UK-P006",
+      "title": "[DEMO] Minimum support price bonus for hill millet growers",
+      "title_hi": "[DEMO] पर्वतीय मंडुवा उत्पादकों हेतु न्यूनतम समर्थन मूल्य बोनस",
+      "promise_text": "[DEMO PROMISE - NOT A REAL MANIFESTO COMMITMENT] Growers of traditional hill millets will receive a bonus over and above the declared minimum support price.",
+      "manifesto_page": "41",
+      "department": "Agriculture",
+      "category": "Agriculture",
+      "status": "not_established",
+      "rti": null,
+      "documents": [],
+      "evidence": [],
+      "assessment": {
+        "status": "not_established",
+        "assessed_on": "2026-08-01",
+        "rationale": "[DEMO] No RTI application has been filed against this promise yet and no official record about it is held. Implementation could not be established from the records currently available. This is a statement about what this platform holds, not a finding that nothing was done.",
+        "method_note": "[DEMO] Research on this promise has not started. It is published so that the gap in the record is visible rather than hidden."
+      }
+    }
+  ]
+}

@@ -64,6 +64,70 @@ export const getPromises = (params = {}) =>
 export const getPromise = (slug) => unwrap(client.get(`/promises/${slug}`));
 
 // --------------------------------------------------------------------------
+// Manifesto accountability (Uttarakhand)
+// --------------------------------------------------------------------------
+/*
+ * The evidence chain: promise -> RTI -> question -> answer -> document ->
+ * evidence -> assessment -> status.
+ *
+ * `getManifestoPromise` propagates errors where the register endpoints swallow
+ * them, and the split is deliberate. A promise page that quietly renders an
+ * empty shell after a failed request would show a citizen "no RTI on file" for a
+ * promise that has one -- the single most damaging thing this module could get
+ * wrong. A dashboard counter that fails to load is a blank tile.
+ */
+export const getManifestoVocabulary = () =>
+  orEmpty(client.get("/manifesto/vocabulary"), {
+    promiseStatuses: [],
+    rtiStatuses: [],
+    answerStatuses: [],
+    documentKinds: [],
+    categories: [],
+    editorialNote: "",
+  });
+
+export const getManifestoElections = () => orEmpty(client.get("/manifesto/elections"), []);
+
+export const getManifestoElection = (slug) => unwrap(client.get(`/manifesto/elections/${slug}`));
+
+export const getManifestoDashboard = (election) =>
+  orEmpty(client.get("/manifesto/dashboard", { params: { election } }), null);
+
+export const getManifestoFilters = (election) =>
+  orEmpty(client.get("/manifesto/filters", { params: { election } }), {
+    departments: [],
+    categories: [],
+    statuses: [],
+    rtiStatuses: [],
+  });
+
+export const getManifestoPromises = (params = {}) =>
+  orEmpty(client.get("/manifesto/promises", { params }), { total: 0, items: [] });
+
+export const getManifestoPromise = (code) => unwrap(client.get(`/manifesto/promises/${code}`));
+
+export const getManifestoPromiseHistory = (code) =>
+  orEmpty(client.get(`/manifesto/promises/${code}/history`), []);
+
+export const getManifestoRti = (params = {}) =>
+  orEmpty(client.get("/manifesto/rti", { params }), { total: 0, items: [] });
+
+/** The RTI register as one table: question, answer, attachments, per application. */
+export const getManifestoRtiSummary = (params = {}) =>
+  orEmpty(client.get("/manifesto/rti-summary", { params }), {
+    total: 0,
+    summary: {},
+    items: [],
+    note: "",
+  });
+
+export const getManifestoReplies = (params = {}) =>
+  orEmpty(client.get("/manifesto/replies", { params }), { total: 0, items: [] });
+
+export const getManifestoDocuments = (params = {}) =>
+  orEmpty(client.get("/manifesto/documents", { params }), { total: 0, items: [] });
+
+// --------------------------------------------------------------------------
 // States and the campaign pipeline
 // --------------------------------------------------------------------------
 export const getStates = () => orEmpty(client.get("/states"), []);
@@ -161,7 +225,9 @@ export const getRtiGuide = () => orEmpty(client.get("/tools/guides/rti"), null);
 export const getPilGuide = () => orEmpty(client.get("/tools/guides/pil"), null);
 
 export const generateDocument = (templateKey, values, stateCode) =>
-  unwrap(client.post("/tools/generate", { template_key: templateKey, values, state_code: stateCode }));
+  unwrap(
+    client.post("/tools/generate", { template_key: templateKey, values, state_code: stateCode })
+  );
 
 /**
  * Download the generated DOCX.
@@ -230,7 +296,8 @@ export const rateAnswer = (question, helpful) =>
 export const searchSite = (q, params = {}) =>
   orEmpty(client.get("/search", { params: { q, ...params } }), { total: 0, items: [], groups: [] });
 export const suggest = (q) => orEmpty(client.get("/search/suggest", { params: { q } }), []);
-export const getSearchCoverage = () => orEmpty(client.get("/search/coverage"), { types: [], total: 0 });
+export const getSearchCoverage = () =>
+  orEmpty(client.get("/search/coverage"), { types: [], total: 0 });
 
 // --------------------------------------------------------------------------
 // Corrections (§7 trust layer)

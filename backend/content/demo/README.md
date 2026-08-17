@@ -26,7 +26,7 @@ of these markers is deliberate:
 | Constituencies are fictional — "Demo North Delhi", "Demo Kothrud" | Nobody real holds a seat in them, so a realistic personal name cannot collide with a real office holder. |
 | Every citation is titled `DEMO RECORD - not a real source` | The title renders next to every figure on the profile, which is where a reader looks. |
 | Citation URLs point at non-existent paths | Clicking one fails, which is the correct behaviour for evidence that does not exist. |
-| Member emails end in `@demo.rtr.invalid` | `.invalid` is reserved by RFC 2606 and can never be a real address. |
+| Member emails end in `@demo-rtr.example.com` | `example.com` is reserved by RFC 2606 and held by IANA, so it can never reach a real inbox. It is not `.invalid`, which would be the more obvious choice: `email-validator` (behind pydantic's `EmailStr`) rejects special-use TLDs, so `.invalid` addresses were refused with a 422 at sign-in and the demo logins below never worked. Non-email fields — representative office addresses, research source URLs — still use `.invalid`, where nothing validates them and unresolvability is the point. |
 
 **It is not loaded automatically.** Nothing in the normal boot or deploy path touches
 it. It only exists if somebody runs the command above on purpose.
@@ -47,7 +47,7 @@ Every demo member can sign in at `/login` with their email and the access code
 **`DEMO-USER`**:
 
 ```
-citizen1@demo.rtr.invalid   through   citizen14@demo.rtr.invalid
+citizen1@demo-rtr.example.com   through   citizen14@demo-rtr.example.com
 ```
 
 `citizen1` has the most activity — signed petitions, filed reports, forum posts,

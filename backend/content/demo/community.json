@@ -1,5 +1,5 @@
 {
-  "_comment": "Demo members and the content they produce. Emails end in @demo.rtr.invalid (RFC 2606 reserved, can never be routable) and every one signs in with the access code DEMO-USER. Report ratings are weighted so that at least one service in Maharashtra clears the five-rating floor and shows a real score, while another stays below it and shows the withheld state instead.",
+  "_comment": "Demo members and the content they produce. Emails end in @demo-rtr.example.com (RFC 2606 reserved, can never reach a real inbox) and every one signs in with the access code DEMO-USER. Report ratings are weighted so that at least one service in Maharashtra clears the five-rating floor and shows a real score, while another stays below it and shows the withheld state instead.",
 
   "citizens": [
     { "handle": "citizen1", "display_name": "Anjali K.", "state": "MH", "reputation": 46 },

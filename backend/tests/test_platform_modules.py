@@ -1615,7 +1615,11 @@ class TestSessionLifecycle:
             "backend/seed_modules.py",
             "backend/scripts/load_demo.py",
         ):
-            source = (root / relative).read_text()
+            # encoding is explicit: these files contain Devanagari, and read_text()
+            # defaults to the system locale, so on a Windows developer machine
+            # (cp1252) this assertion died with a UnicodeDecodeError instead of
+            # running.
+            source = (root / relative).read_text(encoding="utf-8")
             assert "async for session in database.session_scope()" not in source, (
                 f"{relative} returns early from its session block; use "
                 "database.transaction() or the writes are silently discarded"
@@ -1753,3 +1757,611 @@ class TestDatabaseUrlHandling:
             "migrations/env.py builds its own engine; without connect_args a hosted "
             "Postgres URL fails at migrate time only"
         )
+
+
+# --------------------------------------------------------------------------
+# Manifesto accountability
+# --------------------------------------------------------------------------
+class TestManifestoResponseStatus:
+    """How completely an application was answered is DERIVED, never stored.
+
+    These pin the derivation because it is the one number on the RTI register a
+    reader is likely to quote: "the state answered 2 of 5 applications in full".
+    Getting it wrong in the direction of generosity would understate a
+    government's non-answering, and in the other direction would accuse it of
+    stonewalling questions it actually answered.
+    """
+
+    def _rti(self, status="reply_received"):
+        from backend.modules.manifesto.models import RtiApplication
+
+        return RtiApplication(code="RTI-1", promise_id="p1", public_authority="A", status=status)
+
+    def _questions(self, *statuses):
+        from backend.modules.manifesto.models import RtiQuestion
+
+        return [
+            RtiQuestion(rti_id="r1", number=index + 1, question_text="q", answer_status=status)
+            for index, status in enumerate(statuses)
+        ]
+
+    def test_every_question_answered_is_information_provided(self):
+        from backend.modules.manifesto import service
+
+        result = service.response_status(self._rti(), self._questions("answered", "answered"))
+        assert result["key"] == "information_provided"
+        assert "2 of 2" in result["detail"]
+
+    def test_some_answered_is_partially_provided(self):
+        from backend.modules.manifesto import service
+
+        result = service.response_status(
+            self._rti(), self._questions("answered", "not_answered", "partially_answered")
+        )
+        assert result["key"] == "partially_provided"
+        assert "1 of 3" in result["detail"]
+
+    def test_reply_that_answers_nothing_is_insufficient_not_awaited(self):
+        """The distinction the register exists to make.
+
+        A reply that arrives and answers nothing is a different fact from no reply
+        at all, and collapsing the two would hide the more interesting one.
+        """
+        from backend.modules.manifesto import service
+
+        result = service.response_status(
+            self._rti(), self._questions("not_answered", "not_answered")
+        )
+        assert result["key"] == "information_insufficient"
+
+    def test_no_reply_on_file_is_awaited_whatever_the_questions_say(self):
+        from backend.modules.manifesto import service
+
+        result = service.response_status(self._rti(status="filed"), self._questions("answered"))
+        assert result["key"] == "awaited"
+        # The application's own status carries the nuance.
+        assert result["detail"] == "Filed, awaiting reply"
+
+    def test_wholly_denied_and_wholly_transferred_keep_their_own_labels(self):
+        from backend.modules.manifesto import service
+
+        assert (
+            service.response_status(self._rti(), self._questions("denied", "denied"))["key"]
+            == "denied"
+        )
+        assert (
+            service.response_status(self._rti(), self._questions("transferred"))["key"]
+            == "transferred"
+        )
+
+    def test_reply_received_with_no_published_questions_is_insufficient(self):
+        from backend.modules.manifesto import service
+
+        result = service.response_status(self._rti(), [])
+        assert result["key"] == "information_insufficient"
+
+
+class TestManifestoPublicApi:
+    """The public endpoints return nothing that is not published.
+
+    Unpublished research is real work in progress; a half-finished RTI trail shown
+    as a finished one is the exact failure this module exists to hold others to.
+    """
+
+    async def _promise(self, session, *, published: bool, suffix: str = "1"):
+        """One election -> manifesto -> promise chain. `suffix` keeps the unique
+        slugs and codes distinct when a test needs more than one."""
+        from backend.modules.manifesto.models import (
+            Manifesto,
+            ManifestoElection,
+            ManifestoPromise,
+        )
+
+        election = ManifestoElection(
+            slug=f"test-2022-{suffix}", state_code="UT", name="Test", year=2022, is_published=True
+        )
+        session.add(election)
+        await session.flush()
+        manifesto = Manifesto(
+            slug=f"test-manifesto-{suffix}",
+            election_id=election.id,
+            party_name="Test Party",
+            title="Test manifesto",
+            is_published=True,
+        )
+        session.add(manifesto)
+        await session.flush()
+        promise = ManifestoPromise(
+            code=f"TEST-P00{suffix}",
+            election_id=election.id,
+            manifesto_id=manifesto.id,
+            title="A promise",
+            promise_text="The text as printed.",
+            status="fulfilled",
+            is_published=published,
+        )
+        session.add(promise)
+        await session.flush()
+        return promise
+
+    async def test_unpublished_promise_is_404_not_an_empty_page(self, session):
+        from fastapi import HTTPException
+
+        # Imported from the module, not the package: `backend.modules.manifesto`
+        # re-exports the APIRouter instance under the name `router`.
+        from backend.modules.manifesto.router import _published_promise
+
+        await self._promise(session, published=False)
+        with pytest.raises(HTTPException) as raised:
+            await _published_promise(session, "TEST-P001")
+        assert raised.value.status_code == 404
+
+    async def test_dashboard_counts_only_published_rows(self, session):
+        from backend.modules.manifesto import service
+
+        await self._promise(session, published=False, suffix="1")
+        assert (await service.dashboard(session))["totalPromises"] == 0
+
+        await self._promise(session, published=True, suffix="2")
+        assert (await service.dashboard(session))["totalPromises"] == 1
+
+    async def test_status_never_travels_without_its_meaning(self, session):
+        """A badge with no explanation is a verdict; the envelope prevents one."""
+        from backend.modules.manifesto import service
+
+        for entry in (await service.dashboard(session))["byStatus"]:
+            assert entry["label"] and entry["meaning"]
+
+
+class TestSearchStemming:
+    """Inflected query words must find the uninflected corpus.
+
+    Substring matching only works in one direction: "recall" finds "recalled",
+    "recalled" finds nothing. The AI assistant offered "Can an MLA be recalled?"
+    as an example question and then refused it for want of sources, which is what
+    prompted this.
+    """
+
+    def test_regular_inflections_are_stripped(self):
+        from backend.core.search import _stem
+
+        assert _stem("recalled") == "recall"
+        assert _stem("recalling") == "recall"
+        assert _stem("elections") == "election"
+        assert _stem("authorities") == "authority"
+        assert _stem("matches") == "match"
+
+    def test_short_and_irregular_words_are_left_alone(self):
+        """The floors exist so the stemmer cannot mangle a word into a prefix
+        that matches half the corpus."""
+        from backend.core.search import _stem
+
+        assert _stem("led") == "led"
+        assert _stem("is") == "is"
+        assert _stem("process") == "process"
+        assert _stem("address") == "address"
+
+    def test_states_does_not_become_stat(self):
+        """The regression that made the first version of this worse than nothing:
+        "stat" matches statute, statement and status."""
+        from backend.core.search import _stem
+
+        assert _stem("states") == "state"
+
+    async def test_an_inflected_query_finds_the_document(self, session):
+        await search.index(
+            session,
+            entity_type="constitution_article",
+            entity_id="recall-1",
+            title="The power of recall",
+            body="A recall is a procedure by which voters can remove a representative.",
+            url_path="/c/recall",
+        )
+        await session.flush()
+
+        assert await search.query(session, "recalled representative")
+        assert await search.query(session, "recall")
+
+    async def test_stemming_does_not_double_a_token_score(self, session):
+        """A word matched through its stem scores once, not once per path.
+
+        The title deliberately does not contain the query as written, because a
+        raw-query-in-title hit is worth _W_TITLE_EXACT and would swamp the thing
+        being measured here. The subtitle carries the term instead, so the result
+        still clears MIN_SCORE on a single-word query.
+        """
+        await search.index(
+            session, entity_type="report", entity_id="x", title="Municipal supply",
+            subtitle="Water and sanitation", body="water supply in the district",
+            url_path="/x",
+        )
+        await session.flush()
+
+        plain = (await search.query(session, "water"))[0]["score"]
+        inflected = (await search.query(session, "waters"))[0]["score"]
+        assert plain == inflected
+
+    async def test_a_stem_does_not_match_a_longer_word_that_merely_starts_with_it(
+        self, session
+    ):
+        """The regression this design exists to prevent.
+
+        "governs" stems to "govern", which is a substring of "government". If the
+        stem were matched as a substring, a question about zoning bylaws would
+        ground itself in constitutional articles and the assistant would answer
+        rather than decline.
+        """
+        await search.index(
+            session,
+            entity_type="constitution_article",
+            entity_id="gov",
+            title="The Government of India",
+            body="The Government of India shall consist of the President and Council of Ministers.",
+            url_path="/c/gov",
+        )
+        await session.flush()
+
+        assert await search.query(session, "governs zoning bylaw rooftop solar") == []
+
+
+# --------------------------------------------------------------------------
+# Open-data importer
+# --------------------------------------------------------------------------
+class TestRepresentativeImporter:
+    """The importer writes claims about named people in bulk with nobody reading
+    each row, which inverts the platform's usual safety model. These pin the
+    three rules that make that acceptable."""
+
+    AFFIDAVIT_CSV = (
+        "candidate,state,year,house,party,criminal_cases,total_assets,liabilities,education\n"
+        "A Candidate,Uttarakhand,2022,vidhan_sabha,Test Party,"
+        '2,"Rs 1,23,45,678","Nil",Post Graduate\n'
+    )
+
+    async def _import(self, session, csv_text, *, source_url, publish=False):
+        from backend.scripts.import_representatives import SOURCES, import_records
+
+        source = SOURCES["myneta_affidavits"]
+        return await import_records(
+            session,
+            source.parse(csv_text),
+            source=source,
+            source_url=source_url,
+            publish=publish,
+        )
+
+    def test_currency_and_blank_cells_are_parsed_or_refused(self):
+        """A misread figure here becomes a published financial allegation, so
+        anything unparseable must become None rather than a guess."""
+        from backend.scripts.import_representatives import _number
+
+        assert _number("Rs 1,23,45,678") == 12345678.0
+        assert _number("45%") == 45.0
+        assert _number("Nil") is None
+        assert _number("-") is None
+        assert _number("not available") is None
+        assert _number("garbage") is None
+
+    async def test_claims_land_unverified_and_profiles_land_as_drafts(self, session):
+        from backend.modules.representatives.models import Representative, RepresentativeClaim
+
+        result = await self._import(
+            session, self.AFFIDAVIT_CSV, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        await session.flush()
+        assert result.created == 1
+
+        rep = (await session.execute(select(Representative))).scalar_one()
+        assert rep.is_published is False, "a profile about a real person must not auto-publish"
+
+        claims = list((await session.execute(select(RepresentativeClaim))).scalars())
+        assert claims
+        assert all(c.verification_status == "unverified" for c in claims)
+        assert all(c.source_is_primary for c in claims)
+        # The affidavit year travels with every figure drawn from it.
+        assert all(c.period == "2022" for c in claims if c.field_key != "background.education")
+
+    async def test_high_risk_fields_are_refused_from_a_secondary_source(self, session):
+        """requires_primary is a legal control: a news report about an affidavit
+        is not the affidavit."""
+        from backend.modules.representatives.models import RepresentativeClaim
+
+        result = await self._import(
+            session, self.AFFIDAVIT_CSV, source_url="https://some-news-site.example/story"
+        )
+        await session.flush()
+
+        claims = list((await session.execute(select(RepresentativeClaim))).scalars())
+        keys = {c.field_key for c in claims}
+        assert "criminal.pending_cases" not in keys
+        assert "assets.total" not in keys
+        # background.education does not require a primary source, so it survives.
+        assert "background.education" in keys
+        assert any("needs a primary source" in line for line in result.rejected)
+
+    async def test_a_fact_checked_claim_is_never_overwritten(self, session):
+        """Rule 2. An importer that reverted a fact-check would make the
+        fact-check worthless."""
+        from backend.modules.representatives.models import RepresentativeClaim
+
+        await self._import(
+            session, self.AFFIDAVIT_CSV, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        await session.flush()
+
+        claim = (
+            await session.execute(
+                select(RepresentativeClaim).where(
+                    RepresentativeClaim.field_key == "criminal.pending_cases"
+                )
+            )
+        ).scalar_one()
+        claim.verification_status = "fact_checked"
+        await session.flush()
+
+        changed = self.AFFIDAVIT_CSV.replace(",2,", ",99,")
+        result = await self._import(
+            session, changed, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        await session.flush()
+
+        assert claim.value_number == 2.0, "the reviewed value was overwritten"
+        assert result.claims_skipped_reviewed == 1
+        assert result.conflicts and "left as is" in result.conflicts[0]
+
+    async def test_reimporting_the_same_file_changes_nothing(self, session):
+        from backend.modules.representatives.models import Representative
+
+        await self._import(
+            session, self.AFFIDAVIT_CSV, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        await session.flush()
+        second = await self._import(
+            session, self.AFFIDAVIT_CSV, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        await session.flush()
+
+        assert second.created == 0
+        assert second.claims_created == 0
+        assert second.claims_updated == 0
+        assert len((await session.execute(select(Representative))).scalars().all()) == 1
+
+    async def test_a_dated_field_without_a_period_is_rejected(self, session):
+        """An undated asset figure reads as current, which is why these fields
+        set period_required."""
+        undated = self.AFFIDAVIT_CSV.replace("2022,vidhan_sabha", ",vidhan_sabha")
+        result = await self._import(
+            session, undated, source_url="https://myneta.info/uttarakhand2022/"
+        )
+        # The adapter drops the row outright when the affidavit year is missing,
+        # rather than importing the person with undated allegations attached.
+        assert result.created == 0
+        assert result.claims_created == 0
+
+
+class TestManifestoImporter:
+    """The bulk path into the accountability chain.
+
+    The rule these exist to pin is the one that would be easiest to relax under
+    deadline: a bulk process may import what was SAID -- the promise, the
+    question, the answer, the record -- and may never import a conclusion about
+    it.
+    """
+
+    PROMISES = [
+        {
+            "code": "TEST-P001",
+            "title": "A promise",
+            "promise_text": "The text exactly as printed in the manifesto.",
+            "department": "Education",
+            "category": "Education",
+            "manifesto_page": "12",
+        }
+    ]
+    RTI = [
+        {
+            "code": "TEST-RTI-001",
+            "promise_code": "TEST-P001",
+            "public_authority": "A Directorate",
+            "filed_on": "2025-01-10",
+            "status": "reply_received",
+            "reply_authority": "PIO, A Directorate",
+            "reply_received_on": "2025-02-05",
+            "reply_url": "https://example.gov.in/reply.pdf",
+        }
+    ]
+
+    async def _election(self, session):
+        from backend.modules.manifesto.models import Manifesto, ManifestoElection
+
+        election = ManifestoElection(
+            slug="test-2022", state_code="UT", name="Test", year=2022, is_published=True
+        )
+        session.add(election)
+        await session.flush()
+        session.add(
+            Manifesto(
+                slug="test-manifesto",
+                election_id=election.id,
+                party_name="Test Party",
+                title="Test manifesto",
+                is_published=True,
+            )
+        )
+        await session.flush()
+        return election
+
+    async def _import(self, session, **kwargs):
+        from backend.scripts.import_manifesto import import_chain
+
+        payload = {"promises": [], "rti": [], "questions": [], "documents": []}
+        payload.update(kwargs)
+        return await import_chain(session, election_slug="test-2022", **payload)
+
+    async def test_an_imported_promise_carries_no_status(self, session):
+        """The whole editorial gate in one assertion. A bulk process must not be
+        able to publish a conclusion about a government's performance."""
+        from backend.modules.manifesto.models import ManifestoPromise
+
+        await self._election(session)
+        # Even when the file tries to supply one.
+        rows = [dict(self.PROMISES[0], status="fulfilled", assessment="All done")]
+        await self._import(session, promises=rows)
+        await session.flush()
+
+        promise = (await session.execute(select(ManifestoPromise))).scalar_one()
+        assert promise.status == "not_established"
+        assert promise.is_published is False
+
+    async def test_the_reply_due_date_is_computed_from_the_filing_date(self, session):
+        """s.7(1) of the RTI Act: 30 days. Filled only when the file omits it."""
+        from datetime import date
+
+        from backend.modules.manifesto.models import RtiApplication
+
+        await self._election(session)
+        await self._import(session, promises=self.PROMISES, rti=self.RTI)
+        await session.flush()
+
+        application = (await session.execute(select(RtiApplication))).scalar_one()
+        assert application.filed_on == date(2025, 1, 10)
+        assert application.reply_due_on == date(2025, 2, 9)
+
+    async def test_a_record_without_provenance_is_refused(self, session):
+        """An anonymous PDF is not evidence."""
+        from backend.modules.manifesto.models import GovernmentDocument
+
+        await self._election(session)
+        documents = [
+            {
+                "code": "TEST-DOC-1",
+                "promise_code": "TEST-P001",
+                "title": "An order",
+                "kind": "government_order",
+            }
+        ]
+        result = await self._import(session, promises=self.PROMISES, documents=documents)
+        await session.flush()
+
+        assert (await session.execute(select(GovernmentDocument))).scalars().all() == []
+        assert any("source_note or source_url" in line for line in result.rejected)
+
+    async def test_an_unanswered_question_is_not_recorded_as_answered(self, session):
+        """Silence is the more consequential state, so it must never arise from a
+        missing column."""
+        from backend.modules.manifesto.models import RtiQuestion
+
+        await self._election(session)
+        questions = [
+            {"rti_code": "TEST-RTI-001", "number": 1, "question": "What happened?"},
+            {
+                "rti_code": "TEST-RTI-001",
+                "number": 2,
+                "question": "And then?",
+                "answer": "The department has informed that...",
+            },
+        ]
+        await self._import(session, promises=self.PROMISES, rti=self.RTI, questions=questions)
+        await session.flush()
+
+        by_number = {
+            q.number: q for q in (await session.execute(select(RtiQuestion))).scalars()
+        }
+        assert by_number[1].answer_status == "awaited"
+        assert by_number[2].answer_status == "answered"
+
+    async def test_reimporting_the_same_files_changes_nothing(self, session):
+        from backend.modules.manifesto.models import ManifestoPromise, RtiApplication
+
+        await self._election(session)
+        await self._import(session, promises=self.PROMISES, rti=self.RTI)
+        await session.flush()
+        second = await self._import(session, promises=self.PROMISES, rti=self.RTI)
+        await session.flush()
+
+        assert second.promises_created == 0
+        assert second.rti_created == 0
+        assert second.responses_created == 0
+        assert len((await session.execute(select(ManifestoPromise))).scalars().all()) == 1
+        assert len((await session.execute(select(RtiApplication))).scalars().all()) == 1
+
+
+class TestResearchImporter:
+    """The library behind the Research Centre, the Knowledge Hub and the
+    assistant's grounding."""
+
+    async def _import(self, session, rows, **kwargs):
+        from backend.scripts.import_research import import_documents
+
+        return await import_documents(session, rows, **kwargs)
+
+    async def test_a_row_without_its_original_is_refused(self, session):
+        from backend.modules.research.models import ResearchDocument
+
+        result = await self._import(session, [{"title": "A report", "kind": "report"}])
+        await session.flush()
+
+        assert (await session.execute(select(ResearchDocument))).scalars().all() == []
+        assert any("needs its original" in line for line in result.rejected)
+
+    async def test_hosting_a_copy_requires_an_explicit_licence(self, session):
+        """A file_url is a request to host somebody's document. Guessing the
+        licence there is a redistribution problem nobody notices until later."""
+        result = await self._import(
+            session,
+            [
+                {
+                    "title": "A copyrighted report",
+                    "source_url": "https://example.org/report",
+                    "file_url": "https://example.org/report.pdf",
+                }
+            ],
+        )
+        assert result.created == 0
+        assert any("no licence" in line for line in result.rejected)
+
+    async def test_linking_without_a_licence_defaults_to_link_only(self, session):
+        from backend.modules.research.models import ResearchDocument
+
+        await self._import(
+            session,
+            [{"title": "A linked report", "source_url": "https://adrindia.org/x"}],
+        )
+        await session.flush()
+
+        document = (await session.execute(select(ResearchDocument))).scalar_one()
+        assert document.licence == "linked_only"
+        assert document.file_url == ""
+        assert document.is_published is False
+
+    async def test_tags_split_on_semicolons_so_a_comma_survives(self, session):
+        from backend.modules.research.models import ResearchDocument
+
+        await self._import(
+            session,
+            [
+                {
+                    "title": "Tagged",
+                    "source_url": "https://sci.gov.in/x",
+                    "tags": "elections;criminal cases, pending",
+                    "article_refs": "324;326",
+                }
+            ],
+        )
+        await session.flush()
+
+        document = (await session.execute(select(ResearchDocument))).scalar_one()
+        assert document.tags == ["elections", "criminal cases, pending"]
+        assert document.article_refs == ["324", "326"]
+
+    async def test_the_publisher_is_derived_from_the_citation_when_absent(self, session):
+        from backend.modules.research.models import ResearchDocument
+
+        await self._import(
+            session,
+            [{"title": "A judgment", "source_url": "https://sci.gov.in/judgment/1"}],
+        )
+        await session.flush()
+
+        document = (await session.execute(select(ResearchDocument))).scalar_one()
+        assert document.publisher == "Supreme Court of India"

@@ -196,6 +196,89 @@ def response_dict(response: RtiResponse, *, rti: Optional[RtiApplication] = None
     }
 
 
+# --------------------------------------------------------------------------
+# How completely one application was answered
+# --------------------------------------------------------------------------
+# A SEPARATE VOCABULARY FROM PROMISE_STATUSES, AND THE DISTINCTION IS THE WHOLE
+# POINT OF THE RTI REGISTER. This says how much of what was ASKED came back; a
+# promise status says what the records ESTABLISH about implementation. They
+# answer different questions and routinely disagree -- an authority can answer
+# every question fully and the answers can still show a promise unimplemented.
+# Collapsing the two into one column would let a reader read "information
+# provided" as "promise delivered", which is precisely the confusion §14 of the
+# brief exists to prevent.
+RESPONSE_STATUSES: dict[str, str] = {
+    "information_provided": "Information provided",
+    "partially_provided": "Partially provided",
+    "information_insufficient": "Information insufficient",
+    "awaited": "Reply awaited",
+    "denied": "Information denied",
+    "transferred": "Transferred to another authority",
+}
+
+
+def response_status(
+    rti: RtiApplication, questions: Iterable[RtiQuestion]
+) -> dict:
+    """Derived from the per-question answer statuses, never stored.
+
+    Derived for the same reason `timeline()` is: an application-level status
+    typed by hand drifts from the questions underneath it, and here the drift
+    would be a public claim that an authority answered something it did not.
+    Recomputing it from the rows means the summary line and the expanded
+    question list can never contradict each other.
+    """
+    questions = list(questions)
+
+    if rti.status not in RTI_ANSWERED_STATUSES:
+        # No reply on file. Whatever the questions say, nothing has come back,
+        # and the register says so rather than counting silence as a shortfall.
+        # The application's own status carries the nuance ("no reply within the
+        # statutory period" is not the same as "filed last week"), so it is
+        # passed through as the detail rather than flattened into the badge.
+        return {
+            "key": "awaited",
+            "label": RESPONSE_STATUSES["awaited"],
+            "detail": RTI_STATUSES.get(rti.status, rti.status),
+        }
+
+    if not questions:
+        return {
+            "key": "information_insufficient",
+            "label": RESPONSE_STATUSES["information_insufficient"],
+            "detail": "A reply was received; its questions have not been published yet.",
+        }
+
+    tally: dict[str, int] = {}
+    for question in questions:
+        tally[question.answer_status] = tally.get(question.answer_status, 0) + 1
+
+    answered = tally.get("answered", 0)
+    partial = tally.get("partially_answered", 0)
+    denied = tally.get("denied", 0)
+    transferred = tally.get("transferred", 0)
+    total = len(questions)
+
+    if answered == total:
+        key = "information_provided"
+    elif denied == total:
+        key = "denied"
+    elif transferred == total:
+        key = "transferred"
+    elif answered or partial:
+        key = "partially_provided"
+    else:
+        key = "information_insufficient"
+
+    return {
+        "key": key,
+        "label": RESPONSE_STATUSES[key],
+        # The arithmetic behind the badge, so a reader can see that "partially
+        # provided" means three of five rather than taking the word for it.
+        "detail": f"{answered} of {total} question(s) answered in full",
+    }
+
+
 def question_dict(
     question: RtiQuestion, *, document: Optional[GovernmentDocument] = None
 ) -> dict:
