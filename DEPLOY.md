@@ -452,6 +452,53 @@ unless `--publish` is typed, and safe to re-run.
 | `import_representatives` | Representative profiles and sourced claims | Claims on high-risk fields from a secondary source; overwriting a fact-checked value |
 | `import_manifesto` | Promises, RTI applications, questions, answers, replies, records | Any status or assessment; a record with no provenance |
 | `import_research` | Research Centre / Knowledge Hub library | A row with no `source_url`; hosting a copy with no stated licence |
+| `harvest_gov_sources` | Discovers documents on official sites, writes an import CSV | Any URL robots.txt disallows; any site that 403s an honestly-identified agent |
+| `import_datagovin` | Catalogues data.gov.in datasets via the official API | Nothing — but the upstream 502s often, and failures are reported, never silently dropped |
+
+### Getting data off official government sites
+
+Two tools, because the two routes have different rules.
+
+```sh
+.venv/bin/python -m backend.scripts.harvest_gov_sources --list
+.venv/bin/python -m backend.scripts.harvest_gov_sources --source cic_annual_reports --out cic.csv
+.venv/bin/python -m backend.scripts.import_research --file cic.csv --dry-run
+```
+
+`harvest_gov_sources` reads official index pages and writes the CSV `import_research`
+takes. It never writes to the database itself: a parser that mis-reads a page
+should not be able to make a public claim about what a government published
+without a person seeing it first. It checks `robots.txt` before every request,
+waits 1.5s between calls to the same host, and HEAD-checks every link so a dead
+citation never enters the catalogue.
+
+**It identifies itself honestly and never spoofs a browser.** Some government
+sites serve only a fake desktop User-Agent and 403 an honest one —
+`indiacode.nic.in` does exactly that. Those sites are not harvested. Getting past
+a filter that exists to exclude automated clients is circumventing a stated
+preference, and this project cannot both demand that institutions honour what
+they publish and sneak past their front door. Cite and link to those documents
+instead; that is what a citation is.
+
+`--list` prints what is harvestable **and what is deliberately excluded, with the
+reason**, so nobody re-derives it later.
+
+For data.gov.in the portal is `Disallow: /` for every agent, so it is reached
+through its API instead:
+
+```sh
+export DATA_GOV_IN_API_KEY=<your 32-character key>
+.venv/bin/python -m backend.scripts.import_datagovin --resource <uuid> --dry-run
+```
+
+Get a key at data.gov.in → log in → My Account → **Generate Your New API KEY**.
+Do not use the `579b464db66ec23bdd000001…` key from their documentation: it works,
+but its quota is shared with every tutorial that copied it, so it rate limits and
+returns 502 under load. The script warns if it sees that prefix.
+
+The API has no catalogue endpoint, so resource IDs come from browsing the portal
+in a browser — `robots.txt` governs automated agents, not people. Collect the
+UUIDs you want and pass them with `--resource` or a `--resources` file.
 
 ### Manifesto promises, RTIs and replies
 
